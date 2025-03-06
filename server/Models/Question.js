@@ -1,0 +1,30 @@
+const mongoose  = require("mongoose")
+const Type=require("./Type")
+const Chapter=require("./Chapter")
+const QuestionScheme=new mongoose.Schema({
+   questionNum:{
+type:Number,
+required:true,
+unique:true
+   },
+   // typeID:{
+   //  type:mongoose.Schema.Types.ObjectId,
+   //  required:true,
+   //  ref:'Type'
+   // },
+   type:{
+      enum:['R','I','A','S','E','C'],
+      required:true
+     },
+   chapterID:{
+      type:mongoose.Schema.Types.ObjectId,
+      required:true,
+      ref:'Chapter'
+   },
+  text:{
+    type:String,
+    required:true
+  }
+
+},{})
+module.exports=mongoose.model('Question',QuestionScheme)

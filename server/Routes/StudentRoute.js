@@ -1,0 +1,8 @@
+const express=require("express")
+const StudentController=require("../Controllers/StudentController")
+const route=express.Router()
+route.get("/",StudentController.getAllTasks)
+route.get("/:id",StudentController.getTaskBystudentID)
+route.post("/",StudentController.createTask)
+route.put("/",StudentController.updateTask)
+route.delete("/",StudentController.deleteTask)
