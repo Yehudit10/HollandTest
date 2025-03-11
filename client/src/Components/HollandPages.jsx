@@ -1,87 +1,47 @@
 
 
-import React, { useState, useEffect } from 'react';
-import { Button } from 'primereact/button';
+import React, {  useState } from 'react';
+import{Card}from'primereact/card'
 import { Carousel } from 'primereact/carousel';
-import { Tag } from 'primereact/tag';
-import T from './T';
-// import { ProductService } from './service/ProductService';
+import HollandPage1 from './HollandPage1';
+import HollandPage3 from './HollangPage3';
+import HollangPage2 from './HollandPage2';
+
 const HollandPages=()=> {
-    // // const [products, setProducts] = useState([]);
-    // // const responsiveOptions = [
-    // //     {
-    // //         breakpoint: '1400px',
-    // //         numVisible: 2,
-    // //         numScroll: 1
-    // //     },
-    // //     {
-    // //         breakpoint: '1199px',
-    // //         numVisible: 3,
-    // //         numScroll: 1
-    // //     },
-    // //     {
-    // //         breakpoint: '767px',
-    // //         numVisible: 2,
-    // //         numScroll: 1
-    // //     },
-    // //     {
-    // //         breakpoint: '575px',
-    // //         numVisible: 1,
-    // //         numScroll: 1
-    // //     }
-    // // ];
 
-    // // const getSeverity = (product) => {
-    // //     switch (product.inventoryStatus) {
-    // //         case 'INSTOCK':
-    // //             return 'success';
 
-    // //         case 'LOWSTOCK':
-    // //             return 'warning';
 
-    // //         case 'OUTOFSTOCK':
-    // //             return 'danger';
 
-    // //         default:
-    // //             return null;
-    // //     }
-    // // };
+const  [activePage,setActivePage]=useState(2)
 
-    // // useEffect(() => {
-    // //     ProductService.getProductsSmall().then((data) => setProducts(data.slice(0, 9)));
-    // // }, []);
-
-    // const productTemplate = (product) => {
-    //     return (
-    //         <div className="border-1 surface-border border-round m-2 text-center py-5 px-3">
-    //             {/* <div className="mb-3">
-    //                 <img src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} alt={product.name} className="w-6 shadow-2" />
-    //             </div>
-    //             <div>
-    //                 <h4 className="mb-1">{product.name}</h4>
-    //                 <h6 className="mt-0 mb-3">${product.price}</h6>
-    //                 <Tag value={product.inventoryStatus} severity={getSeverity(product)}></Tag>
-    //                 <div className="mt-5 flex flex-wrap gap-2 justify-content-center">
-    //                     <Button icon="pi pi-search" className="p-button p-button-rounded" />
-    //                     <Button icon="pi pi-star-fill" className="p-button-success p-button-rounded" />
-    //                 </div>
-    //             </div> */}
-    //         </div>
-    //     );
-    // };
-const arr=[1,2,3]
-const my=()=>{
-   // <h1>hi<h1/>
-   return <T/>
+const nextPage=()=>{
+    setActivePage((activePage+2)%3)
 }
+const showComps=(comp)=>{
+    
+   return comp
+   
+}
+const responsiveOptions = [
+    { breakpoint: '1400px', numVisible: 1, numScroll: 1 },
+    { breakpoint: '1199px', numVisible: 1, numScroll: 1 },
+    { breakpoint: '767px', numVisible: 1, numScroll: 1 },
+    { breakpoint: '575px', numVisible: 1, numScroll: 1 }
+];
+
     return (
-        <div className="card">
-            <Carousel  numVisible={1} numScroll={1} value={[1,2,3]} responsiveOptions={arr} className="custom-carousel" circular
-            autoplayInterval={3000} itemTemplate={my}/>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <Card className="card" style={{display:'flex',alignItems:'center',height:'80vh',width:'53vw',marginTop:'10vh'}}>
+            <Carousel  numVisible={1} numScroll={1} value={[<HollandPage3/>,<HollangPage2 nextPage={nextPage}/>,<HollandPage1 nextPage={nextPage}/>]} responsiveOptions={responsiveOptions} className="custom-carousel" 
+             itemTemplate={showComps}   page={activePage} 
+             onPageChange={(e)=>{setActivePage(e.page)}}
+             style={{width:"50vw"}}
+              />
+        </Card>
         </div>
     )
 }
-// value={products} itemTemplate={productTemplate} 
+
         
 export default HollandPages
         
