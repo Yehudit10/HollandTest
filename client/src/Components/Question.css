@@ -48,14 +48,15 @@
     gap: 25rem;
     justify-content: center;
     align-items: center;
-padding: 3rem;
+padding: 1rem;
   }
   
   .nav-button {
    min-width:10vw;
-   background-color:  #47b0e4a4; 
+   background-color:  #007bff; 
    border-color:white;
     color: white;
+    padding:1rem;
     
   }
   
@@ -114,12 +115,14 @@ padding: 3rem;
 
 .p-steps-item .p-menuitem-link:hover {
     /* background-color: #0056b3; Darker blue on hover */
+    background-color:#007bff; 
+
 }
 
 
 
 .p-steps-item.p-highlight .p-menuitem-link {
-    background-color:  #47b0e4a4; 
+    background-color:#007bff; 
   
 }
 
@@ -127,6 +130,7 @@ padding: 3rem;
     clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%);
     /* clip-path: polygon(85% 0, 100% 50%, 85% 100%, 15% 100%, 25% 50%, 15% 0); */
 
+    
 
 }
 .p-steps .p-steps-item::before {

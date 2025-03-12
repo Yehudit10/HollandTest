@@ -12,7 +12,8 @@ if(!match)
 return res.status(401).send({error:true,massage:"Unauthorized",data:null})
 const userDetails={
     username:foundUser.username,
-    role:foundUser.role
+    role:foundUser.role,
+    currentQuestion:foundUser.currentTest.currentQuestion
 }
 const accessToken=jwt.sign(userDetails,procces.env.ACCESS_TOKEN,{expiresIn:'15m'})
 const refreshToken=jwt.sign({username:UserDetails.username},procces.env.REFRESH_TOKEN,{expiresIn:'1d'})

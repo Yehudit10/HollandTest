@@ -1,11 +1,21 @@
 const mongoose=require("mongoose")
-const resultSchema= new mongoose.Schema({  
-    R:{workSum:{type:Number,required:true},capabilitySum:{type:Number,required:true},interestSum:{type:Number,required:true},select:{type:Boolean,required:true}},
-    I:{workSum:{type:Number,required:true},capabilitySum:{type:Number,required:true},interestSum:{type:Number,required:true},select:{type:Boolean,required:true}},
-    A:{workSum:{type:Number,required:true},capabilitySum:{type:Number,required:true},interestSum:{type:Number,required:true},select:{type:Boolean,required:true}},
-    S:{workSum:{type:Number,required:true},capabilitySum:{type:Number,required:true},interestSum:{type:Number,required:true},select:{type:Boolean,required:true}},
-    E:{workSum:{type:Number,required:true},capabilitySum:{type:Number,required:true},interestSum:{type:Number,required:true},select:{type:Boolean,required:true}},
-    C:{workSum:{type:Number,required:true},capabilitySum:{type:Number,required:true},interestSum:{type:Number,required:true},select:{type:Boolean,required:true}},
+
+const subResultSchema=new mongoose.Schema({
+    work:{type:Number,required:true},
+    capability:{type:Number,required:true},
+    interest:{type:Number,required:true},
+    select:{type:Boolean,required:true}
+})
+const resultSchema= new mongoose.Schema({
+    userId:{type:mongoose.Schema.Types.ObjectId,required:true},
+    R:{type:subResultSchema,required:true},
+    I:{type:subResultSchema,required:true},
+    A:{type:subResultSchema,required:true},
+    S:{type:subResultSchema,required:true},
+    E:{type:subResultSchema,required:true},
+    C:{type:subResultSchema,required:true},
+   
 },{timestamps:true})
 
-module.exports=resultSchema
+//module.exports=resultSchema
+module.exports=mongoose.model('Result',resultSchema)
