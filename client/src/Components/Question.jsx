@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { Carousel } from 'primereact/carousel';
-import './Question.css'
+import './Question2.css'
 
 import love from '../images/love.svg';
 import like from '../images/like.svg'
@@ -75,7 +75,7 @@ else{
         <>
         
     <div className='question-container'>
-    <Steps activeIndex={currentChapter} style={{marginTop:'5vh'}} model={[{label:'חלק ראשון'},{label:'חלק שני'},{label:'חלק שלישי'}]} />
+    <Steps activeIndex={currentChapter} style={{marginTop:'3vh'}} model={[{label:'חלק ראשון'},{label:'חלק שני'},{label:'חלק שלישי'}]} />
         <div className="carousel-wrapper">
             <Carousel value={questionsList} numVisible={1} numScroll={1} 
              itemTemplate={showQuestion} 
@@ -86,7 +86,7 @@ else{
               style={{display:'flex',alignItems:'center',height:'35vh',width:'30vw',marginTop:'5vh'}}
              />
            </div>
-             <div >
+             <div className='answer-buttons-container'>
              <Button onClick={async()=>{await handleAnswer(4)}} className='answer-button' label="אוהבת מאוד" icon={<img src={love} className='icon-button'/>} />
              <Button onClick={async()=>{ await handleAnswer(3)}} className='answer-button' label="כן אוהבת" icon={<img src={like}  className='icon-button' />} />
              <Button onClick={async()=>{await handleAnswer(2)}} className='answer-button' label="לא בטוחה"icon={<img src={meh}  className='icon-button' />} />

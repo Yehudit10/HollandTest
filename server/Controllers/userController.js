@@ -26,6 +26,8 @@ return res.status(400).json({error:true,message:"there is already exist a user b
 const hashedpassword=await bcrypt.hash(password,10)
    const user=await User.create({password:hashedpassword,username,firstname,lastname,address,phone,profil,email})
    if(!user)
+   return res.status(400).json({error:true,message:"create failed",data:null})
+
    return res.status(200).json({error:false,message:"",data:user})
 
 }

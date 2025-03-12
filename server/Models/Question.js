@@ -7,12 +7,9 @@ type:Number,
 required:true,
 unique:true
    },
-   // typeID:{
-   //  type:mongoose.Schema.Types.ObjectId,
-   //  required:true,
-   //  ref:'Type'
-   // },
+  
    type:{
+      type:String,
       enum:['R','I','A','S','E','C'],
       required:true
      },

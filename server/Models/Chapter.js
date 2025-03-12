@@ -1,7 +1,9 @@
 const mongoose=require("mongoose")
 const chapterSchema=new mongoose.Schema({
     chapterName:{
-enum:['work','capability','interest']
+        type:String,
+enum:['work','capability','interest'],
+required:true
     },
     description:{
         type:String,
