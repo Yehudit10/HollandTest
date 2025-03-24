@@ -16,7 +16,7 @@ import { Button } from 'primereact/button';
 const HollandResults = () => {
     const contentRef=useRef()
 
-    const downloadPDF=async()=>{
+const downloadPDF=async()=>{
 const page=contentRef.current
 const canvas=await html2canvas(page,{scale:1.5})
 const imgData = canvas.toDataURL("image/jpeg", 0.6);

@@ -1,0 +1,75 @@
+.dashboard-container {
+    padding: 20px;
+}
+
+.top-cards {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.top-cards .p-card {
+    width: 30%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative; /* הוסף מיקום יחסי לכרטיס */
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-icon {
+    font-size: 2.5em;
+    position: absolute; /* הוסף מיקום אבסולוטי לאייקון */
+    top: 10px;
+    right: 10px;
+}
+
+.card-text {
+    flex: 1;
+}
+
+.card-title {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.card-subtitle {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.card-text p {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* צביעת חלקים נפרדים */
+.revenue-card {
+    background: linear-gradient(to right, #e8f5e9 20%, white 20%);
+    border: 1px solid #a5d6a7;
+}
+
+.revenue-card .card-icon {
+    color: #a5d6a7;
+}
+
+.orders-card {
+    background: linear-gradient(to right, #e3f2fd 20%, white 20%);
+    border: 1px solid #90caf9;
+}
+
+.orders-card .card-icon {
+    color: #90caf9;
+}
+
+.customers-card {
+    background: linear-gradient(to right, #fff3e0 20%, white 20%);
+    border: 1px solid #ffe082;
+}
+
+.customers-card .card-icon {
+    color: #ffe082;
+}

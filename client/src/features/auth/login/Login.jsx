@@ -1,18 +1,30 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Password } from "primereact/password";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
-import "./Login.css";
+import "./Form.css";
+
+import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../authApiSlice";
 
 const Login = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-
+  const { register, handleSubmit ,control,formState: { errors } } = useForm();
+  const [login,{isError,isSuccess,isLoading,data}]=useLoginMutation()
+ 
+const navigate=useNavigate()
+useEffect(()=>{
+if(isSuccess)
+{
+  console.log(data)
+navigate("/home")}
+},[isSuccess])
   const onSubmit = (data) => {
-    console.log("Form Data:", data);
+    login(data)
+    console.log(data)
   };
 
   return (
@@ -31,14 +43,16 @@ const Login = () => {
           </div>
 
           <div className="form-group">
-            <Password
-              id="password"
+            <Controller name="password"
+            control={control}
+            rules={{required:"Password is required"}}
+            className={`p-password custom-password ${errors.password ? "p-invalid" : ""}`}
+            render={({field})=><Password
               placeholder="Password"
-              {...register("password", { required: "Password is required" })}
+               {...field}
               toggleMask
               feedback={false}
-
-              className={`p-password custom-password ${errors.password ? "p-invalid" : ""}`}
+            />}
             />
             {errors.password && <small className="p-error">{errors.password.message}</small>}
           </div>

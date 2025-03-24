@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Menubar } from 'primereact/menubar';
 import { Button } from 'primereact/button';
 import { Avatar } from 'primereact/avatar';
@@ -6,20 +6,31 @@ import { OverlayPanel } from 'primereact/overlaypanel';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import './NavBar.css'; // קובץ CSS מותאם אישית
+import './NavBar.css';
+import { useNavigate } from 'react-router-dom';
+import { useSendLogoutMutation } from '../features/auth/authApiSlice';
+import useAuth from '../hooks/useAuth';
 
 const NavBar = () => {
     const profileMenu = useRef(null);
+const navigate=useNavigate()
+const[logout,{isError,isSuccess}]=useSendLogoutMutation()
+
+const handleLogout=()=>{
+    logout()
+}
+useEffect(()=>{if(isSuccess)
+navigate("/login")},[isSuccess])
 
     const items = [
-        { label: 'שאלון הכוונה' },
+        { label: 'שאלון הכוונה', command:()=>{ navigate("holland")} },
         { label: 'מאגר הלימודים' },
         { label: 'מאגר העיסוקים' },
     ];
-
+const {profil}=useAuth()
     const end = (
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Button icon="pi pi-heart-fill" className="p-button-rounded p-button-secondary" />
+            <Button  icon="pi pi-heart-fill" className="p-button-rounded p-button-secondary" />
             <Button icon="pi pi-search" className="p-button-rounded p-button-secondary" />
             <Avatar
                 icon="pi pi-user"
@@ -28,10 +39,11 @@ const NavBar = () => {
                 style={{ cursor: 'pointer' }}
                 onClick={(e) => profileMenu.current.toggle(e)}
             />
+           {/* <img src={`http://localhost:2890/uploads/${profil}`}/> */}
             <OverlayPanel ref={profileMenu} dismissable>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                    <Button label="Log Out" icon="pi pi-sign-out" className="p-button-text" />
-                    <Button label="Switch Account" icon="pi pi-user-edit" className="p-button-text" />
+                    <Button label="Log Out" onClick={handleLogout} icon="pi pi-sign-out" className="p-button-text" />
+                    <Button label="Switch Account" onClick={()=>{}}icon="pi pi-user-edit" className="p-button-text" />
                 </div>
             </OverlayPanel>
         </div>

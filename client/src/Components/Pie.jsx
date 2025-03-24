@@ -24,7 +24,7 @@ const DynamicPieChart = () => {
 
   return (
     <div className="pie-chart-container">
-      <h3 className="chart-title">Dynamic Pie Chart</h3>
+      <h3 className="chart-title">Average Holland Test Score</h3>
       <Chart
         type="pie"
         data={data}

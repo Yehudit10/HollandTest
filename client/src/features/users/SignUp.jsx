@@ -1,25 +1,73 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Password } from "primereact/password";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
-import "./Login.css";
-
+import {useAddUserMutation}from "./userApiSlice"
+import{useNavigate}from "react-router-dom"
+import "../auth/login/Form.css"
+import { FileUpload } from "primereact/fileupload";
+import { Avatar } from "primereact/avatar";
 const SignUp = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-
+  const navigate=useNavigate()
+const [image, setImage] = useState(null);
+const [preview, setPreview] = useState()
+  const { register, handleSubmit,control, formState: { errors } } = useForm();
+const [signUp,{isError,isLoading,isSuccess}]=useAddUserMutation()
   const onSubmit = (data) => {
-    console.log("Form Data:", data);
+    const formData =new FormData()
+    formData.append("profil",image)
+    Object.keys(data).forEach((key) => {
+        formData.append(key, data[key]);
+      })
+    signUp(formData)
   };
+  useEffect(()=>{
+if(isSuccess)
+navigate("/login")
+  },[isSuccess])
+  
+  useEffect(() => {
+    console.log(image)
+    if (!image) {
+        setPreview(undefined)
+        return
+    }
+    const objectUrl = URL.createObjectURL(image)
+    setPreview(objectUrl)
+    return () => URL.revokeObjectURL(objectUrl)
+}, [image])
 
+const handleImageChange = (e) => {
+  if (!e.files || e.files.length === 0) {
+      setImage(undefined)
+      return
+  }
+  setImage(e.files[0])
+}
   return (
     <div className="form-container">
       <div className="form-card">
         <h2 className="form-title">Sign-Up</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="form-group">
+                    <Avatar
+                    key={preview}
+                    size="large"
+                    image={preview || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}  // אם אין תמונה, תראה ברירת מחדל
+                    shape="circle"
+                    />
+                        <FileUpload
+                            mode="basic"
+                            accept="image/*"
+                            chooseLabel="Choose Image"
+                            onSelect={handleImageChange}
+                            // customUpload uploadHandler={handleImageChange}
+                        />
+                    </div>
           <div className="form-group">
             <InputText
               id="username"
@@ -48,14 +96,16 @@ const SignUp = () => {
             {errors.lastname && <small className="p-error">{errors.lastname.message}</small>}
           </div>
           <div className="form-group">
-            <Password
-              id="password"
+          <Controller name="password"
+            control={control}
+            rules={{required:"Password is required"}}
+            className={`p-password custom-password ${errors.password ? "p-invalid" : ""}`}
+            render={({field})=><Password
               placeholder="Password"
-              {...register("password", { required: "Password is required" })}
+               {...field}
               toggleMask
               feedback={false}
-
-              className={`p-password custom-password ${errors.password ? "p-invalid" : ""}`}
+            />}
             />
             {errors.password && <small className="p-error">{errors.password.message}</small>}
           </div>

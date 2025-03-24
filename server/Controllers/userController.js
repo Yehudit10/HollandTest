@@ -17,25 +17,28 @@ const getUserByID=async(req,res)=>{
     return res.status(200).json({error:false,message:"",data:user})
 }
 const addUser=async(req,res)=>{
-    const {username,password,firstname,lastname,address,phone,profil,email}=req.body
+    const profil=req.file?.filename||""
+
+    const {username,password,firstname,lastname,address,phone,email}=req.body
+    console.log(req.file)
    if(!password||!username||!email)
    return res.status(400).json({error:true,message:"you are missing some required fields",data:null})
-const duplicate=await User.find({username}).lean()
+const duplicate=await User.findOne({username}).lean()
 if(duplicate)
-return res.status(400).json({error:true,message:"there is already exist a user by this name",data:null})
+    return res.status(400).json({error:true,message:"there is already exist a user by this name",data:null})
 const hashedpassword=await bcrypt.hash(password,10)
    const user=await User.create({password:hashedpassword,username,firstname,lastname,address,phone,profil,email})
    if(!user)
    return res.status(400).json({error:true,message:"create failed",data:null})
 
-   return res.status(200).json({error:false,message:"",data:user})
+   return res.status(201).json({error:false,message:"",data:user})
 
 }
 const updateUser=async(req,res)=>{
     const {_id,password,name,lastname,address,phone,profil,email,currentTest,testhistory}=req.body
     if(!_id||!name||!lastname||!email)
         return res.status(400).json({error:true,message:"you are missing required fields",data:null})
-        const duplicate=await User.find({username}).lean()
+        const duplicate=await User.findOne({username}).lean()
         if(duplicate)
         return res.status(400).json({error:true,message:"there is already exist a user by this name",data:null})
     const user=await User.findById(_id).exec()
@@ -69,6 +72,7 @@ const deleteUser=async(req,res)=>{
     const deletedUser=await user.deleteOne()
     if(!deletedUser)
         return res.status(400).json({error:true,message:"delete failed",data:null})
+        return res.status(200).json({error:false,message:null,data:deletedUser})
     
    }
    module.exports={deleteUser,updateUser,getAllUsers,getUserByID,addUser}

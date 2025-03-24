@@ -9,13 +9,13 @@ const addQuestion=async(req,res)=>{
     const {questionNum,type,chapterID,text}=req.body
     if(!questionNum||!type||!chapterID||!text)
     return res.status(400).json({error:true,message:"you are missing some required fields",data:null})
-    const duplicate=await Question.find({questionNum}).exec()
+    const duplicate=await Question.findOne({questionNum}).lean()
     if(duplicate)
     return res.status(400).json({error:true,message:"question num must be unique",data:null})
     const newQuestion=await Question.create({questionNum,type,chapterID,text})
     if(!newQuestion)
    return res.status(400).json({error:true,message:"create failed",data:null})
-   return res.status(200).json({error:false,message:null,data:newQuestion})
+   return res.status(201).json({error:false,message:null,data:newQuestion})
 
 }
 const updateQuestion=async(req,res)=>{
@@ -23,7 +23,7 @@ const updateQuestion=async(req,res)=>{
     if(!_id||!questionNum||!type||!chapterID||!text)
     return res.status(400).json({error:true,message:"you are missing some required fields",data:null})
     const question=await Question.findById(_id).exec()
-    const duplicate=await Question.find({questionNum})
+    const duplicate=await Question.findOne({questionNum}).lean()
     if(duplicate)
     return res.status(400).json({error:true,message:"question num must be unique",data:null})
     question.questionNum=questionNum
@@ -43,9 +43,10 @@ const deleteQuestion=async(req,res)=>{
     const question=await Question.findById(_id).exec()
     if(!question)
         return res.status(400).json({error:true,message:"question not found",data:null})
-    const deletedQuestion=await user.deleteOne()
+    const deletedQuestion=await Question.deleteOne()
     if(!deletedQuestion)
         return res.status(400).json({error:true,message:"delete failed",data:null})
+        return res.status(200).json({error:false,message:null,data:deletedQuestion})
     
    }
 module.exports={getAllQuestions,updateQuestion,addQuestion,deleteQuestion}
