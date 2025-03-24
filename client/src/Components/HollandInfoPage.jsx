@@ -6,14 +6,14 @@ import Enterprising from '../images/Enterprising.png';
 import Conventional from '../images/Conventional.png';
 import './HollandInfoPage.css';
 import HollandType from './HollandType';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
 const HollandInfoPage = () => {
-  const navigate=useNavigate()
   return (
     <div className="holland-info-page">
+      <Link to="/dash/holland" className='back-link'>חזרה</Link>
       <h1>שאלון הולנד להכוונה מקצועית</h1>
       <div>השאלון באתר הוא כלי שמסייע לזהות תחומי עניין ונטיות תעסוקתיות. השאלון אינו כלי אבחון ואינו מחליף שירותי ייעוץ מקצועיים לבחירת קריירה.</div>
       <h3>מהו שאלון הולנד (RIASEC)</h3>
@@ -30,7 +30,7 @@ const HollandInfoPage = () => {
         <HollandType image={Enterprising} title="יזמית" description="אוהבת עשייה, ביצוע והשגת מטרות. אוהבת לפעול ולהוביל תהליכים ואנשים. בעלת יכולת השפעה על אנשים ושכנוע. אוהבת לעבוד עם אנשים שהיא מובילה, לקבל החלטות. לא אוהבת להיות מובלת. יכולת בינאישית טובה. אוהבת לקחת סיכונים לצורך רווח והשגת מטרות. מחפשת גיוון." />
         <HollandType image={Conventional} title="מנהלית" description="אוהבת סדר, נהלים ומסגרת. אוהבת רוטינות וכללים ואוהבת שפועלים לאורם. אוהבת היררכיה ובהירות.  שמה לב לפרטים, מדויקת ושיטתית. אוהבת לתכנן ולפעול על פי התכנון. מעדיפה תהליכים ברורים ומוגדרים. לא מתחברת לעמימות ולחריגה מן הנורמה." />
       </div>
-      <button onClick={()=>{navigate("/")}} className="questionnaire-button">חזרה</button>
+      {/* <button onClick={()=>{navigate("/")}} className="questionnaire-button">חזרה</button> */}
     </div>
   );
 };

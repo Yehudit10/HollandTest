@@ -1,7 +1,9 @@
 import React from 'react';
 import "./HollandPages.css"
 import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom';
 const HollandPage3 = () => {
+  const navigate=useNavigate()
     return (
       <div 
       className='holland-container'
@@ -33,7 +35,7 @@ const HollandPage3 = () => {
           התחרטת על התשובה? אין בעיה, אפשר לחזור אחורה ולענות שוב.
         </p>
         <Button
-  
+  onClick={()=>{navigate("test")}}
 className='custom-button'
     >
       בואי נתחיל

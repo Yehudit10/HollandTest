@@ -7,12 +7,16 @@ type:Number,
 required:true,
 unique:true
    },
-  
    type:{
-      type:String,
-      enum:['R','I','A','S','E','C'],
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'Type',
       required:true
      },
+   // type:{
+   //    type:String,
+   //    enum:['R','I','A','S','E','C'],
+   //    required:true
+   //   },
    chapterID:{
       type:mongoose.Schema.Types.ObjectId,
       required:true,

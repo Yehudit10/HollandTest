@@ -45,7 +45,7 @@
     margin-top: 5px;
   }
   
-  .questionnaire-button {
+  /* .questionnaire-button {
     background-color: #007bff;
     color: white;
     padding: 10px 20px;
@@ -59,10 +59,25 @@
   
   .questionnaire-button:hover {
     background-color: #0056b3;
-  }
+  } */
   .dialog-image {
     width: 100%;
     max-width: 400px;
     height: auto;
     margin-bottom: 15px;
   }
+  .back-link {
+    position: absolute;
+    top: 10%;
+    right: 7%;
+    font-size: 20px;
+    font-weight: bold;
+    color: #007bff; /* Blue link color */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+    color: #0056b3; /* Darker blue on hover */
+}

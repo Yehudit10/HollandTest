@@ -17,15 +17,16 @@ const HollandResults2 = () => {
     const contentRef=useRef()
     const handlePrint = useReactToPrint({
         content: () => contentRef.current,
-        documentTitle: 'MyDocument',
-    removeAfterPrint: true
+        //documentTitle: 'MyDocument',
+    //removeAfterPrint: true,
+    
     });
 
 
-    const downloadPDF=async()=>{
+    const downloadPDF=()=>{
        
     console.log(contentRef.current)
-        handlePrint()
+    handlePrint()
        
     }
     return (

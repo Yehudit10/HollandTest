@@ -10,4 +10,4 @@ required:true
         required:true
     }
 },{})
-module.exports=chapterSchema
+module.exports=mongoose.model('Chapter',chapterSchema)

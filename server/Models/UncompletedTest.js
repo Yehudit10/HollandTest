@@ -1,19 +1,34 @@
 const mongoose  = require("mongoose")
 const Type=require("./Type")
 const Question=require("./Question")
+const Chapter=require("./Chapter")
 const uncompletedTestScheme=new mongoose.Schema({
    userId:{type:mongoose.Schema.Types.ObjectId},
+   // answers:[
+   //    {
+   //    // questionID:{type:mongoose.Schema.Types.ObjectId,required:true,ref:'Question'},
+   //    questionChapter:{  type:String,
+   //       enum:['work','capability','interest'],
+   //       required:true},
+   //    questionType:{
+   //       type:String,enum:['R','I','A','S','E','C'],
+   //    required:true
+   //    },
+   //    questionresult:{type:Number,min:1,max:5,required:true}
+   // }
+   // ]
    answers:[
       {
       // questionID:{type:mongoose.Schema.Types.ObjectId,required:true,ref:'Question'},
-      questionChapter:{  type:String,
-         enum:['work','capability','interest'],
+      questionChapter:{  type:mongoose.Schema.ObjectId,
+        ref:'Chapter',
          required:true},
       questionType:{
-         type:String,enum:['R','I','A','S','E','C'],
+         type:mongoose.Schema.ObjectId,
+         ref:'Type',
       required:true
       },
-      questionresult:{type:Number,min:0,max:2,required:true}
+      questionresult:{type:Number,min:1,max:5,required:true}
    }
    ]
 ,
@@ -29,5 +44,5 @@ currentQuestion:
  },
 {timestamps:true})
 
-module.exports=uncompleteTestScheme
-//module.exports=mongoose.model('UncompletedTest',uncompletedTestScheme)
+//module.exports=uncompleteTestScheme
+module.exports=mongoose.model('UncompletedTest',uncompletedTestScheme)

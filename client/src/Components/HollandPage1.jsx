@@ -15,7 +15,7 @@ const HollandPage1 = (props) => {
           ואז יציג עיסוקים מתאימים.
         </p>
         <div >
-          <Link to="/holland-info" className="holland-link">
+          <Link to="holland-info" className="holland-link">
             מהו שאלון הולנד?
           </Link>
         </div>
