@@ -12,11 +12,7 @@ unique:true
       ref:'Type',
       required:true
      },
-   // type:{
-   //    type:String,
-   //    enum:['R','I','A','S','E','C'],
-   //    required:true
-   //   },
+ 
    chapterID:{
       type:mongoose.Schema.Types.ObjectId,
       required:true,
@@ -29,3 +25,8 @@ unique:true
 
 },{})
 module.exports=mongoose.model('Question',QuestionScheme)
+  // type:{
+   //    type:String,
+   //    enum:['R','I','A','S','E','C'],
+   //    required:true
+   //   },

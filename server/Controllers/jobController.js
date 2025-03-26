@@ -1,8 +1,21 @@
 const Job=require("../Models/Job")
 const getAllJobs=async(req,res)=>{
-const jobs=await Job.find().lean()
+    console.log(req.query)
+    const {q,workingHoursMin,workingHoursMax,educationLevel}=req.query
+const query={
+    jobname:{$regex:`${q||""}`,$options:"i"},
+    workingHoursAvg:{$gte:workingHoursMin||0,$lte:workingHoursMax||100},
+}
+console.log(educationLevel?.split(","))
+if(educationLevel?.split(",").filter(level=>level.trim()).length>0)
+query.educationLevel= {$in:educationLevel.split(",")} 
+console.log(query)
+
+
+const jobs=await Job.find(query).lean()
 if(!jobs)
 return res.status(400).json({error:true,message:"no jobs found",data:null})
+
 return res.status(200).json({error:false,message:"",data:jobs})
 }
 const addJob=async(req,res)=>{

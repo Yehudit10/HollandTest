@@ -1,6 +1,8 @@
 const express=require("express")
 const jobController=require("../Controllers/jobController")
+const verifyJWT=require("../middleware/verifyJWT")
 const router=express.Router()
+router.use(verifyJWT)
 router.get("/",jobController.getAllJobs)
 router.post("/",jobController.addJob)
 router.put("/",jobController.updateJob)

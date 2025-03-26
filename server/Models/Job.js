@@ -7,7 +7,7 @@ const jobSchema=new mongoose.Schema({
     description:{
         type:String,
         required:true
-    },
+    },   
     salaryAvg:{
         type:Number,
     },
@@ -16,7 +16,7 @@ const jobSchema=new mongoose.Schema({
     },
     educationLevel:{
 type:String,
-enum:["","",""]
+enum:["ללא תעודת בגרות","תעודת בגרות","על-תיכוני","תואר אקדמאי"]
     },
     relatedTypes:{
         type:[mongoose.Schema.Types.ObjectId],

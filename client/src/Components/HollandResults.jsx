@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useParams } from "react-router-dom";
 import HollandType from './HollandType';
 import Artistic from '../images/Artistic.png';
 import Realistic from '../images/Realistic.png';
@@ -13,20 +13,42 @@ import Sidebar from './SideBar';
 import html2canvas from 'html2canvas';
 import { jsPDF } from "jspdf";
 import { Button } from 'primereact/button';
+import { useGetSentencesQuery } from '../features/hollandTest/result/resultApiSlice';
+import { useGetTypesQuery } from '../features/types/typeApiSlice';
+import Loading from './Loading';
 const HollandResults = () => {
+    const{resultId}=useParams()
+    const {data:sentencesData,isError,isSuccess:sentencesIsSuccess,isLoading:sentencesIsLoading}=useGetSentencesQuery(resultId)
+    const {data:typesData,isSuccess:typesIsSuccess,isLoading:typesIsLoading}=useGetTypesQuery()
+    let result
+    const [sumAll,setSumAll]=useState(1)
+    const [sums,setSums]=useState({R:0,I:0,A:0,S:0,E:0,C:0})
+    useEffect(()=>{
+        if(sentencesIsSuccess)
+        {
+        result=sentencesData.data.result
+        console.log(result)
+        for(const type in result)
+        {setSums({...sums,[type]:sums[type]+result[type].interest+result[type].work+result[type].capability})
+           
+console.log(type)}
+            setSumAll(Object.values(sums).reduce((acc, val) => acc + val, 0))
+        console.log(result,sums,sumAll)}
+    },[sentencesIsSuccess])
+    
     const contentRef=useRef()
-
 const downloadPDF=async()=>{
 const page=contentRef.current
 const canvas=await html2canvas(page,{scale:1.5})
 const imgData = canvas.toDataURL("image/jpeg", 0.6);
         const pdf = new jsPDF("p", "mm", "a4");
-        const imgWidth = 210; // A4 width in mm
+        const imgWidth = 210; 
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
         pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
         pdf.save("download.pdf"); 
     }
+    if(sentencesIsLoading||typesIsLoading)
+    return <Loading/>
     return (
         <div ref={contentRef} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
      <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', paddingLeft: '20px' }}>
@@ -72,12 +94,12 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
                 </div>
                 <div style={{ flexGrow: 1, maxWidth: '300px', alignSelf: 'flex-start' }}>
                     <h2>ההתאמה שלך לכל טיפוס</h2>
-                    <HollandMatch title="אומנותית" percentage={77.5} />
-                    <HollandMatch title="ביצועית" percentage={0} />
-                    <HollandMatch title="חברתית" percentage={77.5} />
-                    <HollandMatch title="חקרנית" percentage={77.5} />
-                    <HollandMatch title="יזמית" percentage={77.5} />
-                    <HollandMatch title="מנהלית" percentage={77.5} />
+                    <HollandMatch title="אומנותית" percentage={sums?.A/sumAll} />
+                    <HollandMatch title="ביצועית" percentage={sums?.R/sumAll} />
+                    <HollandMatch title="חברתית" percentage={sums?.S/sumAll} />
+                    <HollandMatch title="חקרנית" percentage={sums?.I/sumAll} />
+                    <HollandMatch title="יזמית" percentage={sums?.C/sumAll} />
+                    <HollandMatch title="מנהלית" percentage={sums?.E/sumAll} />
                     <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
                         <button data-html2canvas-ignore="true" style={{
                             padding: '10px 20px',

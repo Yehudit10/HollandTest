@@ -1,9 +1,9 @@
 const Type=require("../Models/Type")
 const getAllTypes=async(req,res)=>{
-const Types=await Type.find().lean()
-if(!Types)
+const types=await Type.find().lean()
+if(!types)
 return res.status(400).json({error:true,message:"no Types found",data:null})
-return res.status(200).json({error:false,message:"",data:Types})
+return res.status(200).json({error:false,message:"",data:types})
 }
 const getTypeById=async(req,res)=>{
     const {_id}=req.params

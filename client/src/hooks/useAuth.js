@@ -5,9 +5,7 @@ const useAuth=()=>{
 const token=useSelector(selectToken)
 if(token)
 {
-    console.log(token)
     const decodedUser=jwtDecode(token)
-    console.log(decodedUser)
     const {username,role,profil}=decodedUser
     return {username,role,profil}
 }

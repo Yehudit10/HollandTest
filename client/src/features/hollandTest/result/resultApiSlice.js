@@ -1,0 +1,21 @@
+import apiSlice from "../../../app/apiSlice"
+const resultApiSlice=apiSlice.injectEndpoints({
+    endpoints:(build)=>({
+        getSentences:build.query({
+        query:(id)=>({
+            url:`/api/results/${id}`,
+        }),
+        }),
+        addResult:build.mutation({
+            query:(test)=>({
+                url:"/api/results",
+                method:'POST',
+                body:test
+            }),
+            
+        })
+      
+    })
+})
+export const{useAddResultMutation,useGetSentencesQuery}=resultApiSlice
+export default resultApiSlice

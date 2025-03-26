@@ -1,12 +1,20 @@
 const User=require('../Models/User')
-const UncompletedTest=require("../Models/UncompletedTest")
 const Result=require('../Models/Result')
-const addResult=async()=>{
-    const {userId}=req.body
-    const user=await User.findById(userId).lean()
-    if(!user)
-    return res.status(400).json({error:true,message:"user not found",data:null})
-    const test=user.currentTest.populate('cpatherID','type')
+const Type=require("../Models/Type")
+const Test=require("../Models/Test")
+const addResult=async(req,res)=>{
+    // const {userId}=req.body
+    // const user=await User.findById(userId).lean()
+    // if(!user)
+    // return res.status(400).json({error:true,message:"test not found",data:null})
+    // const test=user.currentTest.populate('cpatherID','type')
+     const {testId}=req.body
+     const test=await Test.findById(testId).lean().populate("answers.questionType").populate("answers.questionChapter")
+     if(!test) 
+       return res.status(400).json({error:true,message:"test not found",data:null})
+if(test.userId!=req.user._id)//middleware???????????????????????
+return res.status(401).json({error:true,message:"Unauthorized",data:null})
+
     const result={
         R: { work: 0, capability: 0, interest: 0, select: false },
         I: { work: 0, capability: 0, interest: 0, select: false },
@@ -15,13 +23,14 @@ const addResult=async()=>{
         E: { work: 0, capability: 0, interest: 0, select: false },
         C: { work: 0, capability: 0, interest: 0, select: false },
     }
-    const sumResult={}
+    const sumResult={R:0,I:0,A:0,S:0,E:0,C:0}
     let sumAll=0;
-    test.forEach((answer)=>{
-        result[answer.questionType.type][answer.questionChapter.chapterName]+=answer/4
-        sumResult[answer.questionType.type]+=answer/4
-        sumAll+=answer/4
+    (test.answers).forEach((answer)=>{
+        result[answer.questionType.type][answer.questionChapter.chapterName]+=answer.questionResult/4
+        sumResult[answer.questionType.type]+=answer.questionResult/4
+        sumAll+=answer.questionResult/4
     })
+   
     ///select the index
     //const categories = ['R', 'A', 'I', 'S', 'E', 'C']
     // categories.forEach((category)=>{
@@ -50,17 +59,26 @@ highInNot=sumResult[category]
        
    // })
     temp.forEach((category)=>{
-        if(sumResult[category]-highInNot>1&&sumResult[category]/sumAll-highInNotsumAll>=2)
+        if(sumResult[category]-highInNot>1&&sumResult[category]/sumAll-highInNot/sumAll>=2)
         result[category].select=true
     })
-    const newResult=await Result.create(result)
+    console.log(result)
+    const newResult=await Result.create({userId:test.userId,result})
     if(!newResult)
     return res.status(400).json({error:true,message:"create failed",data:null})
-
+    return res.status(201).json({error:false,message:null,data:newResult})
 }
-const getResultsWithSentences=async()=>{
+const getResultsWithSentences=async(req,res)=>{
     const sentences=[]
-    const result=await Result.findById()
+    const {id}=req.params
+    if(!id)
+        return res.status(400).json({error:true,message:"id is required",data:null})
+    const userResult=await Result.findById(id)
+    if(!userResult)
+        return res.status(400).json({error:true,message:"test not found",data:null})
+    const {result,userId}=userResult
+    if(userId!=req.user._id)//middleware???????????????????????????
+    return res.status(401).json({error:true,message:"Unauthorized",data:null})
     const selected=Object.entries(result).filter(([category,score])=>score.select)
     const sums=Object.values(result).reduce((acc,{interest,capability,work})=>{
         acc.sumI+=interest
@@ -70,14 +88,21 @@ const getResultsWithSentences=async()=>{
     },{sumI:0,sumC:0,sumW:0})
     const {sumI,sumC,sumW}=sums
  const sumAll=sumI+sumC+sumW
- const typesMap={
-    C: "מנהלי",
-    E: "יזמי",
-    S: "חברתי",
-    A: "אמנותי",
-    I: "חקרני",
-    R: "ביצועי"
-}
+ const types=await Type.find().lean()
+if(!types)
+    return res.status(400).json({error:true,message:"types not found",data:null})
+const typesMap={}
+types.forEach(({type,title})=>{
+    typesMap.type=title
+ })
+//  {
+//     C: "מנהלי",
+//     E: "יזמי",
+//     S: "חברתי",
+//     A: "אמנותי",
+//     I: "חקרני",
+//     R: "ביצועי"
+// }
     let sw=0,d=0
     const differences = {
         R: { I: 1, A: 4, S: 4, E: 4, C: 4 },
@@ -95,13 +120,13 @@ const getResultsWithSentences=async()=>{
         case 4:sw=0;break;
     
     }
-    if (sw >= 0.75 && sw < 1)
+if (sw >= 0.75 && sw < 1)
 sentences.push("הסגנונות המאפיינים אותך קרובים זה לזה, דבר שעשוי להעיד על גיבוש בנוגע לצרכייך האישיים בעולם התעסוקה")
-else if (SW >= 0.4 && SW < 0.75)
+else if (sw >= 0.4 && sw < 0.75)
 sentences.push("קיימת קרבה מסויימת בין תחומי העניין שנבחרו");
-else if (SW >= 0.25 && SW < 0.4)
+else if (sw >= 0.25 && sw < 0.4)
 sentences.push("הסגנונות המאפיינים אותך משקפים חפיפה מועטה, דבר המעיד על פיזור מסוים בבחירת תחומי העניין ואי-בהירות בהעדפותיך.")
-else if (SW >= 0 && SW < 0.25)
+else if (sw >= 0 && sw < 0.25)
 sentences.push("הסגנונות המאפיינים אותך שונים זה מזה באופן משמעותי, מה שעשוי להקשות על זיהוי כיוון מקצועי ברור.")
 
 
@@ -146,27 +171,9 @@ senetences.push("בתחום ה"+category+"")
 senetences.push("בתחום ה"+category+"")
 senetences.push("בתחום ה"+category+"")
 
-
-
-
-
 })
-
-
-
-
-
-
-
+return res.status(200).json({error:false,message:null,data:{result,sentences}})
 
 }
 
-
-
-
-
-
-
-
-
-}
+module.exports={addResult,getResultsWithSentences}

@@ -17,9 +17,9 @@ const OccupationCard2 = ({ title, description, educationLevel,salaryAvg,workingH
           <p style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>{description}</p>
           <div style={{ display: 'flex', alignItems: 'center' }}>
           <ul style={{marginRight:'5px',display: 'flex'}}>
-        <li style={{ fontSize: '12px' ,paddingRight:'5px',fontWeight:'bold'}}>שכר חודשי ממוצע: <span style={{ fontSize: '12px',fontWeight:'initial',paddingLeft:'20px' }}>{salaryAvg}</span></li>
-          <li style={{ fontSize: '12px' ,paddingRight:'5px',fontWeight:'bold'}}>היקף שעות עבודה שבועי: <span style={{ fontSize: '12px',fontWeight:'initial',paddingLeft:'20px' }}>{salaryAvg}</span></li>
-          <li style={{ fontSize: '12px',paddingRight:'5px',fontWeight:'bold' }}>השכלה נדרשת: <span style={{ fontSize: '12px',fontWeight:'initial',paddingLeft:'20px' }}>{educationLevel}</span></li></ul>
+        <li style={{ fontSize: '12px' ,paddingRight:'5px',fontWeight:'bold'}}>שכר חודשי ממוצע: <span style={{ fontSize: '12px',fontWeight:'initial',paddingLeft:'20px' }}>{salaryAvg||"אין מידע"}</span></li>
+          <li style={{ fontSize: '12px' ,paddingRight:'5px',fontWeight:'bold'}}>היקף שעות עבודה שבועי: <span style={{ fontSize: '12px',fontWeight:'initial',paddingLeft:'20px' }}>{workingHoursAvg||"אין מידע"}</span></li>
+          <li style={{ fontSize: '12px',paddingRight:'5px',fontWeight:'bold' }}>השכלה נדרשת: <span style={{ fontSize: '12px',fontWeight:'initial',paddingLeft:'20px' }}>{educationLevel||"אין מידע"}</span></li></ul>
            
           </div>
          

@@ -5,7 +5,6 @@ import { Button } from "primereact/button";
 import { Password } from "primereact/password";
 import { Avatar } from "primereact/avatar";
 import { FileUpload } from 'primereact/fileupload';
-import './Profil.css'
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";

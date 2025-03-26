@@ -31,7 +31,6 @@ navigate("/login")
   },[isSuccess])
   
   useEffect(() => {
-    console.log(image)
     if (!image) {
         setPreview(undefined)
         return

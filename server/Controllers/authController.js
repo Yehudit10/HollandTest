@@ -12,6 +12,7 @@ const login = async (req, res) => {
     if (!match)
         return res.status(401).send({ error: true, massage: "Unauthorized", data: null })
     const userDetails = {
+        _id:foundUser._id,
         username: foundUser.username,
         role: foundUser.role,
         profil:foundUser.profil,
@@ -37,11 +38,12 @@ const refresh = async (req, res) => {
             return res.status(403).send({ error: true, massage: "Unauthorized", data: null })
         const foundUser = await User.findOne({ username: decode.username }).lean()
         const userDetails = {
+            _id:foundUser._id,
             username: foundUser.username,
             profil:foundUser.profil,
             role: foundUser.role
         }
-        const accessToken = jwt.sign(userDetails, process.env.ACCESS_TOKEN, { expiresIn: '30s' })
+        const accessToken = jwt.sign(userDetails, process.env.ACCESS_TOKEN, { expiresIn: '15m' })
         res.json({ accessToken })
     })
 

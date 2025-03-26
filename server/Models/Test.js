@@ -2,8 +2,13 @@ const mongoose  = require("mongoose")
 const Type=require("./Type")
 const Question=require("./Question")
 const Chapter=require("./Chapter")
-const uncompletedTestScheme=new mongoose.Schema({
-   userId:{type:mongoose.Schema.Types.ObjectId},
+const User=require("./User")
+const testScheme=new mongoose.Schema({
+   userId:{
+      type:mongoose.Schema.Types.ObjectId,
+      required:true,
+      ref:'User'
+   },
    // answers:[
    //    {
    //    // questionID:{type:mongoose.Schema.Types.ObjectId,required:true,ref:'Question'},
@@ -14,12 +19,11 @@ const uncompletedTestScheme=new mongoose.Schema({
    //       type:String,enum:['R','I','A','S','E','C'],
    //    required:true
    //    },
-   //    questionresult:{type:Number,min:1,max:5,required:true}
+   //    questionresult:{type:Number   ,min:1,max:5,required:true}
    // }
    // ]
    answers:[
       {
-      // questionID:{type:mongoose.Schema.Types.ObjectId,required:true,ref:'Question'},
       questionChapter:{  type:mongoose.Schema.ObjectId,
         ref:'Chapter',
          required:true},
@@ -28,12 +32,12 @@ const uncompletedTestScheme=new mongoose.Schema({
          ref:'Type',
       required:true
       },
-      questionresult:{type:Number,min:1,max:5,required:true}
+      questionResult:{type:Number,min:0,max:4,required:true}
    }
    ]
-,
-currentQuestion:
-{type:mongoose.Schema.Types.ObjectId,required:true,ref:'Question'},
+// ,
+// currentQuestion:
+// {type:mongoose.Schema.Types.ObjectId,required:true,ref:'Question'},
 // result:
 // [{type:{type:mongoose.Schema.Types.ObjectId,required:true,ref:'Type'},
 // activitysum:{type:Number,required:true},
@@ -45,4 +49,4 @@ currentQuestion:
 {timestamps:true})
 
 //module.exports=uncompleteTestScheme
-module.exports=mongoose.model('UncompletedTest',uncompletedTestScheme)
+module.exports=mongoose.model('Test',testScheme)

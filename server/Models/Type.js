@@ -1,6 +1,6 @@
 const mongoose  = require("mongoose")
 
-const TypeScheme=new mongoose.Schema({
+const typeScheme=new mongoose.Schema({
    type:{
       type:String,
     enum:['R','I','A','S','E','C'],
@@ -13,9 +13,12 @@ requird:true
    description:{
     type:String,
     required:true
+   },
+   image:{
+      type:String,
+      required:true
    }
-   
 
 },{})
 
-module.exports=mongoose.model('Type',TypeScheme)
+module.exports=mongoose.model('Type',typeScheme)

@@ -19,12 +19,11 @@ const navigate=useNavigate()
 useEffect(()=>{
 if(isSuccess)
 {
-  console.log(data)
 navigate("/home")}
 },[isSuccess])
   const onSubmit = (data) => {
     login(data)
-    console.log(data)
+  
   };
 
   return (
