@@ -25,7 +25,7 @@ navigate("/login")},[isSuccess])
     const items = [
         { label: 'שאלון הכוונה', command:()=>{ navigate("holland")} },
         { label: 'מאגר הלימודים' },
-        { label: 'מאגר העיסוקים' },
+        { label: 'מאגר העיסוקים',command:()=>{navigate("jobs")} },
     ];
 const {profil}=useAuth()
     const end = (
@@ -43,7 +43,7 @@ const {profil}=useAuth()
             <OverlayPanel ref={profileMenu} dismissable>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                     <Button label="Log Out" onClick={handleLogout} icon="pi pi-sign-out" className="p-button-text" />
-                    <Button label="Switch Account" onClick={()=>{}}icon="pi pi-user-edit" className="p-button-text" />
+                    <Button label="Edit profile" onClick={()=>navigate("edit")}icon="pi pi-user-edit" className="p-button-text" />
                 </div>
             </OverlayPanel>
         </div>

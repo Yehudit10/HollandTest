@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Slider } from "primereact/slider";
@@ -12,18 +12,24 @@ import { InputIcon } from "primereact/inputicon";
 import { InputNumber } from "primereact/inputnumber"
 import { InputSwitch } from 'primereact/inputswitch';
 import { Checkbox } from "primereact/checkbox";
-import {  useSearchParams } from "react-router-dom";
+import {  useNavigate, useSearchParams } from "react-router-dom";
         
-const FilterSidebar2 = () => {
-
+const FilterSidebar3 = () => {
+const navigate=useNavigate()
   const [searchParams,setSearchParams]=useSearchParams()
+  const [filter,setFilter]=useState({
+    salaryRanges:[],
+    workingHoursMin:0,
+    workingHoursMax:50,
+    educationLevel:[]
+  })
+  
   const [range, setRange] = useState([1,9]);
-  const handleFilterChange = (name,value) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set(name,value);
-    setSearchParams(newSearchParams); 
-    
+  const handleFilterChange = () => {
+    const newSearchParams = new URLSearchParams(filter).toString();
+     navigate(`?${newSearchParams}`)
   };
+  useEffect(handleFilterChange,[filter])
   const handleFilterAppend = (name,value) => {
     const newSearchParams = new URLSearchParams(searchParams);
     const newVal=newSearchParams.get(name)?.split(',')||[]
@@ -32,7 +38,6 @@ const FilterSidebar2 = () => {
     setSearchParams(newSearchParams); 
   };
 
-
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [toggles, setToggles] = useState({
     remote: false,
@@ -40,11 +45,7 @@ const FilterSidebar2 = () => {
     internships: false,
   });
 
-  const categories = [
-    { label: "עוד לא החלטתי", value: "undecided" },
-    { label: "הנדסה", value: "engineering" },
-    { label: "מחשבים", value: "computers" },
-  ];
+ 
 
   return (
     <div className="filter-sidebar">
@@ -53,7 +54,8 @@ const FilterSidebar2 = () => {
           <IconField  iconPosition="left">
                 <InputIcon className="pi pi-search"> </InputIcon>
                 <InputText className="input-search" onChange={
-                  (e)=>{handleFilterChange("q",e.target.value)}
+                  (e)=>{setFilter({...filter,q:e.target.value})
+                }
                   } style={{direction:'rtl'}} placeholder="במה היית רוצה לעסוק?" />
             </IconField>
 {/* <Divider/> */}
@@ -80,7 +82,7 @@ const FilterSidebar2 = () => {
           <ToggleButton
             checked={searchParams.getAll("salaryRanges")?.includes("0,7000")}
             onChange={(e) =>{
-          handleFilterAppend("salaryRanges",[0,7000])
+          setFilter({...filter,salaryRanges:[...filter.salaryRanges,[0,7000]]})
             }}
             onLabel="עד ₪7000"
             offLabel="עד ₪7000"
@@ -114,9 +116,6 @@ const FilterSidebar2 = () => {
             offLabel="מעל 18000₪"
           />
         </div>
-          {/* <Button label="מעל 10,000" className="p-button-outlined" />
-          <Button label="מעל 8,000" className="p-button-outlined" />
-          <Button label="מעל 5,000" className="p-button-outlined" /> */}
         </div>
       </div>
       <Divider/>
@@ -141,70 +140,68 @@ const FilterSidebar2 = () => {
         <h6 className="text-second">כמה שעות עבודה בשבוע? גררו את העיגולים עד שתגיעו לטווח הרצוי. הממוצע הוא כ-41</h6>
         <Slider
         
-          value={searchParams.get("workingHours")?.split(',')}
-          onChange={(e)=>{handleFilterChange("workingHours",e.value)}}
+          value={[filter.workingHoursMin,filter.workingHoursMax]}
+          onChange={(e)=>{
+            setFilter({...filter,workingHoursMin:e.value[0],workingHoursMax:e.value[1]})
+            }}
           range
           min={0}
           max={50}
         />
-        {/* <p className="text-center">{searchParams.get("workingHours")} - {searchParams.get("workingHours")[1]}</p> */}
+        <p className="text-center">{filter.workingHoursMin} - {filter.workingHoursMax}</p>
       </div>
-     
-      <Divider/>
-      {/* Search by Benefits */}
-      <div className="mb-3">
-        <h5 className="text-title">חיפוש לפי הכנסה</h5>
-        <div className="flex flex-wrap gap-2">
-          <Button label="ביטוח בריאות" className="p-button-outlined" />
-          <Button label="רכב צמוד" className="p-button-outlined" />
-          <Button label="הכשרה מקצועית" className="p-button-outlined" />
-        </div>
-      </div>
-      <Divider/>
-      {/* Toggle Buttons */}
-      <div className="mb-3">
-        <h5 className="text-title">נכונות להעדפות אחרונות</h5>
+      <div className="mb-3" >
+        <h5 className="text-title">חיפוש לפי השכלה</h5>
+        <h6 className="text-second">לחצו על כל רמות ההשכלה הרלוונטיות לכם. כדאי לבחור גם השכלה נמוכה משלכם</h6>
+
+        <div >
+          
         <div className="flex flex-column gap-2">
           <ToggleButton
-            checked={toggles.remote}
-            onChange={(e) => setToggles({ ...toggles, remote: e.value })}
-            onLabel="אפשרות עבודה מהבית"
-            offLabel="אפשרות עבודה מהבית"
-            className="w-full"
+            checked={filter.educationLevel.includes("תואר אקדמאי")}
+            onChange={(e) =>{
+          setFilter({...filter,educationLevel:[...filter.educationLevel,"תואר אקדמאי"]})
+            }}
+            onLabel="תואר אקדמאי"
+            offLabel="תואר אקדמאי"
           />
           <ToggleButton
-            checked={toggles.partTime}
-            onChange={(e) => setToggles({ ...toggles, partTime: e.value })}
-            onLabel="עבודה במשרה חלקית"
-            offLabel="עבודה במשרה חלקית"
-            className="w-full"
+            checked={filter.educationLevel.includes("על תיכונית")}
+            onChange={(e) =>{
+          setFilter({...filter,educationLevel:[...filter.educationLevel,"על תיכונית"]})
+            }}
+            onLabel="על תיכונית"
+            offLabel="על תיכונית"
           />
           <ToggleButton
-            checked={toggles.internships}
-            onChange={(e) => setToggles({ ...toggles, internships: e.value })}
-            onLabel="התמחות לסטודנטים"
-            offLabel="התמחות לסטודנטים"
-            className="w-full"
+            checked={filter.educationLevel.includes("תעודת בגרות")}
+            onChange={(e) =>{
+          setFilter({...filter,educationLevel:[...filter.educationLevel,"תעודת בגרות"]})
+            }}
+            onLabel="תעודת בגרות"
+            offLabel="תעודת בגרות"
+          />
+           <ToggleButton
+            checked={filter.educationLevel.includes("ללא תעודת בגרות")}
+            onChange={(e) =>{
+          setFilter({...filter,educationLevel:[...filter.educationLevel,"ללא תעודת בגרות"]})
+            }}
+            onLabel="ללא תעודת בגרות"
+            offLabel="ללא תעודת בגרות"
           />
         </div>
+         
+        </div>
       </div>
+     
+    
+      {/* Toggle Buttons */}
+      
       <Divider/>
-      {/* Skills Tags */}
-      <div className="mb-3">
-        <h5 className="text-title">כישורים</h5>
-        <Chips
-          value={selectedFilters}
-          onChange={(e) => setSelectedFilters(e.value)}
-          separator=","
-          placeholder="הוסף כישור"
-          className="w-full"
-        />
-      </div>
-      <Divider/>
-      {/* Submit Button */}
-      <Button label="הצג תוצאות מתאימות" className="p-button-primary w-full" />
+     
+      {/* <Button label="הצג תוצאות מתאימות" className="p-button-primary w-full" /> */}
     </div>
   );
 };
 
-export default FilterSidebar2;
+export default FilterSidebar3;

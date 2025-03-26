@@ -1,16 +1,16 @@
-import apiSlice from "../../app/apiSlice"
+import apiSlice from "../../../app/apiSlice"
 const questionApiSlice=apiSlice.injectEndpoints(
     {
         endpoints:(build)=>({
             getQuestions:build.query({
             query:()=>({
-                url:"/api/question"
+                url:"/api/questions"
             }),
             providesTags:['Question']
             }),
             addQuestion:build.mutation({
                 query:(question)=>({
-                    url:"/api/question",
+                    url:"/api/questions",
                     method:'POST',
                     body:question
                 }),
@@ -18,7 +18,7 @@ const questionApiSlice=apiSlice.injectEndpoints(
             }),
             updateQuestion:build.mutation({
                 query:(question)=>({
-                    url:"/api/question",
+                    url:"/api/questions",
                     method:'PUT',
                     body:question
                 }),
@@ -27,7 +27,7 @@ const questionApiSlice=apiSlice.injectEndpoints(
             }),
             deleteQuestion:build.mutation({
                 query:(question)=>({
-                    url:"/api/question",
+                    url:"/api/questions",
                     method:'DELETE',
                     body:question
                 }),

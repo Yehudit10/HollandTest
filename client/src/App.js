@@ -7,8 +7,7 @@ import HollandPages from './Components/HollandPages';
 import HollandPage1 from './Components/HollandPage1';
 import { Outlet, Route, Router, Routes } from 'react-router-dom';
 
-import Question from './features/questions/Question';
-
+import Question from "./features/hollandTest/questions/Question"
 import HollandResults from './Components/HollandResults';
 import NavBar from './Components/NavBar';
 import DynamicPieChart from './Components/Pie';
@@ -27,53 +26,59 @@ import OccupationCard from './Components/OccupationCard';
 import OccupationCard2 from './Components/OccupationCard2';
 import Dashboard from './Components/AdminDashboard';
 import JobList from './features/jobs/JobsList';
+import HomePage from './Components/HomePage';
+import Profil from './features/users/Profil';
 
 
 function App() {
   return (
     <div className="App">
-  {/* <Upload/> */}
+      {/* <Upload/> */}
 
 
-   <Routes>
-    <Route path="/" element={<>home page</>}/>
-     <Route path="/login" element={<Login/>}/>
-    <Route path="/signup" element={<SignUp/>}/>
-    <Route path="/" element={<PersistLogin/>}>
-    <Route  element={<RequireAuth allowedRoles={['user','admin']}/>}>
-    <Route path="home" element={<><NavBar/><Outlet/></>}>
-      <Route path="holland" element={<Outlet/>}>
-        <Route index element={<HollandPages/>}/>
-      <Route path="holland-info" element={<HollandInfoPage />} />
-      <Route path="test" element={<Question/>}/> 
-      <Route path="test/result" element={<HollandResults/>}/>
-      </Route></Route>
-    </Route>
-    </Route>
-    
-  </Routes> 
-  {/* <NavBar/>
+      <Routes>
+        <Route path="/" element={<HomePage/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<PersistLogin />}>
+          <Route element={<RequireAuth allowedRoles={['user', 'admin']} />}>
+            <Route path="home" element={<><NavBar /><Outlet /></>}>
+                <Route path="edit" element={<Profil/>}/>
+              <Route path="holland" element={<Outlet />}>
+                <Route index element={<HollandPages />} />
+                <Route path="holland-info" element={<HollandInfoPage />} />
+                <Route path="test" element={<Question/>} />
+                <Route path="test/result/:resultId" element={<HollandResults />} />
+              </Route>
+              <Route path="jobs" element={<JobList/>}/>
+              
+              </Route>
+          </Route>
+        </Route>
+
+      </Routes>
+      {/* <NavBar/>
   <FilterSidebar/> */}
- {/* <HollandResults2/> */}
- {/* <SubjectsList/> */}
-  {/* <TestProgressChart /> */}
-{/* <DynamicPieChart/> */}
-{/* <Question/> */}
-{/* <HollandResults/> */}
-{/* <HollandPages/> */}
+      {/* <HollandResults2/> */}
+      {/* <SubjectsList/> */}
+      {/* <TestProgressChart /> */}
+      {/* <DynamicPieChart/> */}
+      {/* <Question/> */}
+      {/* <HollandResults/> */}
+      {/* <HollandPages/> */}
 
-{/* <HollandResults2/> */}
+      {/* <HollandResults2/> */}
 
       {/* <HollandInfoPage/> */}
-   
-    {/* <HollandPage1/> */}
-    {/* <RatingPage/> */}
-    {/* <Login/> */}
-    {/* <UserRegistrationChart/> */}
-    {/* <UsersList/> */}
-    {/* <AdminDashboard/> */}
-  {/* <JobList/> */}
-                    {/* <Dashboard/> */}
+
+      {/* <HollandPage1/> */}
+      {/* <RatingPage/> */}
+      {/* <Login/> */}
+      {/* <UserRegistrationChart/> */}
+      {/* <UsersList/> */}
+      {/* <AdminDashboard/> */}
+      {/* <JobList/> */}
+      {/* <Dashboard/> */}
     </div>
   );
 }

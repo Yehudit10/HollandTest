@@ -8,7 +8,7 @@ const userApiSlice=apiSlice.injectEndpoints(
                url:"/api/users" 
                
             }),
-            providesTags:['Users']
+            providesTags:['User']
             
         })
         

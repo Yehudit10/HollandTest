@@ -1,6 +1,8 @@
 const express=require("express")
 const questionController=require("../Controllers/questionController")
+const verifyJWT=require("../middleware/verifyJWT")
 const router=express.Router()
+router.use(verifyJWT)
 router.get("/",questionController.getAllQuestions)
 router.post("/",questionController.addQuestion)
 router.put("/",questionController.updateQuestion)

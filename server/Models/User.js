@@ -1,6 +1,7 @@
 const mongoose  = require("mongoose")
 const Result=require("./Result")
-const UncompletedTest=require("./UncompletedTest")
+const UncompletedTest=require("./Test")
+const Job=require("./Job")
 const UserScheme=new mongoose.Schema({
    username:{type:String,
     required:true,
@@ -27,6 +28,10 @@ unique:true},
         tolowercase:true,
         required:true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']},
+    favoraites:[{
+       type:mongoose.Schema.Types.ObjectId,
+        ref:'Job'
+    }]
     //currentTest:UncompletedTest,
     // testsHistory:[Result]
 

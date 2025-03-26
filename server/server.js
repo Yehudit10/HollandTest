@@ -13,10 +13,12 @@ app.use(express.json())
 app.use(express.static("public"))
 app.use("/api/users",require("./Routes/userRoutes"))
 app.use("/api/auth",require("./Routes/authRoutes"))
-app.use("/api/question",require("./Routes/questionRoutes"))
-app.use("/api/chapter",require("./Routes/chapterRoutes"))
-app.use("/api/job",require("./Routes/jobRoute"))
-
+app.use("/api/questions",require("./Routes/questionRoutes"))
+app.use("/api/chapters",require("./Routes/chapterRoutes"))
+app.use("/api/jobs",require("./Routes/jobRoutes"))
+app.use("/api/results",require("./Routes/resultRoutes"))
+app.use("/api/tests",require("./Routes/testRoutes"))
+app.use("/api/types",require("./Routes/typeRoutes"))
 connectToDB()
 mongoose.connection.once('open',()=>{
     app.listen(PORT,()=>{
