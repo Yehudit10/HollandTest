@@ -9,7 +9,6 @@ jwt.verify(token,process.env.ACCESS_TOKEN,(err,decode)=>{
     if(err)
     return res.status(403).json({error:true,message:"Forbidden",data:null})
     req.user=decode  
-    console.log(decode)
 })
 next()
 }

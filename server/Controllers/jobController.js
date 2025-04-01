@@ -1,17 +1,14 @@
 const Job=require("../Models/Job")
 const getAllJobs=async(req,res)=>{
-    console.log(req.query)
-    const {q,workingHoursMin,workingHoursMax,educationLevel}=req.query
+    const {q,minWorkingHours,maxWorkingHours,educationLevel,minSalary,maxSalary}=req.query 
 const query={
     jobname:{$regex:`${q||""}`,$options:"i"},
-    workingHoursAvg:{$gte:workingHoursMin||0,$lte:workingHoursMax||100},
-}
-console.log(educationLevel?.split(","))
-if(educationLevel?.split(",").filter(level=>level.trim()).length>0)
+    workingHoursAvg:{$gte:(minWorkingHours||0),$lte:(maxWorkingHours||100)},
+    salaryAvg:{$gte:(minSalary||0),$lte:(maxSalary||1000000)}
+} 
+if(educationLevel?.split(",").filter(level=>level.trim())?.length>0)
 query.educationLevel= {$in:educationLevel.split(",")} 
-console.log(query)
-
-
+ 
 const jobs=await Job.find(query).lean()
 if(!jobs)
 return res.status(400).json({error:true,message:"no jobs found",data:null})
@@ -33,17 +30,15 @@ const updateJob=async(req,res)=>{
     if(!_id||!jobname||!description||!relatedTypes)
     return res.status(400).json({error:true,message:"you are missing some required fields",data:null})
     const job=await Job.findById(_id).exec()
- 
     job.jobname=jobname
     job.description=description
     job.relatedTypes=relatedTypes
-   job.salaryAvg=salaryAvg
-     job.workingHoursAvg=workingHoursAvg
-     job.educationLevel=educationLevel
+    job.salaryAvg=salaryAvg
+    job.workingHoursAvg=workingHoursAvg
+    job.educationLevel=educationLevel
     const updatedJob=await job.save()
     if(!updatedJob)
     return res.status(400).json({error:true,message:"update failed",data:null})
-
     return res.status(200).json({error:false,message:null,data:updatedJob})
 }
 const deleteJob=async(req,res)=>{
@@ -57,6 +52,5 @@ const deleteJob=async(req,res)=>{
     if(!deletedJob)
         return res.status(400).json({error:true,message:"delete failed",data:null})
         return res.status(200).json({error:false,message:null,data:deletedJob})
-    
    }
 module.exports={getAllJobs,updateJob,addJob,deleteJob}

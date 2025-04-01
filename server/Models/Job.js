@@ -18,10 +18,14 @@ const jobSchema=new mongoose.Schema({
 type:String,
 enum:["ללא תעודת בגרות","תעודת בגרות","על-תיכוני","תואר אקדמאי"]
     },
+    // relatedTypes:{
+    //     type:[mongoose.Schema.Types.ObjectId],
+    //     required:true,
+    //     ref:'Type'
+    // },
     relatedTypes:{
-        type:[mongoose.Schema.Types.ObjectId],
-        required:true,
-        ref:'Type'
+        type:[{type:{type:mongoose.Schema.Types.ObjectId,ref:'Type',required:true},match:{type:Number,required:true,min:0,max:100}}],
+        required:true
     }
 
 },{})

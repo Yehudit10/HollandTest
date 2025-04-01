@@ -11,8 +11,9 @@
     margin-right: 5%;
     margin-top: 2%;
     border-radius: 10px;
-    z-index: 999;
-    overflow: visible;
+    /* z-index: 999; */
+    /* overflow: visible; */
+    height: 100%;
   }
   
   /* Search Box */
@@ -41,9 +42,6 @@
     box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5);
   }
   
-  /* Category Selection */
-
-
 
 
   .text-title {
@@ -110,34 +108,9 @@
    
   }
   
-  /* Button Styling (Salary Filters & Other Buttons) */
-  .p-button-outlined {
-    border-radius: 8px;
-    padding: 6px 12px;
-    margin: 5px 0;
-    font-weight: normal;
-    color: #333;
-    border: 1px solid #d1d5db;
-    background-color: transparent;
-    transition: background-color 0.2s ease;
-  }
+ 
   
-  .p-button-outlined:hover {
-    background-color: #f3f4f6;
-  }
-  
-  /* Slider Styling */
-  .p-slider {
-    width: 100%;
-  }
-  
-  .p-slider .p-slider-handle {
-    width: 12px;
-    height: 12px;
-    background-color: #60A5FA;
-  }
-  
-  /* Toggle Button Styling */
+
   .p-togglebutton {
     width: 48%;
     margin:1px;
@@ -149,19 +122,6 @@
     font-size: x-small;
   }
   
-  /* Chips (Skills Tags) */
-  .p-chips {
-    width: 100%;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    padding: 8px;
-  }
-  
-  .p-chips .p-chip {
-    background-color: #60A5FA;
-    color: #ffffff;
-    font-weight: normal;
-  }
   
   /* Submit Button */
   .p-button-primary {
@@ -172,54 +132,11 @@
     background-color: #60A5FA;
     color: #fff;
   }
-  
+   */
   .p-button-primary:hover {
     background-color: #3b82f6;
   }
 
 
   /*  */
-  .custom-checkbox-wrapper {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-  }
-  
-  .custom-checkbox .p-checkbox-box {
-    border-radius: 40;
-    width: 7rem;  
-    height: 3rem; /* Relative height for the checkbox */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #999;
-    border-radius: 5px;
-    font-size: 2em; /* Adjust the checkmark size */
-  }
-  
-  .custom-checkbox input {
-    display: none; /* Hide the default checkbox */
-  }
-  
-  .checkbox-label {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1em; /* Adjust text size relative to the checkbox size */
-    color: #333;
-    pointer-events: none; /* So clicking still toggles the checkbox */
-  }
-  
-  /* When checkbox is checked */
-  .custom-checkbox input:checked + .p-checkbox-box {
-    background-color: #4caf50; /* Green background */
-    color: white;
-  }
-  
-  .custom-checkbox input:checked + .p-checkbox-box .checkbox-label {
-    color: white;
-  }
-  
-  
   

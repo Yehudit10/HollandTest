@@ -3,15 +3,23 @@ import { Button } from 'primereact/button';
 import { Rating } from 'primereact/rating';
 
 const OccupationCard2 = ({ title, description, educationLevel,salaryAvg,workingHoursAvg, matchPercentage }) => {
-  const ratingValue = Math.round(matchPercentage / 20); 
-
+  const ratingValue =Math.floor(matchPercentage/20)
+const starsMap=[
+  "אין התאמה",
+ "התאמה דלה",
+  "ץץץ",
+  "לללל",
+  "התאמה טובה",
+  "התאמה מצוינת"
+]
+console.log()
   return (
     <div className="p-card p-shadow-2" style={{ marginBottom: '10px', width: '100%', direction: 'rtl'}}>
       <div className="p-card-body">
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginBottom: '10px' }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
           {matchPercentage && <><Rating value={ratingValue} readOnly stars={5} cancel={false} />
-            <span style={{ fontSize: '12px', color: '#666', marginLeft: '5px' }}>התאמה מצוינת</span></>}
+            <span style={{ fontSize: '12px', color: '#666', marginLeft: '5px',marginRight:'15px' }}>        {   starsMap[ratingValue]}</span></>}
           </div>
           <h3 style={{ fontSize: '20px', marginBottom: '5px' }}>{title}</h3>
           <p style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>{description}</p>

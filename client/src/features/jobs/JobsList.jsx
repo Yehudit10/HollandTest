@@ -1,18 +1,18 @@
 import { useEffect, useMemo } from "react"
-import FilterSidebar from "../../Components/FilterSideBar"
-import FilterSidebar2 from "../../Components/FilterSideBar2"
-import Loading from "../../Components/Loading"
-import OccupationCard2 from "../../Components/OccupationCard2"
-import { useGetAllJobsQuery } from "./jobApiSlice"
+import FilterSidebar from "../../components/FilterSideBar"
+import FilterSidebar2 from "../../components/FilterSideBar2"
+import Loading from "../../components/Loading"
+import OccupationCard2 from "../../components/OccupationCard2"
+import { useGetAllJobsQuery, useGetJobsQuery } from "./jobApiSlice"
 import { useSearchParams } from "react-router-dom"
-import FilterSidebar3 from "../../Components/FilterSideBar3"
+import FilterSidebar3 from "../../components/FilterSideBar3"
 
 const JobList=()=>{
   const [searchParams]=useSearchParams()
   const queryParams = useMemo(() => {
     return Object.fromEntries(searchParams.entries());
   }, [searchParams]);
-  const {data,isError,isSuccess,isLoading}=useGetAllJobsQuery(queryParams)
+  const {data,isError,isSuccess,isLoading}=useGetJobsQuery(queryParams)
   const jobsList=data?.data
   
 if(isLoading)

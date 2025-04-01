@@ -1,5 +1,5 @@
-import OccupationCard from "../../Components/OccupationCard"
-import Sidebar from "../../Components/SideBar"
+import OccupationCard from "../../components/OccupationCard"
+import Sidebar from "../../components/SideBar"
 
 const SubjectsList=()=>{
     const subjectsList=[{ title:"BI", description:"תאור ארוך מאוד מאוד....", educationLevel:"אוניברסיטה", matchPercentage:"30" },

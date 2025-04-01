@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useGetUsersQuery } from "./userApiSlice"
-import Loading from "../../Components/Loading"
+import Loading from "../../components/Loading"
 import UserCard from "./UserCard"
 
 

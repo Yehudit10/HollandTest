@@ -80,6 +80,7 @@ const getResultsWithSentences=async(req,res)=>{
     if(userId!=req.user._id)//middleware???????????????????????????
     return res.status(401).json({error:true,message:"Unauthorized",data:null})
     const selected=Object.entries(result).filter(([category,score])=>score.select)
+    console.log(selected)
     const sums=Object.values(result).reduce((acc,{interest,capability,work})=>{
         acc.sumI+=interest
         acc.sumC+=capability
@@ -91,9 +92,9 @@ const getResultsWithSentences=async(req,res)=>{
  const types=await Type.find().lean()
 if(!types)
     return res.status(400).json({error:true,message:"types not found",data:null})
-const typesMap={}
+const typeMaps={}
 types.forEach(({type,title})=>{
-    typesMap.type=title
+    typeMaps[type]=title 
  })
 //  {
 //     C: "מנהלי",
@@ -115,8 +116,8 @@ types.forEach(({type,title})=>{
     switch(selected.length)
     {
         case 1:sw=null;break;
-        case 2:d=differences[selected[0]][selected[1]];sw=(4-d)/4;break;
-        case 3:d=(differences[selected[0]][selected[1]]+differences[selected[0]][selected[2]]+differences[selected[1]][selected[2]]);sw=(4-d)/4;break;
+        case 2:d=differences[selected[0][0]][selected[1][0]];sw=(4-d)/4;break;
+        case 3:d=(differences[selected[0][0]][selected[1][0]]+differences[selected[0][0]][selected[2][0]]+differences[selected[1][0]][selected[2][0]]);sw=(4-d)/4;break;
         case 4:sw=0;break;
     
     }
@@ -143,7 +144,17 @@ sentences.push("ישנם תחומים רבים שאת/ה שואף/ת להשתל�
 if(sumI>=0&&sumI<16)
 sentences.push("נבחרו פריטים מעטים בחלק מן הפעילויות, דבר שיכול להעיד על קושי בזיהוי תחומי העניין והסיפוק האישיים שלך")
 if(sumI===0)
-sentences.push()
+sentences.push("לא נבחרו פריטים בחלק מן הפעילויות, דבר שיכול להעיד על קושי בזיהוי תחומי העניין והסיפוק האישיים שלך")
+if(sumC>0&&sumC<=16)
+sentences.push("נבחרו פריטים מעטים בחלק מן הכשרים, דבר שעשוי להצביע על שימוש בביקורת עצמית רבה, המשפיעה על הערכתך את יכולתך להצליח בתחומים שונים")
+if(sumC===0)
+sentences.push("לא נבחרו פריטים בחלק הכשרים, דבר שעשוי להעיד על הערכה עצמית נמוכה לגבי יכולתך להצליח בתחומים שונים ואשר מקשה עלייך בבחירת כיווני לימודים ותעסוקה")
+if(sumW>0&&sumW<9)
+sentences.push("נבחרו פריטים מעטים בחלק מן המקצועות. ייתכן שהדבר נובע מהיכרות מועטה עם עולם התעסוקה ו/ או מרמת נכונות נמוכה לבחירה עכשווית")
+if(sumW===0)
+sentences.push("לא נבחרו פריטים בחלק מן המקצועות. ייתכן שהדבר נובע מהיכרות מועטה עם עולם התעסוקה ו/ או מרמת נכונות נמוכה לבחירה עכשווית")
+const s=""
+
 //...continue
 
 const chaptersDiff = {
@@ -156,21 +167,21 @@ const chaptersDiff = {
 }
 
 selected.forEach(([cat,{work,capability,interest}])=>{
-    const category=typeMaps[cat]
-    if(interest-capability>chaptersDiff[cat].IC&&interest-work>chaptersDiff[cat][IW])
+    const category=typeMaps[cat] 
+    if(interest-capability>chaptersDiff[cat].IC&&interest-work>chaptersDiff[cat].IW)
     sentences.push("בתחום ה" +category+"בולטת בחירה מרובה בפעילויות ביחס להערכה נמוכה של כישורים וביחס לבחירה מועטת במקצועות. כלומר, ניכר העניין הרב שהתחום מספק לך, אולם יש לך נטייה לא להעריך את יכולתך להצליח בתחום זה, לכן נכונותך לבחור בו בפועל נמוכה")
 else if(interest-capability>chaptersDiff[cat].IC)
-senetences.push("בתחום ה"+category+" בולטת בחירה מרובה בפעילויות ביחס להערכה נמוכה של כישורים. ניכר העניין הרב שהתחום מספק לך, אולם יש לך נטייה לא להעריך את יכולתך להצליח בתחום זה, דבר שעשוי להשפיע על הנכונות שלך לבחור בו בפועל")
+sentences.push("בתחום ה"+category+" בולטת בחירה מרובה בפעילויות ביחס להערכה נמוכה של כישורים. ניכר העניין הרב שהתחום מספק לך, אולם יש לך נטייה לא להעריך את יכולתך להצליח בתחום זה, דבר שעשוי להשפיע על הנכונות שלך לבחור בו בפועל")
 else if(interest-work>chaptersDiff[cat].IW)
-senetences.push("בתחום ה"+category+" בולטת בחירה מרובה בפעילויות ביחס לבחירה מועטת במקצועות, דבר שיכול להעיד על נכונות נמוכה לעסוק בתחום זה, אף על פי שאתה נהנה מעיסוקים הקשורים בו ומתעניין בו")
+sentences.push("בתחום ה"+category+" בולטת בחירה מרובה בפעילויות ביחס לבחירה מועטת במקצועות, דבר שיכול להעיד על נכונות נמוכה לעסוק בתחום זה, אף על פי שאתה נהנה מעיסוקים הקשורים בו ומתעניין בו")
 if(work-interest>chaptersDiff[cat].WI&&work-capability>chaptersDiff[cat].WC)
-senetences.push("בתחום ה"+category+"בולטת בחירה מרובה במקצועות ביחס להערכה נמוכה של כישורים וביחס לבחירה מועטת בפעילויות, דבר שיכול להעיד על רצון ועל מוטיבציה גבוהה לעסוק במקצועות מתחום זה בעתיד למרות רמת עניין נמוכה והערכה עצמית נמוכה של יכולותיך בו כיום")
+sentences.push("בתחום ה"+category+"בולטת בחירה מרובה במקצועות ביחס להערכה נמוכה של כישורים וביחס לבחירה מועטת בפעילויות, דבר שיכול להעיד על רצון ועל מוטיבציה גבוהה לעסוק במקצועות מתחום זה בעתיד למרות רמת עניין נמוכה והערכה עצמית נמוכה של יכולותיך בו כיום")
 else if(work-interest>chaptersDiff[cat].WI)
-senetences.push("בתחום ה"+category+"")
-senetences.push("בתחום ה"+category+"")
-senetences.push("בתחום ה"+category+"")
-senetences.push("בתחום ה"+category+"")
-
+sentences.push("בתחום ה"+category+"")
+// sentences.push("בתחום ה"+category+"")
+// sentences.push("בתחום ה"+category+"")
+// sentences.push("בתחום ה"+category+"")
+ 
 })
 return res.status(200).json({error:false,message:null,data:{result,sentences}})
 

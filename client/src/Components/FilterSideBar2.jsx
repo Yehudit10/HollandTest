@@ -21,8 +21,7 @@ const FilterSidebar2 = () => {
   const handleFilterChange = (name,value) => {
     const newSearchParams = new URLSearchParams(searchParams);
       newSearchParams.set(name,value);
-    setSearchParams(newSearchParams); 
-    
+    setSearchParams(newSearchParams);  
   };
   const handleFilterAppend = (name,value) => {
     const newSearchParams = new URLSearchParams(searchParams);

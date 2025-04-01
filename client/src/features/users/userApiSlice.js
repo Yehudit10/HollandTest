@@ -13,6 +13,12 @@ const userApiSlice=apiSlice.injectEndpoints(
         })
         
         ,
+        getUserById:build.query({
+            query:()=>({
+                url:`/api/users/me`
+            }), 
+            providesTags:['User']
+        }),
         addUser:build.mutation({
            query:(data)=>({
                url:"/api/users",
@@ -42,5 +48,5 @@ const userApiSlice=apiSlice.injectEndpoints(
 
 }
 )
-export const {useAddUserMutation,useDeleteUserMutation,useGetUsersQuery,useUpdateUserMutation}=userApiSlice
+export const {useAddUserMutation,useDeleteUserMutation,useGetUsersQuery,useUpdateUserMutation,useGetUserByIdQuery}=userApiSlice
 export default userApiSlice
