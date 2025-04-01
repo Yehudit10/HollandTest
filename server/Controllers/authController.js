@@ -40,10 +40,16 @@ const refresh = async (req, res) => {
         const userDetails = {
             _id:foundUser._id,
             username: foundUser.username,
+            firstname:foundUser.firstname,
+            lastname:foundUser.lastname,
             profil:foundUser.profil,
-            role: foundUser.role
+            role: foundUser.role,
+            email:foundUser.email,
+            phone:foundUser.phone,
+            address:foundUser.address
+
         }
-        const accessToken = jwt.sign(userDetails, process.env.ACCESS_TOKEN, { expiresIn: '15m' })
+        const accessToken = jwt.sign(userDetails, process.env.ACCESS_TOKEN, { expiresIn: '30m' })
         res.json({ accessToken })
     })
 

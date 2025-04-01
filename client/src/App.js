@@ -2,32 +2,34 @@ import logo from './logo.svg';
 import './App.css';
 import Login from './features/auth/login/Login';
 import SignUp from './features/users/SignUp';
-import HollandInfoPage from './Components/HollandInfoPage';
-import HollandPages from './Components/HollandPages';
-import HollandPage1 from './Components/HollandPage1';
+import HollandInfoPage from './components/HollandInfoPage';
+import HollandPages from './components/HollandPages';
+import HollandPage1 from './components/HollandPage1';
 import { Outlet, Route, Router, Routes } from 'react-router-dom';
 
 import Question from "./features/hollandTest/questions/Question"
-import HollandResults from './Components/HollandResults';
-import NavBar from './Components/NavBar';
-import DynamicPieChart from './Components/Pie';
-import HollandResults2 from './Components/HollandResult2';
-import TestProgressChart from './Components/TestProgress';
+import HollandResults from './features/hollandTest/result/HollandResults';
+import NavBar from './components/NavBar';
+import DynamicPieChart from './components/Pie';
+import HollandResults2 from './components/HollandResult2';
+import TestProgressChart from './components/TestProgress';
 import SubjectsList from './features/subjects/SubjecstList';
-import FilterSidebar from './Components/FilterSideBar';
-import Upload from './Components/Upload';
-import UserRegistrationChart from './Components/UserRegisteration';
+import FilterSidebar from './components/FilterSideBar';
+import Upload from './components/Upload';
+import UserRegistrationChart from './components/UserRegisteration';
 import UserCard from './features/users/UserCard';
 import UsersList from './features/users/UsersList';
 import RequireAuth from './features/auth/RequireAuth';
 import PersistLogin from './features/auth/PersistLogin';
-import AdminDashboard from './Components/AdminDashboard';
-import OccupationCard from './Components/OccupationCard';
-import OccupationCard2 from './Components/OccupationCard2';
-import Dashboard from './Components/AdminDashboard';
+import AdminDashboard from './components/AdminDashboard';
+import OccupationCard from './components/OccupationCard';
+import OccupationCard2 from './components/OccupationCard2';
+import Dashboard from './components/AdminDashboard';
 import JobList from './features/jobs/JobsList';
-import HomePage from './Components/HomePage';
+import HomePage from './components/HomePage';
 import Profil from './features/users/Profil';
+import ViewQuestions from './features/hollandTest/questions/ViewQuestion';
+import Edit from './features/users/Edit';
 
 
 function App() {
@@ -41,9 +43,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/" element={<PersistLogin />}>
+        <Route element={<RequireAuth allowedRoles={['admin']} />}>
+        <Route path="view" element={<ViewQuestions/>}></Route>
+        </Route>
           <Route element={<RequireAuth allowedRoles={['user', 'admin']} />}>
             <Route path="home" element={<><NavBar /><Outlet /></>}>
-                <Route path="edit" element={<Profil/>}/>
+                <Route path="edit" element={<Edit/>}/>
               <Route path="holland" element={<Outlet />}>
                 <Route index element={<HollandPages />} />
                 <Route path="holland-info" element={<HollandInfoPage />} />

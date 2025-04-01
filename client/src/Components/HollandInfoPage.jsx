@@ -7,13 +7,21 @@ import Conventional from '../images/Conventional.png';
 import './HollandInfoPage.css';
 import HollandType from './HollandType';
 import { Link, useNavigate } from 'react-router-dom';
+import { useGetTypesQuery } from '../features/types/typeApiSlice';
+import useGetFilePath from '../hooks/useGetFilePath';
+import Loading from './Loading';
 
 
 
 const HollandInfoPage = () => {
+  const {data:typesData,isLoading,isSuccess}=useGetTypesQuery()
+  const {getFilePath}=useGetFilePath()
+  const navigate=useNavigate()
+  if(isLoading)
+  return <Loading/>
   return (
     <div className="holland-info-page">
-      <Link to="/dash/holland" className='back-link'>חזרה</Link>
+      <button onClick={() => navigate(-1)} className='back-link' style={{ background: 'none', border: 'none', }}>חזרה</button>
       <h1>שאלון הולנד להכוונה מקצועית</h1>
       <div>השאלון באתר הוא כלי שמסייע לזהות תחומי עניין ונטיות תעסוקתיות. השאלון אינו כלי אבחון ואינו מחליף שירותי ייעוץ מקצועיים לבחירת קריירה.</div>
       <h3>מהו שאלון הולנד (RIASEC)</h3>
@@ -23,14 +31,10 @@ const HollandInfoPage = () => {
 שאלון הולנד הוא הדרך הוותיקה והנפוצה מכולן לבירור נטיות תעסוקתיות, ומשתמשים בו כמעט בכל מכוני כוח האדם וההכוונה התעסוקתית.</div>
       <h3>ששת הטיפוסים של הולנד</h3>
       <div className="holland-types">
-        <HollandType image={Artistic} title="אומנותית" description="אוהבת פעילות מעורפלת, לא שיטתית. יצירתית ומקורית בחשיבה ובקשר עם העולם. אוהבת עיסוק בחומרים ובמלל. מבטאת את עצמה דרך יצירה ואומנות. לא אוהבת כללים ונורמות. אוהבת חופש פעולה. יש לה ראייה סובייקטיבית, מורכבת ומקורית של תופעות. מתחברת לאנשים דרך רגש, דימיון, אומנות ואסתטיקה. לא אוהבת סטנדרטיזציה." />
-        <HollandType image={Realistic} title="ביצועית" description="מעשית, פרקטית, אוהבת פעילויות שתוצאותיהן מיידיות, שכוללות פעילות פיזית. אוהבת סדר, פעילויות מוגדרות, מוחשיות וברורות. בעלת כושר ויכולת טכנית, יכולת מתמטית, יכולת מוטורית וקואורדינציה. פחות אוהבת עבודה עם ניירת ופחות זקוקה לקשר עם אנשים אחרים או מעורבות רגשית. זקוקה לכללים ולקריטריונים ברורים להערכת מעשיה." />
-        <HollandType image={Social} title="חברתית" description="אוהבת לעבוד עם אנשים, פחות אוהבת לעבוד עם מכונות וחומרים. אוהבת ומוכשרת ביצירת קשרים חברתיים ובין אישיים. אוהבת לסייע לאנשים ללמוד ולהתפתח, לעזור לאנשים לפתור בעיות אישיות. אוהבת ללמד ולייעץ לאנשים אחרים. שמה דגש על רגש, פחות מתחברת לפעילויות שיטתיות ורציונליות. אמפתית ורגישה לצרכים של אחרים, מבינה סיטואציות חברתיות." />
-        <HollandType image={Investigative} title="חקרנית" description="מעדיפה פעילויות שדורשות חשיבה, חקירה ובחינה שיטתית ואנליטית של תופעות. אוהבת לעבוד כאינדבידואלית ופחות אוהבת פעילות חברתיות. אוהבת דיוק והסתכלות על פרטים, בחינה של עובדות ופתרון בעיות. פחות מתחברת לפעילות פיזית." />
-        <HollandType image={Enterprising} title="יזמית" description="אוהבת עשייה, ביצוע והשגת מטרות. אוהבת לפעול ולהוביל תהליכים ואנשים. בעלת יכולת השפעה על אנשים ושכנוע. אוהבת לעבוד עם אנשים שהיא מובילה, לקבל החלטות. לא אוהבת להיות מובלת. יכולת בינאישית טובה. אוהבת לקחת סיכונים לצורך רווח והשגת מטרות. מחפשת גיוון." />
-        <HollandType image={Conventional} title="מנהלית" description="אוהבת סדר, נהלים ומסגרת. אוהבת רוטינות וכללים ואוהבת שפועלים לאורם. אוהבת היררכיה ובהירות.  שמה לב לפרטים, מדויקת ושיטתית. אוהבת לתכנן ולפעול על פי התכנון. מעדיפה תהליכים ברורים ומוגדרים. לא מתחברת לעמימות ולחריגה מן הנורמה." />
+      {typesData?.data.map(({image,title,description})=>
+      <HollandType image={getFilePath(image)} title={title} description={description} />
+      )}
       </div>
-      {/* <button onClick={()=>{navigate("/")}} className="questionnaire-button">חזרה</button> */}
     </div>
   );
 };

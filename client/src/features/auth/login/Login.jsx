@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../authApiSlice";
 
 const Login = () => {
-  const { register, handleSubmit ,control,formState: { errors } } = useForm();
+  const { register, handleSubmit ,control,reset,formState: { errors } } = useForm();
   const [login,{isError,isSuccess,isLoading,data}]=useLoginMutation()
  
 const navigate=useNavigate()

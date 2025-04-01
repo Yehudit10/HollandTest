@@ -13,7 +13,7 @@ import { Card } from 'primereact/card';
 import { Steps } from 'primereact/steps';
 import { useNavigate } from 'react-router-dom';
 import { useGetQuestionsQuery } from './questionApiSlice';
-import Loading from '../../../Components/Loading';
+import Loading from '../../../components/Loading';
 import { useAddTestMutation, useDeleteTestMutation, useGetTestQuery, useUpdateTestMutation } from './testApiSlice';
 import { useAddResultMutation } from '../result/resultApiSlice';
 const  Question=()=> {
