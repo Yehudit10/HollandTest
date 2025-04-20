@@ -9,32 +9,36 @@ const testScheme=new mongoose.Schema({
       required:true,
       ref:'User'
    },
+   //answers:{type:[Number],required:true},
+   
+
    // answers:[
    //    {
-   //    // questionID:{type:mongoose.Schema.Types.ObjectId,required:true,ref:'Question'},
-   //    questionChapter:{  type:String,
-   //       enum:['work','capability','interest'],
+   //    questionChapter:{  type:mongoose.Schema.ObjectId,
+   //      ref:'Chapter',
    //       required:true},
    //    questionType:{
-   //       type:String,enum:['R','I','A','S','E','C'],
+   //       type:mongoose.Schema.ObjectId,
+   //       ref:'Type',
    //    required:true
    //    },
-   //    questionresult:{type:Number   ,min:1,max:5,required:true}
+   //    questionResult:{type:Number,min:0,max:4,required:true}
    // }
    // ]
-   answers:[
-      {
-      questionChapter:{  type:mongoose.Schema.ObjectId,
-        ref:'Chapter',
+
+
+
+
+   test:[
+       {
+      _id:false,
+      question:{  type:mongoose.Schema.ObjectId,
+        ref:'Question',
          required:true},
-      questionType:{
-         type:mongoose.Schema.ObjectId,
-         ref:'Type',
-      required:true
-      },
-      questionResult:{type:Number,min:0,max:4,required:true}
-   }
-   ]
+      questionResult:{type:Number,min:0,max:4}
+   },
+   ]   
+
 // ,
 // currentQuestion:
 // {type:mongoose.Schema.Types.ObjectId,required:true,ref:'Question'},

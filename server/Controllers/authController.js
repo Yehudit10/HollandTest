@@ -16,11 +16,9 @@ const login = async (req, res) => {
         username: foundUser.username,
         role: foundUser.role,
         profil:foundUser.profil,
-
-        //currentQuestion: foundUser.currentTest.currentQuestion
     }
     
-    const accessToken = jwt.sign(userDetails, process.env.ACCESS_TOKEN, { expiresIn: '30s' })
+    const accessToken = jwt.sign(userDetails, process.env.ACCESS_TOKEN, { expiresIn: '15m' })
     const refreshToken = jwt.sign({ username: userDetails.username }, process.env.REFRESH_TOKEN, { expiresIn: '1d' })
     res.cookie("jwt", refreshToken, {
         httpOnly: true,
@@ -29,6 +27,7 @@ const login = async (req, res) => {
     res.json({ accessToken })
 }
 const refresh = async (req, res) => {
+
     const cookies = req.cookies
     if (!cookies?.jwt) {
         return res.status(401).send({ error: true, massage: "Unauthorized", data: null })
@@ -49,7 +48,7 @@ const refresh = async (req, res) => {
             address:foundUser.address
 
         }
-        const accessToken = jwt.sign(userDetails, process.env.ACCESS_TOKEN, { expiresIn: '30m' })
+        const accessToken = jwt.sign(userDetails, process.env.ACCESS_TOKEN, { expiresIn: '15m' })
         res.json({ accessToken })
     })
 

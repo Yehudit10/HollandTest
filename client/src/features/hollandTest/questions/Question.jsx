@@ -16,43 +16,55 @@ import { useGetQuestionsQuery } from './questionApiSlice';
 import Loading from '../../../components/Loading';
 import { useAddTestMutation, useDeleteTestMutation, useGetTestQuery, useUpdateTestMutation } from './testApiSlice';
 import { useAddResultMutation } from '../result/resultApiSlice';
+import {useGetChaptersQuery} from '../chapters/chapterApiSlice'
 const  Question=()=> {
     const navigate=useNavigate()
-    const{data:QuestionData,isError,isSuccess,isLoading}=useGetQuestionsQuery()
-    const questionsList=QuestionData?.data
-    const {data:testData,isError:testIsError,isLoading:testIsLoading,isSuccess:testisSuccess}=useGetTestQuery()
+    const{data:QuestionData,isError,isSuccess:questionIsSuccess,isLoading:questionIsLoading}=useGetQuestionsQuery()
+    const {data:chapterData,isLoading:chapterIsLoading,isSuccess:chapterIsSuccess}=useGetChaptersQuery()
+    const {data:testData,isError:testIsError,isLoading:testIsLoading,isSuccess:testIsSuccess}=useGetTestQuery()
     const[addTest,{data:newTestData}]=useAddTestMutation()
     const [updateTest,{}]=useUpdateTestMutation()
     const [deleteTest,{isSuccess:deleteIsSuccess}]=useDeleteTestMutation()
     const [saveResult,{data:resultData,isError:resultIsError,isSuccess:resultIsSuccess}]=useAddResultMutation()
-
-    // if(testData?.data===null&&testData?.data.status===204)
-    // addTest()
     const [currentQuestion,setCurrentQuestion]=useState(0)
-    // const [currentQuestion,setCurrentQuestion]=useState(testData?.data?.answers?.length||0)
-    // const [userAnswers,setUserAnswers]=useState(testData?.data?.answers||[])
     const [userAnswers,setUserAnswers]=useState([])
     const [currentChapter,setCurrentChapter]=useState(0);
+    useEffect(()=>setCurrentChapter(0),[chapterIsSuccess])
     useEffect(()=>{
-        if(testisSuccess)
-        {
-        if(testData===null)
-        addTest()
-        else
-        {
-            setUserAnswers(testData.data?.answers)
-            setCurrentQuestion(testData.data?.answers?.length)
-        }
-    }},[testisSuccess])
+        const chapterId=userAnswers[currentQuestion]?.question?.chapterID
+        if(chapterId!=currentChapter)
+setCurrentChapter(chapterData?.data?.findIndex((c)=>c._id===chapterId))
+        },[currentQuestion])
     useEffect(()=>{
-        if(testData)
-        updateTest({_id:testData.data._id,answers:userAnswers})
+        
+        if(testIsSuccess)
+        {
+        if(testData==null&&questionIsSuccess)
+        addTest(QuestionData.data)
+
+    }},[testIsSuccess,questionIsSuccess])
+    useEffect(()=>{if(testData?.data){setUserAnswers(testData.data.test)
+        const index=testData.data?.test?.findIndex((question)=>question.questionResult==null)
+        if(index===-1)
+       setCurrentQuestion(testData.data?.test?.length-1)
+    else
+    setCurrentQuestion(index)
+
+}},[testData])
+console.log(currentChapter)
+    const testId=testData?.data._id
+    useEffect(()=>{
+       if(testId)
+        updateTest({
+    _id:testId,
+    test:userAnswers?.map((answer)=>({question:answer.question._id,questionResult:answer.questionResult}))})
     },[userAnswers])
     useEffect(()=>{
         if(deleteIsSuccess&&resultIsSuccess)
         navigate(`result/${resultData.data._id}`)
 
     },[deleteIsSuccess])
+  
 const showImg=(num)=>{
  
 switch(num)
@@ -74,9 +86,10 @@ switch(num)
         flexDirection:'column',
         position:'relative'
       }}>
+        <div>{chapterData?.data[currentChapter]?.description}</div>
         <div className='qeustion-text'>{question.text}</div>
-        {userAnswers.length>currentQuestion&&<Image className='choosen-img' src={showImg(userAnswers[currentQuestion].questionResult)}></Image>} 
-    <span style={{position:'absolute',bottom:'5%',left:'50%'}}>{currentQuestion+1}/{questionsList.length}</span>
+        <Image className='choosen-img' src={showImg(userAnswers[currentQuestion]?.questionResult)}></Image>
+    <span style={{position:'absolute',bottom:'5%',left:'50%'}}>{currentQuestion+1}/{userAnswers.length}</span>
 
        </Card>         
         </>
@@ -84,32 +97,26 @@ switch(num)
     }
 
     const handleAnswer=async (answer)=>{
-        const detailedAnswer={questionChapter:questionsList[currentQuestion].chapterID,questionType:questionsList[currentQuestion].type,questionResult:answer}
-        if(currentQuestion>userAnswers.length)
-            setUserAnswers([...userAnswers,detailedAnswer])
-        else
         setUserAnswers((prevArray)=>{
     const newArray=[...prevArray]
-    newArray[currentQuestion]=detailedAnswer
+    const updatedAnswer={question:newArray[currentQuestion].question,questionResult:answer}
+   newArray[currentQuestion]=updatedAnswer
    return newArray})
          await new Promise(resolve => setTimeout(resolve, 500));
          // handleNext()
-         if(currentQuestion<questionsList.length-1)
+         if(currentQuestion<userAnswers.length-1)
          setCurrentQuestion(currentQuestion+1)
     }
     const handleNext=()=>{
-        if(currentQuestion<questionsList.length-1)
+        if(currentQuestion<userAnswers.length-1)
 setCurrentQuestion(currentQuestion+1)
 
 else{
-    saveResult({testId:testData?.data._id||newTestData.data._id})
-    deleteTest({_id:testData.data._id})
+    saveResult({testId})
+    deleteTest({_id:testId})
 }
     }
-    const handlePrev=()=>{
-        setCurrentQuestion(currentQuestion-1)
-            }
-          if(isLoading||testIsLoading)
+          if(questionIsLoading||testIsLoading||chapterIsLoading)
           return <Loading/> 
     return (
         <>
@@ -117,7 +124,7 @@ else{
     <div className='question-container'>
     <Steps activeIndex={currentChapter} style={{marginTop:'3vh'}} model={[{label:'חלק ראשון'},{label:'חלק שני'},{label:'חלק שלישי'}]} />
         <div className="carousel-wrapper">
-            <Carousel value={questionsList} numVisible={1} numScroll={1} 
+            <Carousel value={userAnswers?.map((q)=>q.question)} numVisible={1} numScroll={1} 
              itemTemplate={showQuestion} 
              page={currentQuestion} 
              onPageChange={(e)=>{setCurrentQuestion(e.page)}}
@@ -135,8 +142,8 @@ else{
               
              </div>
              <div className="navigation-buttons">
-            <Button  className="nav-button pi pi-angle-left" onClick={handlePrev} disabled={currentQuestion===0}>לשאלה הקודמת</Button>
-             <Button style={{direction:'rtl'}} className="nav-button pi pi-angle-right" onClick={handleNext} disabled={currentQuestion===userAnswers?.length}>{currentQuestion===questionsList?.length-1?'לסיום':'לשאלה הבאה'}</Button>
+            <Button  className="nav-button pi pi-angle-left" onClick={()=>{setCurrentQuestion(currentQuestion-1)}} disabled={currentQuestion===0}>לשאלה הקודמת</Button>
+             <Button style={{direction:'rtl'}} className="nav-button pi pi-angle-right" onClick={handleNext} disabled={userAnswers[currentQuestion]?.questionResult==null}>{currentQuestion===userAnswers?.length-1?'לסיום':'לשאלה הבאה'}</Button>
              </div>
         </div>
        </>

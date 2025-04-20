@@ -2,9 +2,10 @@ import React from "react";
 import { Chart } from "primereact/chart";
 import { Card } from "primereact/card";
 
-const UserRegistrationChart = () => {
+const UserRegistrationChart = ({users}) => {
+const monthes=["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul","","Sep","Oct","Nov","Dec"]
   const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    labels: [],
     datasets: [
       {
         label: "User Registrations",

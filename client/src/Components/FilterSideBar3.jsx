@@ -51,40 +51,21 @@ const initState={minWorkingHours:0,maxWorkingHours:50}
         </div>
       </div>
       <Divider/>
-      <div 
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "12px",
-        background: "#f9f9f9",
-        padding: "10px 15px",
-        borderRadius: "8px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-      }}>
-        <InputNumber
+      <div className="salary-container"
+      >
+        <InputNumber className="salary-input"
           value={searchParams.get("minSalary")}
           onValueChange={(e) => {handleFilterChange("minSalary",e.value)}}
-          inputStyle={{
-            textAlign: "center",
-            borderRadius: "6px",
-            border: "1px solid #ccc",
-            padding: "10px",
-          }}
         />
         <span>-</span>
-        <InputNumber
+        <InputNumber className="salary-input"
           value={searchParams.get("maxSalary")}
           onValueChange={(e) => {handleFilterChange("maxSalary",e.value)}}
-          inputStyle={{
-            textAlign: "center",
-            borderRadius: "6px",
-            border: "1px solid #ccc",
-            padding: "10px",
-          }}
+
         />
       </div>
-      {/* Experience Slider */}
-      <div className="mb-3">
+      {/* Working hours Slider */}
+      <div >
         <h5 className="text-title">שעות עבודה</h5>
         <h6 className="text-second">כמה שעות עבודה בשבוע? גררו את העיגולים עד שתגיעו לטווח הרצוי. הממוצע הוא כ-41</h6>
         <Slider
@@ -102,13 +83,14 @@ const initState={minWorkingHours:0,maxWorkingHours:50}
         />
         <p className="text-center">{searchParams.get("minWorkingHours")} - {searchParams.get("maxWorkingHours")}</p>
       </div>
-      <div className="mb-3" >
+      {/* Education Level */}
+      <div  >
         <h5 className="text-title">חיפוש לפי השכלה</h5>
         <h6 className="text-second">לחצו על כל רמות ההשכלה הרלוונטיות לכם. כדאי לבחור גם השכלה נמוכה משלכם</h6>
 
         <div >
           
-        <div className="flex flex-column gap-2">
+        <div >
           <ToggleButton
             checked={searchParams.get("educationLevel")?.split(",").includes("תואר אקדמאי")}
             onChange={(e) =>{
@@ -148,9 +130,7 @@ const initState={minWorkingHours:0,maxWorkingHours:50}
         </div>
       </div>
      
-    
-      {/* Toggle Buttons */}
-      
+ 
       <Divider/>
      
       <Button label="איפוס" onClick={()=>{setSearchParams(initState)}}className="p-button-primary w-full" />

@@ -5,12 +5,21 @@ const Test=require("../Models/Test")
 // return res.status(400).json({error:true,message:"no tests found",data:null})
 // return res.status(200).json({error:false,message:"",data:tests})
 // }
+// const addTest=async(req,res)=>{
+//     // const {userId}=req.body
+//     // if(!userId)
+//     // return res.status(400).json({error:true,message:"you are missing some required fields",data:null})
+//     //const newTest=await Test.create({userId})
+//     const newTest=await Test.create({userId:req.user._id})
+//     if(!newTest)
+//    return res.status(400).json({error:true,message:"create failed",data:null})
+//    return res.status(201).json({error:false,message:null,data:newTest})
+
+// }
+
 const addTest=async(req,res)=>{
-    // const {userId}=req.body
-    // if(!userId)
-    // return res.status(400).json({error:true,message:"you are missing some required fields",data:null})
-    //const newTest=await Test.create({userId})
-    const newTest=await Test.create({userId:req.user._id})
+    const {test}=req.body
+    const newTest=await (await Test.create({userId:req.user._id,test:test?.map((q)=>({question:q._id}))}))
     if(!newTest)
    return res.status(400).json({error:true,message:"create failed",data:null})
    return res.status(201).json({error:false,message:null,data:newTest})
@@ -27,7 +36,7 @@ const addTest=async(req,res)=>{
     
 // }
 const getTest=async(req,res)=>{ 
-    const test=await Test.findOne({userId:req.user._id}).lean()
+    const test=await Test.findOne({userId:req.user._id}).populate("test.question").lean()
     if(!test)
         return res.status(204).send()//.json({error:false,message:"no content",data:null})
    return res.status(200).json({error:false,message:null,data:test})
@@ -35,14 +44,13 @@ const getTest=async(req,res)=>{
 }
 
 const updateTest=async(req,res)=>{
-    console.log("update test")
-    const {_id,answers}=req.body
+    const {_id,test}=req.body
     if(!_id)
     return res.status(400).json({error:true,message:"you are missing some required fields",data:null})
-    const test=await Test.findById(_id).exec()
-    test.userId=req.user._id
-    test.answers=answers
-    const updatedTest=await test.save()
+    const foundtest=await Test.findById(_id).exec()
+    foundtest.userId=req.user._id
+    foundtest.test=test
+    const updatedTest=await foundtest.save()
     if(!updatedTest)
     return res.status(400).json({error:true,message:"update failed",data:null})
     return res.status(200).json({error:false,message:null,data:updatedTest})

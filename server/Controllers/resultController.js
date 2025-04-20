@@ -9,12 +9,10 @@ const addResult=async(req,res)=>{
     // return res.status(400).json({error:true,message:"test not found",data:null})
     // const test=user.currentTest.populate('cpatherID','type')
      const {testId}=req.body
-     const test=await Test.findById(testId).lean().populate("answers.questionType").populate("answers.questionChapter")
+    // const test=await Test.findById(testId).lean().populate("answers.questionType").populate("answers.questionChapter")
+     const test=await Test.findOne({_id:testId,userId:req.user._id}).lean().populate({path:"test.question",populate:[{path:"chapterID"},{path:"type"}]})
      if(!test) 
        return res.status(400).json({error:true,message:"test not found",data:null})
-if(test.userId!=req.user._id)//middleware???????????????????????
-return res.status(401).json({error:true,message:"Unauthorized",data:null})
-
     const result={
         R: { work: 0, capability: 0, interest: 0, select: false },
         I: { work: 0, capability: 0, interest: 0, select: false },
@@ -25,12 +23,17 @@ return res.status(401).json({error:true,message:"Unauthorized",data:null})
     }
     const sumResult={R:0,I:0,A:0,S:0,E:0,C:0}
     let sumAll=0;
-    (test.answers).forEach((answer)=>{
-        result[answer.questionType.type][answer.questionChapter.chapterName]+=answer.questionResult/4
-        sumResult[answer.questionType.type]+=answer.questionResult/4
+    // (test.answers).forEach((answer)=>{
+    //     result[answer.questionType.type][answer.questionChapter.chapterName]+=answer.questionResult/4
+    //     sumResult[answer.questionType.type]+=answer.questionResult/4
+    //     sumAll+=answer.questionResult/4
+    // })
+    (test.test)?.forEach((answer)=>{
+        result[answer.question.type.type][answer.question.chapterID.chapterName]+=answer.questionResult/4
+        sumResult[answer.question.type.type]+=answer.questionResult/4
         sumAll+=answer.questionResult/4
     })
-   
+
     ///select the index
     //const categories = ['R', 'A', 'I', 'S', 'E', 'C']
     // categories.forEach((category)=>{
@@ -40,9 +43,10 @@ return res.status(401).json({error:true,message:"Unauthorized",data:null})
     const temp=[]
     let highInNot=0
     for(const category in sumResult)
-    { if(sumResult[category]/sumAll>33&&sumResult[category]>21)
+    { 
+        if((sumResult[category]*100)/sumAll>33&&sumResult[category]>21)
     result[category].select=true
-else if(sumResult[category]/sumAll>19.5||sumResult[category]>21)
+else if((sumResult[category]*100)/sumAll>19.5||sumResult[category]>21)
 temp.push(category)
 else if(highInNot<sumResult[category])
 highInNot=sumResult[category]
@@ -59,10 +63,9 @@ highInNot=sumResult[category]
        
    // })
     temp.forEach((category)=>{
-        if(sumResult[category]-highInNot>1&&sumResult[category]/sumAll-highInNot/sumAll>=2)
+        if(sumResult[category]-highInNot>1&&(sumResult[category]*100)/sumAll-highInNot*100/sumAll>=2)
         result[category].select=true
     })
-    console.log(result)
     const newResult=await Result.create({userId:test.userId,result})
     if(!newResult)
     return res.status(400).json({error:true,message:"create failed",data:null})
@@ -73,12 +76,10 @@ const getResultsWithSentences=async(req,res)=>{
     const {id}=req.params
     if(!id)
         return res.status(400).json({error:true,message:"id is required",data:null})
-    const userResult=await Result.findById(id)
+    const userResult=await Result.findOne({_id:id,userId:req.user._id})
     if(!userResult)
         return res.status(400).json({error:true,message:"test not found",data:null})
     const {result,userId}=userResult
-    if(userId!=req.user._id)//middleware???????????????????????????
-    return res.status(401).json({error:true,message:"Unauthorized",data:null})
     const selected=Object.entries(result).filter(([category,score])=>score.select)
     console.log(selected)
     const sums=Object.values(result).reduce((acc,{interest,capability,work})=>{
@@ -141,7 +142,7 @@ if(sumC>=40)
 sentences.push("נבחרו מספר רב של פריטים בחלק הכשרים, על כן ניכר שאת/ה מעריך/ה את כישורייך כגבוהים בתחומים רבים") 
 if(sumW>35)
 sentences.push("ישנם תחומים רבים שאת/ה שואף/ת להשתלב בהם בעתיד, וקיים קושי למקד את בחירתך")
-if(sumI>=0&&sumI<16)
+if(sumI>0&&sumI<=16)
 sentences.push("נבחרו פריטים מעטים בחלק מן הפעילויות, דבר שיכול להעיד על קושי בזיהוי תחומי העניין והסיפוק האישיים שלך")
 if(sumI===0)
 sentences.push("לא נבחרו פריטים בחלק מן הפעילויות, דבר שיכול להעיד על קושי בזיהוי תחומי העניין והסיפוק האישיים שלך")
@@ -154,7 +155,10 @@ sentences.push("נבחרו פריטים מעטים בחלק מן המקצועו�
 if(sumW===0)
 sentences.push("לא נבחרו פריטים בחלק מן המקצועות. ייתכן שהדבר נובע מהיכרות מועטה עם עולם התעסוקה ו/ או מרמת נכונות נמוכה לבחירה עכשווית")
 const s=""
-
+if (sumAll > 48)
+{
+    
+}
 //...continue
 
 const chaptersDiff = {
@@ -174,11 +178,20 @@ else if(interest-capability>chaptersDiff[cat].IC)
 sentences.push("בתחום ה"+category+" בולטת בחירה מרובה בפעילויות ביחס להערכה נמוכה של כישורים. ניכר העניין הרב שהתחום מספק לך, אולם יש לך נטייה לא להעריך את יכולתך להצליח בתחום זה, דבר שעשוי להשפיע על הנכונות שלך לבחור בו בפועל")
 else if(interest-work>chaptersDiff[cat].IW)
 sentences.push("בתחום ה"+category+" בולטת בחירה מרובה בפעילויות ביחס לבחירה מועטת במקצועות, דבר שיכול להעיד על נכונות נמוכה לעסוק בתחום זה, אף על פי שאתה נהנה מעיסוקים הקשורים בו ומתעניין בו")
+
+if(capability-work>chaptersDiff[cat].CW&&capability-interest>chaptersDiff[cat].CI)
+sentences.push("בתחום ה"+category+"בולטת הערכה גבוהה של כישורים ביחס לבחירה מועטת במקצועות ובפעילויות, דבר שיכול להעיד על עניין מועט שהתחום מספק לך ועל נכונות נמוכה לעסוק במקצועות מתחום זה למרות הערכה עצמית גבוהה לגבי יכולתך להצליח בו")
+else if(capability-work>chaptersDiff[cat].CW)
+sentences.push("בתחום ה"+category+"בולטת הערכה גבוהה של כישורים ביחס לבחירה מועטת במקצועות, דבר שיכול להעיד על הערכה עצמית גבוהה לגבי יכולתך להצליח בתחום ,אך על נכונות נמוכה לעסוק בו בפועל")
+else if(capability-interest>chaptersDiff[cat].CI)
+sentences.push("בתחום ה"+category+" בולטת הערכה גבוהה של כישורים ביחס לבחירה מועטת בפעילויות, דבר שיכול להעיד על הערכה עצמית גבוהה שלך בתחום למרות רמת עניין נמוכה, שעשייה בתחום זה מספקת לך")
+
 if(work-interest>chaptersDiff[cat].WI&&work-capability>chaptersDiff[cat].WC)
 sentences.push("בתחום ה"+category+"בולטת בחירה מרובה במקצועות ביחס להערכה נמוכה של כישורים וביחס לבחירה מועטת בפעילויות, דבר שיכול להעיד על רצון ועל מוטיבציה גבוהה לעסוק במקצועות מתחום זה בעתיד למרות רמת עניין נמוכה והערכה עצמית נמוכה של יכולותיך בו כיום")
 else if(work-interest>chaptersDiff[cat].WI)
-sentences.push("בתחום ה"+category+"")
-// sentences.push("בתחום ה"+category+"")
+sentences.push("בתחום ה"+category+"בולטת בחירה מרובה במקצועות ביחס לבחירה מועטת בפעילויות, דבר שיכול להעיד על רצון ועל מוטיבציה גבוהה לעסוק במקצועות מתחום זה בעתיד למרות רמת עניין וסיפוק נמוכה מפעילויות בו כיום")
+else if(work-capability>chaptersDiff[cat].WC)
+ sentences.push("בתחום ה"+category+"בולטת בחירה מרובה במקצועות ביחס להערכה נמוכה של כישורים, דבר שיכול להעיד על רצון ועל מוטיבציה גבוהה לעסוק במקצועות מתחום זה בעתיד למרות הערכה עצמית נמוכה של יכולותיך בו כיום")
 // sentences.push("בתחום ה"+category+"")
 // sentences.push("בתחום ה"+category+"")
  

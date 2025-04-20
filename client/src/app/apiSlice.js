@@ -12,15 +12,16 @@ const baseQuery=fetchBaseQuery(
         }
     }
 )
-const baseQueryWithRefresh=async(args,app,extraOptions)=>{
-    let  result=await baseQuery(args,app,extraOptions)
+const baseQueryWithRefresh=async(args,api,extraOptions)=>{
+    let  result=await baseQuery(args,api,extraOptions)
     if(result?.error?.status===403)
     {
-        const refreshResult=await baseQuery("/api/auth/refresh",app,extraOptions)
+        console.log(args)
+        const refreshResult=await baseQuery('/api/auth/refresh',api,extraOptions)
         if(refreshResult?.data)
         {
-            app.dispatch(setToken({...refreshResult.data}))
-            result=await baseQuery(args,app,extraOptions)
+            api.dispatch(setToken({...refreshResult.data}))
+            result=await baseQuery(args,api,extraOptions)
 
         }
         else{

@@ -9,7 +9,8 @@ const store=configureStore(
      auth:authSlice
   },
   middleware:(defaultMiddleware)=>defaultMiddleware().concat(apiSlice.middleware),
-  devTools:true
+  devTools:true,
+  
 }
 )
 export default store

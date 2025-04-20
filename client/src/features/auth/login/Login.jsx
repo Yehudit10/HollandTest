@@ -10,6 +10,7 @@ import "./Form.css";
 
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../authApiSlice";
+import useAuth from "../../../hooks/useAuth";
 
 const Login = () => {
   const { register, handleSubmit ,control,reset,formState: { errors } } = useForm();
@@ -19,7 +20,8 @@ const navigate=useNavigate()
 useEffect(()=>{
 if(isSuccess)
 {
-navigate("/home")}
+navigate("/home")
+}
 },[isSuccess])
   const onSubmit = (data) => {
     login(data)

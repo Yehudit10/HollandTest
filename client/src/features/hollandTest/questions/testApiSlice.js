@@ -4,13 +4,17 @@ const testApiSlice=apiSlice.injectEndpoints({
         getTest:build.query({
         query:()=>({
             url:"/api/tests",
+        
         }),
+        providesTags:['Test']
         }),
         addTest:build.mutation({
-            query:()=>({
+            query:(test)=>({
                 url:"/api/tests",
-                method:'POST'
+                method:'POST',
+                body:{test}
             }),
+            invalidatesTags:['Test']
         }),
         updateTest:build.mutation({
             query:(test)=>({

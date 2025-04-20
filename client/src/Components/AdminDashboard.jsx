@@ -7,12 +7,17 @@ import 'primeicons/primeicons.css';
 import './adminDashboard.css'
 import UserRegistrationChart from './UserRegisteration';
 import DynamicPieChart from './Pie';
-
+import {useGetUsersQuery} from "../features/users/userApiSlice"
 const Dashboard = () => {
     // נתונים סטטיסטיים לדוגמה
     const weeklyRevenue = 1930;
     const weeklyOrders = 65;
     const newCustomers = 107;
+    const {data:usersData,isLoading:usersIsLoading}=useGetUsersQuery()
+    const users=usersData.data
+    
+
+
 
     const dailyRevenueData = {
         labels: ['Jul 17, 2023', 'Jul 18, 2023', 'Jul 19, 2023', 'Jul 20, 2023', 'Jul 21, 2023', 'Jul 22, 2023', 'Jul 24, 2023'],

@@ -25,7 +25,10 @@ const duplicate=await User.findOne({username}).lean()
 if(duplicate)
     return res.status(400).json({error:true,message:"there is already exist a user by this name",data:null})
 const hashedpassword=await bcrypt.hash(password,10)
-   const user=await User.create({password:hashedpassword,username,firstname,lastname,address,phone,profil,email})
+const newUser={password:hashedpassword,username,firstname,lastname,address,profil,email}
+if(phone)
+newUser.phone=phone
+   const user=await User.create(newUser)
    if(!user)
    return res.status(400).json({error:true,message:"create failed",data:null})
 

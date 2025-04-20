@@ -1,0 +1,62 @@
+.profile-card {
+  margin:10px;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 65vw;
+
+}
+
+.profile-info {
+  margin-left: 15px;
+  flex: 1;
+  display: flex;
+}
+
+.profile-name {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.profile-role {
+  color: gray;
+  font-size: 20px;
+  margin: 3px 0;
+}
+
+.contact-info {
+  font-size: 20px;
+  color: #555;
+}
+
+.contact-info p {
+  display: flex;
+  align-items: center;
+  margin: 3px 0;
+}
+
+.icon {
+  margin-right: 8px;
+  color: gray;
+}
+
+.email-icon {
+  color: blue;
+}
+
+.profile-actions {
+ 
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.action-button {
+ height: 2rem;
+ width:2rem;
+
+}

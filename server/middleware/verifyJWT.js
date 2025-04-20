@@ -8,8 +8,8 @@ const token=authHeader.split(' ')[1]
 jwt.verify(token,process.env.ACCESS_TOKEN,(err,decode)=>{
     if(err)
     return res.status(403).json({error:true,message:"Forbidden",data:null})
-    req.user=decode  
+    req.user=decode 
+    next()
 })
-next()
 }
 module.exports=verifyJWT

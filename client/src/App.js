@@ -5,7 +5,7 @@ import SignUp from './features/users/SignUp';
 import HollandInfoPage from './components/HollandInfoPage';
 import HollandPages from './components/HollandPages';
 import HollandPage1 from './components/HollandPage1';
-import { Outlet, Route, Router, Routes } from 'react-router-dom';
+import { Outlet, Route, Router, Routes, useNavigate } from 'react-router-dom';
 
 import Question from "./features/hollandTest/questions/Question"
 import HollandResults from './features/hollandTest/result/HollandResults';
@@ -30,9 +30,12 @@ import HomePage from './components/HomePage';
 import Profil from './features/users/Profil';
 import ViewQuestions from './features/hollandTest/questions/ViewQuestion';
 import Edit from './features/users/Edit';
+import ProfileCard from './features/users/ProfilCard';
 
 
 function App() {
+
+
   return (
     <div className="App">
       {/* <Upload/> */}
@@ -43,11 +46,17 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/" element={<PersistLogin />}>
-        <Route element={<RequireAuth allowedRoles={['admin']} />}>
-        <Route path="view" element={<ViewQuestions/>}></Route>
-        </Route>
+        
+    
           <Route element={<RequireAuth allowedRoles={['user', 'admin']} />}>
             <Route path="home" element={<><NavBar /><Outlet /></>}>
+
+            <Route element={<RequireAuth allowedRoles={['admin']} />}>
+        <Route path="view" element={<ViewQuestions/>}/>
+        <Route path="dash" element={<AdminDashboard/>}/>
+        <Route path="users" element={<UsersList/>}/>
+        </Route>
+
                 <Route path="edit" element={<Edit/>}/>
               <Route path="holland" element={<Outlet />}>
                 <Route index element={<HollandPages />} />

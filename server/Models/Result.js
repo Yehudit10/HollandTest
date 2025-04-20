@@ -5,7 +5,7 @@ const subResultSchema=new mongoose.Schema({
     capability:{type:Number,required:true},
     interest:{type:Number,required:true},
     select:{type:Boolean,required:true}
-})
+},{_id:false})
 const resultSchema= new mongoose.Schema({
     userId:{type:mongoose.Schema.Types.ObjectId,required:true,ref:'User'},
     result:{R:{type:subResultSchema,required:true},

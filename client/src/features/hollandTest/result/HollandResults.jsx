@@ -49,9 +49,10 @@ const HollandResults = () => {
             setSelected(prevSelected => [...prevSelected, type])
       
         }
-        setSums(tempSums)}
+        setSums(tempSums)
+        setSumAll(Object.values(sums).reduce((acc, val) => acc + val, 0));
+    }
         //setSumAll(Object.values(sums).reduce((acc, val) => acc + val, 0))
-
     },[sentencesIsSuccess])
 
     useEffect(() => {
@@ -62,7 +63,6 @@ const HollandResults = () => {
         typesData.data.forEach(({_id,type})=>{
             match=match-Math.abs((sums[type]/36)*100-(job.relatedTypes.find((relatedType)=>relatedType.type===_id)?.match||0))/6
         })
-        console.log(match)
          return match
     }
     const contentRef=useRef()
@@ -139,9 +139,9 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
                     
                 </div>
             </div>
-            <span data-html2canvas-ignore="true">
+            {/* <span data-html2canvas-ignore="true">
             <Sidebar/>
-            </span>
+            </span> */}
         </div>
         
 

@@ -21,19 +21,29 @@ const handleLogout=()=>{
 }
 useEffect(()=>{if(isSuccess)
 navigate("/login")},[isSuccess])
+const {profil,role}=useAuth()
+const userNavigation = [
+    { label: 'שאלון הכוונה', command:()=>{ navigate("holland")} },
+    //{ label: 'מאגר הלימודים' },
+    { label: 'מאגר העיסוקים',command:()=>{navigate("jobs")} },
+];
+const adminNavigation=[
+ { label:'שאלות',command:()=>{navigate("view")}}
+]
+const navigationList=role==='admin'?adminNavigation:userNavigation
+    // const items = [
+    //     { label: 'שאלון הכוונה', command:()=>{ navigate("holland")} },
+    //     //{ label: 'מאגר הלימודים' },
+    //     { label: 'מאגר העיסוקים',command:()=>{navigate("jobs")} },
+    // ];
 
-    const items = [
-        { label: 'שאלון הכוונה', command:()=>{ navigate("holland")} },
-        { label: 'מאגר הלימודים' },
-        { label: 'מאגר העיסוקים',command:()=>{navigate("jobs")} },
-    ];
-const {profil}=useAuth()
     const end = (
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Button  icon="pi pi-heart-fill" className="p-button-rounded p-button-secondary" />
             <Button icon="pi pi-search" className="p-button-rounded p-button-secondary" />
             <Avatar
-                icon="pi pi-user"
+                //icon="pi pi-user"
+                image={`http://localhost:2890/uploads/${profil}`}
                 shape="circle"
                 className="p-mr-2"
                 style={{ cursor: 'pointer' }}
@@ -50,7 +60,7 @@ const {profil}=useAuth()
     );
 
     return (
-        <Menubar model={items} end={end} className="custom-menubar" />
+        <Menubar model={navigationList} end={end} className="custom-menubar" />
     );
 };
 
