@@ -11,7 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import { Dropdown } from "primereact/dropdown";
         
 const FilterSidebar3 = () => {
-const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname"}
+const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname",limit:2}
   const [searchParams,setSearchParams]=useSearchParams(initState)
 
   const handleFilterChange =(name,value) => {
@@ -32,6 +32,7 @@ const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname"}
 const sortOptions={"א-ת":"jobname","שכר גבוה":"salaryAvg","שעות עבודה":"workingHoursAvg"}
 
   return (
+    <>
     <div className="filter-sidebar">
    {/* Search Box */}
    <div>
@@ -47,7 +48,13 @@ const sortOptions={"א-ת":"jobname","שכר גבוה":"salaryAvg","שעות ע�
       <div style={{display:'flex', flexDirection:'row-reverse',gap:'20px'}}>
         
         <h5 className="text-title">:מיון לפי</h5>
-          <Dropdown options={ Object.keys(sortOptions)} value={Object.keys(sortOptions).find(k=>sortOptions[k]===searchParams.get("sortBy"))} onChange={(e)=>{handleFilterChange("sortBy",sortOptions[e.target.value])}}/>
+          <Dropdown  className="small-dropdown"
+  //         style={{
+  //   height: '3.2rem',
+  //   padding: '4px 8px',
+    
+  // }}
+   options={ Object.keys(sortOptions)} value={Object.keys(sortOptions).find(k=>sortOptions[k]===searchParams.get("sortBy"))} onChange={(e)=>{handleFilterChange("sortBy",sortOptions[e.target.value])}}/>
         </div>
       
       <Divider/>
@@ -145,6 +152,18 @@ const sortOptions={"א-ת":"jobname","שכר גבוה":"salaryAvg","שעות ע�
      
       <Button label="איפוס" onClick={()=>{setSearchParams(initState)}}className="p-button-primary w-full" />
     </div>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
+    <Button label="show more" style={{
+    position:'absolute'  ,
+  bottom: '20px',
+  //left: '50%',
+  // height:'50px',
+  // width:'50px',
+  transform: 'translateX(-50%)'}}
+  onClick={()=>{
+    handleFilterChange("limit",parseInt(searchParams.get("limit"))+2)
+ }}/></div>
+    </>
   );
 };
 

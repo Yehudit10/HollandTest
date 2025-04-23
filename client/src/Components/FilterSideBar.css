@@ -14,6 +14,9 @@
     /* z-index: 999; */
     /* overflow: visible; */
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
   
   /* Search Box */
@@ -153,4 +156,16 @@
 
 
   /*  */
+  .small-dropdown {
+    font-size: 12px;
+    height: 30px;
+  }
+  
+  .small-dropdown .p-dropdown-label {
+    padding: 4px 8px;
+  }
+  
+  .small-dropdown .p-dropdown-trigger {
+    padding: 4px;
+  }
   

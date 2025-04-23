@@ -18,7 +18,7 @@ return <Loading/>
 return(
     <>
     <div style={{ display: 'flex', flexDirection: 'row-reverse', gap: '20px', width: '100%' }}>
-      <FilterSidebar3/>
+    <FilterSidebar3/> 
       <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '20px',padding:'4rem' }}>   
         {jobsList.map((job)=>(<div key={job._id}>
         <OccupationCard2
@@ -29,9 +29,11 @@ return(
           salaryAvg={job.salaryAvg}
         />
       </div>)
+      
          )}
-               
+            
       </div>
+       
     </div>
   </>
   
