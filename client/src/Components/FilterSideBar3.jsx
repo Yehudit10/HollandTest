@@ -8,9 +8,10 @@ import { InputIcon } from "primereact/inputicon";
 import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber"
 import { useSearchParams } from "react-router-dom";
+import { Dropdown } from "primereact/dropdown";
         
 const FilterSidebar3 = () => {
-const initState={minWorkingHours:0,maxWorkingHours:50}
+const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname"}
   const [searchParams,setSearchParams]=useSearchParams(initState)
 
   const handleFilterChange =(name,value) => {
@@ -28,10 +29,12 @@ const initState={minWorkingHours:0,maxWorkingHours:50}
   }
 
  
+const sortOptions={"א-ת":"jobname","שכר גבוה":"salaryAvg","שעות עבודה":"workingHoursAvg"}
 
   return (
     <div className="filter-sidebar">
-      {/* Search Box */}
+   {/* Search Box */}
+   <div>
           <IconField  iconPosition="left">
                 <InputIcon className="pi pi-search"> </InputIcon>
                 <InputText className="input-search" onChange={
@@ -39,7 +42,14 @@ const initState={minWorkingHours:0,maxWorkingHours:50}
                 }
                   style={{direction:'rtl'}} placeholder="במה היית רוצה לעסוק?" />
             </IconField>
-
+            </div>
+      <Divider/>
+      <div style={{display:'flex', flexDirection:'row-reverse',gap:'20px'}}>
+        
+        <h5 className="text-title">:מיון לפי</h5>
+          <Dropdown options={ Object.keys(sortOptions)} value={Object.keys(sortOptions).find(k=>sortOptions[k]===searchParams.get("sortBy"))} onChange={(e)=>{handleFilterChange("sortBy",sortOptions[e.target.value])}}/>
+        </div>
+      
       <Divider/>
       {/* Salary Filter */}
       <div>
@@ -66,7 +76,7 @@ const initState={minWorkingHours:0,maxWorkingHours:50}
       </div>
       {/* Working hours Slider */}
       <div >
-        <h5 className="text-title">שעות עבודה</h5>
+        <h5 className="text-second">שעות עבודה</h5>
         <h6 className="text-second">כמה שעות עבודה בשבוע? גררו את העיגולים עד שתגיעו לטווח הרצוי. הממוצע הוא כ-41</h6>
         <Slider
 

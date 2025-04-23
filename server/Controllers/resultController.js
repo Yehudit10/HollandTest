@@ -71,6 +71,12 @@ highInNot=sumResult[category]
     return res.status(400).json({error:true,message:"create failed",data:null})
     return res.status(201).json({error:false,message:null,data:newResult})
 }
+const getAllUserResult=async(req,res)=>{
+    const results=await Result.find({userId:req.user._id}).lean();
+    // if(!results)
+    // return res.status(400).json({error:true,message:"results not found",data:null})
+    return res.status(200).json({error:false,message:"",data:results})
+}
 const getResultsWithSentences=async(req,res)=>{
     const sentences=[]
     const {id}=req.params
@@ -200,4 +206,4 @@ return res.status(200).json({error:false,message:null,data:{result,sentences}})
 
 }
 
-module.exports={addResult,getResultsWithSentences}
+module.exports={addResult,getResultsWithSentences,getAllUserResult}

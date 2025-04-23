@@ -61,7 +61,7 @@ console.log(currentChapter)
     },[userAnswers])
     useEffect(()=>{
         if(deleteIsSuccess&&resultIsSuccess)
-        navigate(`result/${resultData.data._id}`)
+        navigate(`/results/${resultData.data._id}`)
 
     },[deleteIsSuccess])
   
@@ -122,6 +122,8 @@ else{
         <>
         
     <div className='question-container'>
+       
+        <button onClick={()=>{ navigate('../results/67e4467ee7231939e74106ef')}}></button>
     <Steps activeIndex={currentChapter} style={{marginTop:'3vh'}} model={[{label:'חלק ראשון'},{label:'חלק שני'},{label:'חלק שלישי'}]} />
         <div className="carousel-wrapper">
             <Carousel value={userAnswers?.map((q)=>q.question)} numVisible={1} numScroll={1} 

@@ -7,9 +7,9 @@ const OccupationCard2 = ({ title, description, educationLevel,salaryAvg,workingH
 const starsMap=[
   "אין התאמה",
  "התאמה דלה",
-  "ץץץ",
-  "לללל",
+  "התאמה?",
   "התאמה טובה",
+  "התאמה טובה מאוד",
   "התאמה מצוינת"
 ]
 console.log()

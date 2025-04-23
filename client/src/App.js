@@ -31,6 +31,7 @@ import Profil from './features/users/Profil';
 import ViewQuestions from './features/hollandTest/questions/ViewQuestion';
 import Edit from './features/users/Edit';
 import ProfileCard from './features/users/ProfilCard';
+import ViewResults from './features/hollandTest/result/ViewResults';
 
 
 function App() {
@@ -47,7 +48,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/" element={<PersistLogin />}>
         
-    
+
           <Route element={<RequireAuth allowedRoles={['user', 'admin']} />}>
             <Route path="home" element={<><NavBar /><Outlet /></>}>
 
@@ -62,7 +63,8 @@ function App() {
                 <Route index element={<HollandPages />} />
                 <Route path="holland-info" element={<HollandInfoPage />} />
                 <Route path="test" element={<Question/>} />
-                <Route path="test/result/:resultId" element={<HollandResults />} />
+                <Route path="results" element={<ViewResults/>}/>
+                <Route path="results/:resultId" element={<HollandResults />} />
               </Route>
               <Route path="jobs" element={<JobList/>}/>
               
@@ -71,28 +73,6 @@ function App() {
         </Route>
 
       </Routes>
-      {/* <NavBar/>
-  <FilterSidebar/> */}
-      {/* <HollandResults2/> */}
-      {/* <SubjectsList/> */}
-      {/* <TestProgressChart /> */}
-      {/* <DynamicPieChart/> */}
-      {/* <Question/> */}
-      {/* <HollandResults/> */}
-      {/* <HollandPages/> */}
-
-      {/* <HollandResults2/> */}
-
-      {/* <HollandInfoPage/> */}
-
-      {/* <HollandPage1/> */}
-      {/* <RatingPage/> */}
-      {/* <Login/> */}
-      {/* <UserRegistrationChart/> */}
-      {/* <UsersList/> */}
-      {/* <AdminDashboard/> */}
-      {/* <JobList/> */}
-      {/* <Dashboard/> */}
     </div>
   );
 }
