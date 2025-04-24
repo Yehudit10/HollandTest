@@ -9,14 +9,19 @@ import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber"
 import { useSearchParams } from "react-router-dom";
 import { Dropdown } from "primereact/dropdown";
+import { useEffect } from "react";
         
 const FilterSidebar3 = () => {
-const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname",limit:2}
+const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname",offset:0,limit:2}
+
+
   const [searchParams,setSearchParams]=useSearchParams(initState)
 
+
   const handleFilterChange =(name,value) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set(name,value);
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.set(name,value)
+    newSearchParams.set("page",0)
   setSearchParams(newSearchParams);  
   };
 
@@ -25,6 +30,7 @@ const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname",limit:2}
     let newVal=newSearchParams.get(name)?.split(',')||[]
     newVal.includes(value)?newVal=newVal.filter((v)=>v!=value):newVal.push(value)
     newSearchParams.set(name,newVal)
+    newSearchParams.set("page",0)
     setSearchParams(newSearchParams); 
   }
 
@@ -49,12 +55,9 @@ const sortOptions={"א-ת":"jobname","שכר גבוה":"salaryAvg","שעות ע�
         
         <h5 className="text-title">:מיון לפי</h5>
           <Dropdown  className="small-dropdown"
-  //         style={{
-  //   height: '3.2rem',
-  //   padding: '4px 8px',
-    
-  // }}
-   options={ Object.keys(sortOptions)} value={Object.keys(sortOptions).find(k=>sortOptions[k]===searchParams.get("sortBy"))} onChange={(e)=>{handleFilterChange("sortBy",sortOptions[e.target.value])}}/>
+ 
+   options={ Object.keys(sortOptions)} value={Object.keys(sortOptions).find(k=>sortOptions[k]===searchParams.get("sortBy"))} onChange={(e)=>{handleFilterChange("sortBy",sortOptions[e.target.value])
+   }}/>
         </div>
       
       <Divider/>
@@ -152,7 +155,7 @@ const sortOptions={"א-ת":"jobname","שכר גבוה":"salaryAvg","שעות ע�
      
       <Button label="איפוס" onClick={()=>{setSearchParams(initState)}}className="p-button-primary w-full" />
     </div>
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
+    {/* <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
     <Button label="show more" style={{
     position:'absolute'  ,
   bottom: '20px',
@@ -161,8 +164,8 @@ const sortOptions={"א-ת":"jobname","שכר גבוה":"salaryAvg","שעות ע�
   // width:'50px',
   transform: 'translateX(-50%)'}}
   onClick={()=>{
-    handleFilterChange("limit",parseInt(searchParams.get("limit"))+2)
- }}/></div>
+    handleFilterChange("offset",parseInt(searchParams.get("limit"))+parseInt(searchParams.get("offset")))
+ }}/></div> */}
     </>
   );
 };

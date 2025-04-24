@@ -11,6 +11,7 @@ return res.status(200).json({error:false,message:"",data:users})
 }
 
 const getUserByID=async(req,res)=>{
+   
     const user=await User.findById(req.user._id,{password:0}).lean()
     if(!user)
         return res.status(400).json({error:true,message:"no user found",data:null})
@@ -36,7 +37,7 @@ newUser.phone=phone
 
 }
 const updateUser=async(req,res)=>{
-    const {password,username,firstname,lastname,address,phone,email}=req.body
+    const {password,username,firstname,lastname,address,phone,email,favoraites}=req.body
     if(!username||!email)
         return res.status(400).json({error:true,message:"you are missing required fields",data:null})
         const duplicate=await User.findOne({username,_id:{$ne:req.user._id}}).lean()
@@ -53,6 +54,7 @@ const updateUser=async(req,res)=>{
     user.lastname=lastname
     user.address=address
     user.phone=phone
+    user.favoraites=favoraites
     if(req.file)
     user.profil=req.file.filename
     user.email=email

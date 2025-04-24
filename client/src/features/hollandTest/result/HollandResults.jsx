@@ -121,11 +121,7 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
                    
                {[...jobsData?.data].sort((job1,job2)=>{return (matchPercentage(job2)-matchPercentage(job1))}).map((job)=>
                        <OccupationCard2
-                       title={job.jobname}
-                       description={job.description}
-                       educationLevel={job.educationLevel}
-                       workingHoursAvg={job.workingHoursAvg}
-                       salaryAvg={job.salaryAvg}
+                       job={job}
                        matchPercentage={matchPercentage(job)}
                    /> 
                     )}

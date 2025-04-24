@@ -22,7 +22,7 @@ const {getFilePath}=useGetFilePath()
   const { register, handleSubmit,control, reset,formState: { errors } } = useForm();
 const [update,{isError,isLoading,isSuccess}]=useUpdateUserMutation()
 useEffect(()=>{
-  console.log(userIsSuccuss)
+  
   if(userIsSuccuss){
   const{username,firstname,lastname,phone,email,role,address,profil}=userData.data
   setPreview(getFilePath(profil)) 
