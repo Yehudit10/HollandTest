@@ -7,17 +7,16 @@ import 'primeicons/primeicons.css';
 import './adminDashboard.css'
 import UserRegistrationChart from './UserRegisteration';
 import DynamicPieChart from './Pie';
-import {useGetUsersQuery} from "../features/users/userApiSlice"
+import {useGetUsersQuery, useGetUsersStatQuery} from "../features/users/userApiSlice"
+import { useSearchParams } from 'react-router-dom';
+import { Calendar } from 'primereact/calendar';
 const Dashboard = () => {
-    // נתונים סטטיסטיים לדוגמה
-    const weeklyRevenue = 1930;
-    const weeklyOrders = 65;
-    const newCustomers = 107;
-    const {data:usersData,isLoading:usersIsLoading}=useGetUsersQuery()
-    const users=usersData.data
-    
-
-
+   
+   
+const [searchParams,setSearchParams]=useSearchParams()
+    const onMonthChange = (e) => { 
+        setSearchParams(e.target.value?{fromMonth:(e.target.value).toISOString()}:{})    
+      };
 
     const dailyRevenueData = {
         labels: ['Jul 17, 2023', 'Jul 18, 2023', 'Jul 19, 2023', 'Jul 20, 2023', 'Jul 21, 2023', 'Jul 22, 2023', 'Jul 24, 2023'],
@@ -37,7 +36,11 @@ const Dashboard = () => {
             }
         }
     };
-
+   
+const fromMonth= Object.fromEntries(searchParams.entries());
+    const {data:usersData}=useGetUsersStatQuery(fromMonth)
+    const today = new Date();
+    const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
     return (
         <div className="dashboard-container">
             <div className="top-cards">
@@ -49,12 +52,20 @@ const Dashboard = () => {
                     <i className={`pi ${PrimeIcons.SHOPPING_CART}`} ClassName="card-icon" />
                     <p>+231% since last week</p>
                 </Card>
-                <Card title="New Customers" subTitle="107" ClassName="customers-card">
+                <Card title="New Customers"  ClassName="customers-card">
                     <i className={`pi ${PrimeIcons.USER_PLUS}`} ClassName="card-icon" />
-                    <p>+103% since last week</p>
+                    <p>{usersData?.data[usersData?.data?.length-1]?.count+" new customer this month"}</p>
                 </Card>
             </div>
-
+            <Calendar 
+        value={searchParams.get('fromMonth')&&new Date(searchParams.get('fromMonth'))}
+        onChange={onMonthChange}
+        view="month"  
+        dateFormat="mm/yy" 
+        maxDate={lastMonthEnd} 
+        showIcon={true}  
+        showButtonBar={true}  
+      />
             <TabView>
                 <TabPanel header="Daily Revenue">
                     <Chart type="bar" data={dailyRevenueData} options={chartOptions} />
@@ -63,7 +74,7 @@ const Dashboard = () => {
                     <DynamicPieChart></DynamicPieChart>
                 </TabPanel>
                 <TabPanel header="New Customers">
-                   <UserRegistrationChart/>
+                   <UserRegistrationChart users={usersData?.data}/>
                 </TabPanel>
             </TabView>
         </div>

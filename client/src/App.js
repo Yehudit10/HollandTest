@@ -53,8 +53,9 @@ function App() {
             <Route path="home" element={<><NavBar /><Outlet /></>}>
 
             <Route element={<RequireAuth allowedRoles={['admin']} />}>
+            <Route path="stat" element={<AdminDashboard/>}/>
         <Route path="view" element={<ViewQuestions/>}/>
-        <Route path="dash" element={<AdminDashboard/>}/>
+        
         <Route path="users" element={<UsersList/>}/>
         </Route>
 

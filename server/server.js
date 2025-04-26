@@ -11,6 +11,7 @@ app.use(cors(corsOptions))
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.static("public"))
+
 app.use("/api/users",require("./Routes/userRoutes"))
 app.use("/api/auth",require("./Routes/authRoutes"))
 app.use("/api/questions",require("./Routes/questionRoutes"))

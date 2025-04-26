@@ -28,7 +28,8 @@ const userNavigation = [
     { label: 'מאגר העיסוקים',command:()=>{navigate("jobs")} },
 ];
 const adminNavigation=[
- { label:'שאלות',command:()=>{navigate("view")}}
+ { label:'שאלות',command:()=>{navigate("view")}},
+
 ]
 const navigationList=role==='admin'?adminNavigation:userNavigation
     // const items = [

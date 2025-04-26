@@ -15,7 +15,7 @@ if(minWorkingHours)
 query.workingHoursAvg={$gte:minWorkingHours}
 if(maxWorkingHours)
 query.workingHoursAvg={...(query.workingHoursAvg||{}),$lte:maxWorkingHours}
-const jobs=await Job.find(query).sort(sortBy).skip((page||0)*(pageSize||2)).limit(pageSize||2).lean()
+const jobs=await Job.find(query).sort(sortBy).skip(page*pageSize).limit(pageSize).lean()
 if(!jobs)
 return res.status(400).json({error:true,message:"no jobs found",data:null})
 

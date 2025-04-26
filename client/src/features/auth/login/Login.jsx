@@ -14,10 +14,11 @@ import useAuth from "../../../hooks/useAuth";
 
 const Login = () => {
   const { register, handleSubmit ,control,reset,formState: { errors } } = useForm();
-  const [login,{isError,isSuccess,isLoading,data}]=useLoginMutation()
+  const [login,{isError,isSuccess,isLoading,data,error}]=useLoginMutation()
  
 const navigate=useNavigate()
 useEffect(()=>{
+  
 if(isSuccess)
 {
 navigate("/home")
@@ -27,7 +28,8 @@ navigate("/home")
     login(data)
   
   };
-
+if(isError)
+return (<>{JSON.stringify(error)}</>)
   return (
     <div className="form-container">
       <div className="form-card">

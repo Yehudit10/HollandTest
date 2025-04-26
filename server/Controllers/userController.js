@@ -1,7 +1,7 @@
 
 const bcrypt=require("bcrypt")
 const User=require("../Models/User")
-
+const nodemailer=require("nodemailer")
 
 const getAllUsers=async(req,res)=>{
  const users=   await User.find({},{password:0}).lean()
@@ -16,6 +16,71 @@ const getUserByID=async(req,res)=>{
     if(!user)
         return res.status(400).json({error:true,message:"no user found",data:null})
     return res.status(200).json({error:false,message:"",data:user})
+}
+const getUsersStatistics=async(req,res)=>{
+    const now = new Date();
+    const {fromMonth=new Date(now.getFullYear(), now.getMonth() - 11, 1)}=req.query
+    const fromDate=new Date(fromMonth)
+    console.log(fromDate)
+
+const usersCount = await User.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: fromDate } 
+      }
+    },
+    {
+      $project: {
+        yearMonth: { $dateToString: { format: "%Y-%m", date: "$createdAt" } } 
+      }
+    },
+    {
+      $group: {
+        _id: "$yearMonth", 
+        count: { $sum: 1 } 
+      }
+    },
+    {
+      $sort: { _id: 1 } 
+    }
+  ])
+
+
+
+const result = [];
+const monthsDiff=(now.getFullYear() - fromDate.getFullYear()) * 12 + now.getMonth() -fromDate.getMonth()
+    for (let i = monthsDiff - 1; i >= 0; i--) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);  
+      const monthStr = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}`; 
+      const match = usersCount.find(m => m._id === monthStr);
+      result.push({
+        month: `${date.toLocaleString("default", { month: "short" })} ${date.getFullYear()}`,
+        count: match ? match.count : 0 
+      });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        return res.status(200).json({error:false,message:"",data:result})
+    
+
 }
 const addUser=async(req,res)=>{
     const {username,password,firstname,lastname,address,phone,email}=req.body
@@ -77,4 +142,4 @@ const deleteUser=async(req,res)=>{
         return res.status(200).json({error:false,message:null,data:deletedUser})
     
    }
-   module.exports={deleteUser,updateUser,getAllUsers,getUserByID,addUser}
+   module.exports={deleteUser,updateUser,getAllUsers,getUserByID,addUser,getUsersStatistics}

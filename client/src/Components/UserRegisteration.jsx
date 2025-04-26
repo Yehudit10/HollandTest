@@ -2,14 +2,16 @@ import React from "react";
 import { Chart } from "primereact/chart";
 import { Card } from "primereact/card";
 
+
 const UserRegistrationChart = ({users}) => {
-const monthes=["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul","","Sep","Oct","Nov","Dec"]
+
+
   const data = {
-    labels: [],
+    labels: users?.map(m=>m.month),
     datasets: [
       {
         label: "User Registrations",
-        data: [20, 50, 120, 300, 500, 700], // Replace with real data
+        data: users?.map(m=>m.count),
         backgroundColor: "rgba(100, 181, 246, 0.3)", // Light blue fill
         borderColor: "#1976D2", // Blue line
         pointBackgroundColor: "#0D47A1", // Dark blue points
@@ -50,6 +52,7 @@ const monthes=["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul","","Sep","Oct","No
   };
 
   return (
+    
     <div >
       <Card  >
         <h3>

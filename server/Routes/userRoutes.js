@@ -18,7 +18,8 @@ const verifyJWT=require("../middleware/verifyJWT")
 router.post("/",upload.single("profil"),userController.addUser)
 router.use(verifyJWT)
 router.get("/",userController.getAllUsers)
-router.get("/me",userController.getUserByID)
+router.get("/stat",userController.getUsersStatistics)
+router.get("/me",userController.getUserByID)///id instead???
 router.put("/",upload.single("profil"),userController.updateUser)
 router.delete("/",userController.deleteUser)
 module.exports=router

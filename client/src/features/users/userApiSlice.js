@@ -19,6 +19,12 @@ const userApiSlice=apiSlice.injectEndpoints(
             }), 
             providesTags:['User']
         }),
+        getUsersStat:build.query({
+            query:(params)=>({
+                url:'/api/users/stat',
+                params
+            })
+        }),
         addUser:build.mutation({
            query:(data)=>({
                url:"/api/users",
@@ -48,5 +54,5 @@ const userApiSlice=apiSlice.injectEndpoints(
 
 }
 )
-export const {useAddUserMutation,useDeleteUserMutation,useGetUsersQuery,useUpdateUserMutation,useGetUserByIdQuery}=userApiSlice
+export const {useGetUsersStatQuery,useAddUserMutation,useDeleteUserMutation,useGetUsersQuery,useUpdateUserMutation,useGetUserByIdQuery}=userApiSlice
 export default userApiSlice
