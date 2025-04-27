@@ -20,6 +20,7 @@ app.use("/api/jobs",require("./Routes/jobRoutes"))
 app.use("/api/results",require("./Routes/resultRoutes"))
 app.use("/api/tests",require("./Routes/testRoutes"))
 app.use("/api/types",require("./Routes/typeRoutes"))
+app.use("/api/email",require("./Routes/emailRoutes"))
 connectToDB()
 mongoose.connection.once('open',()=>{
     app.listen(PORT,()=>{

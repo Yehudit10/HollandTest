@@ -10,7 +10,7 @@ import { Button } from "primereact/button"
 
 const JobList=()=>{
 
-  const [searchParams,setSearchParams]=useSearchParams()
+  const [searchParams,setSearchParams]=useSearchParams({page:0,pageSize:2})
   const queryParams =Object.fromEntries(searchParams.entries());
   const {data,isError,isSuccess,isLoading}=useGetJobsQuery(queryParams)
  const [jobsList,setJobsList]=useState([])

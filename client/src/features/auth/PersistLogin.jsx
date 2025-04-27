@@ -2,8 +2,9 @@ import { useSelector } from "react-redux"
 import { selectToken } from "./authSlice"
 import { useEffect, useRef, useState } from "react"
 import { useRefreshMutation } from "./authApiSlice"
-import { Navigate, Outlet, useNavigate } from "react-router-dom"
-
+import { Link, Navigate, Outlet, useNavigate } from "react-router-dom"
+import Loading, {} from '../../components/Loading'
+import Error from "../../components/Error"
 const PersistLogin = () => {
     const navigate=useNavigate()
     const token = useSelector(selectToken)
@@ -26,12 +27,14 @@ const PersistLogin = () => {
         }
         return()=>effectRan.current=true
     }, [])
-    //show loading...and errors
+    if(isLoading)
+        return <Loading/>
     if(isError)
     {
-console.log(error)
-   
-    navigate("/login") }
+        console.log(error)
+  return(<><Error error={error.data?.messsage}/><Link to='/login'>please login again</Link></>)
+    //navigate("/login")
+ }
     return(<>{(isSuccess&&trueSuccess||isUninitialized&&token)&&<Outlet/>}</>)
 
 }

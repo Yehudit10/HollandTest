@@ -18,6 +18,8 @@ import Loading from '../../../components/Loading';
 import useGetFilePath from '../../../hooks/useGetFilePath';
 import { useGetJobsQuery } from '../../jobs/jobApiSlice';
 import OccupationCard2 from '../../../components/OccupationCard2';
+import { useSendEmailMutation } from '../../email/emailApiSlice';
+
 const HollandResults = () => {
     const{resultId}=useParams()
     const {getFilePath}=useGetFilePath()
@@ -66,6 +68,21 @@ const HollandResults = () => {
          return match
     }
     const contentRef=useRef()
+    const [sendMail,{}]=useSendEmailMutation()
+const sendEmail=async()=>{
+    const page = contentRef.current; 
+  
+  try {
+    const canvas=await html2canvas(page,{scale:0.5,useCORS: true})
+    const base64Image = canvas.toDataURL("image/jpeg", 0.6);
+   
+    sendMail(base64Image)
+  }catch (error) {
+    console.error("Error capturing the page", error);
+  }
+}
+
+
 const downloadPDF=async()=>{
 const page=contentRef.current
 const canvas=await html2canvas(page,{scale:1.5,useCORS: true})
@@ -83,12 +100,19 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
     return(
 
         <div ref={contentRef} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+          
      <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', paddingLeft: '20px' }}>
     <Button data-html2canvas-ignore="true"
         label="הורד PDF" 
         icon="pi pi-download" 
         className="p-button-raised p-button-rounded p-button-info"
         onClick={downloadPDF} 
+    />
+     <Button data-html2canvas-ignore="true"
+        label="שליחה למייל" 
+        icon="pi pi-envelope" 
+        className="p-button-raised p-button-rounded p-button-info"
+        onClick={sendEmail} 
     />
 </div>
 

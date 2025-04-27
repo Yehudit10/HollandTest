@@ -10,13 +10,8 @@ import { Outlet, Route, Router, Routes, useNavigate } from 'react-router-dom';
 import Question from "./features/hollandTest/questions/Question"
 import HollandResults from './features/hollandTest/result/HollandResults';
 import NavBar from './components/NavBar';
-import DynamicPieChart from './components/Pie';
-import HollandResults2 from './components/HollandResult2';
-import TestProgressChart from './components/TestProgress';
-import SubjectsList from './features/subjects/SubjecstList';
-import FilterSidebar from './components/FilterSideBar';
-import Upload from './components/Upload';
-import UserRegistrationChart from './components/UserRegisteration';
+
+
 import UserCard from './features/users/UserCard';
 import UsersList from './features/users/UsersList';
 import RequireAuth from './features/auth/RequireAuth';
@@ -32,6 +27,7 @@ import ViewQuestions from './features/hollandTest/questions/ViewQuestion';
 import Edit from './features/users/Edit';
 import ProfileCard from './features/users/ProfilCard';
 import ViewResults from './features/hollandTest/result/ViewResults';
+import Favoraites from './components/Favoraites';
 
 
 function App() {
@@ -39,9 +35,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* <Upload/> */}
-
-
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<Login />} />
@@ -59,8 +52,10 @@ function App() {
         <Route path="users" element={<UsersList/>}/>
         </Route>
 
+
+                <Route path="favoraites" element={<Favoraites/>}/>
                 <Route path="edit" element={<Edit/>}/>
-              <Route path="holland" element={<Outlet />}>
+               <Route path="holland" element={<Outlet />}>
                 <Route index element={<HollandPages />} />
                 <Route path="holland-info" element={<HollandInfoPage />} />
                 <Route path="test" element={<Question/>} />

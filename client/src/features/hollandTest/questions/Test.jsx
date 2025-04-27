@@ -12,12 +12,14 @@ import { Image } from 'primereact/image';
 import { Card } from 'primereact/card';
 import { Steps } from 'primereact/steps';
 import { useNavigate } from 'react-router-dom';
+import { useGetQuestionsQuery } from './questionApiSlice';
 import Loading from '../../../components/Loading';
 import { useAddTestMutation, useDeleteTestMutation, useGetTestQuery, useUpdateTestMutation } from './testApiSlice';
 import { useAddResultMutation } from '../result/resultApiSlice';
 import {useGetChaptersQuery} from '../chapters/chapterApiSlice'
 const  Question=()=> {
     const navigate=useNavigate()
+    const{data:QuestionData,isError,isSuccess:questionIsSuccess,isLoading:questionIsLoading}=useGetQuestionsQuery()
     const {data:chapterData,isLoading:chapterIsLoading,isSuccess:chapterIsSuccess}=useGetChaptersQuery()
     const {data:testData,isError:testIsError,isLoading:testIsLoading,isSuccess:testIsSuccess}=useGetTestQuery()
     const[addTest,{data:newTestData}]=useAddTestMutation()
@@ -38,10 +40,10 @@ setCurrentChapter(chapterData?.data?.findIndex((c)=>c._id===chapterId))
         
         if(testIsSuccess)
         {
-        if(testData==null)
-        addTest()
+        if(testData==null&&questionIsSuccess)
+        addTest(QuestionData.data)
 
-    }},[testIsSuccess])
+    }},[testIsSuccess,questionIsSuccess])
     useEffect(()=>{if(testData?.data){setUserAnswers(testData.data.test)
         const index=testData.data?.test?.findIndex((question)=>question.questionResult==null)
         if(index===-1)
@@ -59,7 +61,7 @@ setCurrentChapter(chapterData?.data?.findIndex((c)=>c._id===chapterId))
     },[userAnswers])
     useEffect(()=>{
         if(deleteIsSuccess&&resultIsSuccess)
-        navigate(`home/holland/results/${resultData.data._id}`)
+        navigate(`/results/${resultData.data._id}`)
 
     },[deleteIsSuccess])
   
@@ -114,14 +116,14 @@ else{
     deleteTest({_id:testId})
 }
     }
-          if(testIsLoading||chapterIsLoading)
+          if(questionIsLoading||testIsLoading||chapterIsLoading)
           return <Loading/> 
     return (
         <>
         
     <div className='question-container'>
     
-    <Steps activeIndex={currentChapter} style={{marginTop:'3vh'}} model={chapterData?.data?.map(c=>({label:c.title}))} />
+    <Steps activeIndex={currentChapter} style={{marginTop:'3vh'}} model={[{label:'חלק ראשון'},{label:'חלק שני'},{label:'חלק שלישי'}]} />
         <div className="carousel-wrapper">
             <Carousel value={userAnswers?.map((q)=>q.question)} numVisible={1} numScroll={1} 
              itemTemplate={showQuestion} 

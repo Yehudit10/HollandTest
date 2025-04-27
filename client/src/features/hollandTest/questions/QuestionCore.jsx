@@ -12,59 +12,59 @@ import { Image } from 'primereact/image';
 import { Card } from 'primereact/card';
 import { Steps } from 'primereact/steps';
 import { useNavigate } from 'react-router-dom';
+import { useGetQuestionsQuery } from './questionApiSlice';
 import Loading from '../../../components/Loading';
 import { useAddTestMutation, useDeleteTestMutation, useGetTestQuery, useUpdateTestMutation } from './testApiSlice';
 import { useAddResultMutation } from '../result/resultApiSlice';
 import {useGetChaptersQuery} from '../chapters/chapterApiSlice'
-const  Question=()=> {
+const  Question=({chapters,userAnswers})=> {
     const navigate=useNavigate()
-    const {data:chapterData,isLoading:chapterIsLoading,isSuccess:chapterIsSuccess}=useGetChaptersQuery()
-    const {data:testData,isError:testIsError,isLoading:testIsLoading,isSuccess:testIsSuccess}=useGetTestQuery()
-    const[addTest,{data:newTestData}]=useAddTestMutation()
-    const [updateTest,{}]=useUpdateTestMutation()
-    const [deleteTest,{isSuccess:deleteIsSuccess}]=useDeleteTestMutation()
-    const [saveResult,{data:resultData,isError:resultIsError,isSuccess:resultIsSuccess}]=useAddResultMutation()
-    const [currentQuestion,setCurrentQuestion]=useState(0)
-    const [userAnswers,setUserAnswers]=useState([])
+//     const{data:QuestionData,isError,isSuccess:questionIsSuccess,isLoading:questionIsLoading}=useGetQuestionsQuery()
+//     const {data:chapterData,isLoading:chapterIsLoading,isSuccess:chapterIsSuccess}=useGetChaptersQuery()
+//     const {data:testData,isError:testIsError,isLoading:testIsLoading,isSuccess:testIsSuccess}=useGetTestQuery()
+//     const[addTest,{data:newTestData}]=useAddTestMutation()
+//     const [updateTest,{}]=useUpdateTestMutation()
+//     const [deleteTest,{isSuccess:deleteIsSuccess}]=useDeleteTestMutation()
+//     const [saveResult,{data:resultData,isError:resultIsError,isSuccess:resultIsSuccess}]=useAddResultMutation()
+     const [currentQuestion,setCurrentQuestion]=useState(0)
     const [currentChapter,setCurrentChapter]=useState(0);
-    const testId=testData?.data._id
-    useEffect(()=>setCurrentChapter(0),[chapterIsSuccess])
+//     const testId=testData?.data._id
+//     useEffect(()=>setCurrentChapter(0),[chapterIsSuccess])
     useEffect(()=>{
         const chapterId=userAnswers[currentQuestion]?.question?.chapterID
         if(chapterId!=currentChapter)
-setCurrentChapter(chapterData?.data?.findIndex((c)=>c._id===chapterId))
+setCurrentChapter(chapters.findIndex((c)=>c._id===chapterId))
         },[currentQuestion])
-    useEffect(()=>{
+//     useEffect(()=>{
         
-        if(testIsSuccess)
-        {
-        if(testData==null)
-        addTest()
+//         if(testIsSuccess)
+//         {
+//         if(testData==null&&questionIsSuccess)
+//         addTest(QuestionData.data)
 
-    }},[testIsSuccess])
-    useEffect(()=>{if(testData?.data){setUserAnswers(testData.data.test)
-        const index=testData.data?.test?.findIndex((question)=>question.questionResult==null)
-        if(index===-1)
-       setCurrentQuestion(testData.data?.test?.length-1)
-    else
-    setCurrentQuestion(index)
+//     }},[testIsSuccess,questionIsSuccess])
+//     useEffect(()=>{if(testData?.data){setUserAnswers(testData.data.test)
+//         const index=testData.data?.test?.findIndex((question)=>question.questionResult==null)
+//         if(index===-1)
+//        setCurrentQuestion(testData.data?.test?.length-1)
+//     else
+//     setCurrentQuestion(index)
 
-}},[testData])
+// }},[testData])
     
-    useEffect(()=>{
-       if(testId)
-        updateTest({
-    _id:testId,
-    test:userAnswers?.map((answer)=>({question:answer.question._id,questionResult:answer.questionResult}))})
-    },[userAnswers])
-    useEffect(()=>{
-        if(deleteIsSuccess&&resultIsSuccess)
-        navigate(`home/holland/results/${resultData.data._id}`)
+//     useEffect(()=>{
+//        if(testId)
+//         updateTest({
+//     _id:testId,
+//     test:userAnswers?.map((answer)=>({question:answer.question._id,questionResult:answer.questionResult}))})
+//     },[userAnswers])
+//     useEffect(()=>{
+//         if(deleteIsSuccess&&resultIsSuccess)
+//         navigate(`/results/${resultData.data._id}`)
 
-    },[deleteIsSuccess])
+//     },[deleteIsSuccess])
   
 const showImg=(num)=>{
- 
 switch(num)
 {
     case 4: return love;
@@ -105,23 +105,23 @@ switch(num)
          if(currentQuestion<userAnswers.length-1)
          setCurrentQuestion(currentQuestion+1)
     }
-    const handleNext=()=>{
-        if(currentQuestion<userAnswers.length-1)
-setCurrentQuestion(currentQuestion+1)
+//     const handleNext=()=>{
+//         if(currentQuestion<userAnswers.length-1)
+// setCurrentQuestion(currentQuestion+1)
 
-else{
-    saveResult({testId})
-    deleteTest({_id:testId})
-}
-    }
-          if(testIsLoading||chapterIsLoading)
-          return <Loading/> 
+// else{
+//     saveResult({testId})
+//     deleteTest({_id:testId})
+// }
+//     }
+//           if(questionIsLoading||testIsLoading||chapterIsLoading)
+//           return <Loading/> 
     return (
         <>
         
     <div className='question-container'>
     
-    <Steps activeIndex={currentChapter} style={{marginTop:'3vh'}} model={chapterData?.data?.map(c=>({label:c.title}))} />
+    <Steps activeIndex={currentChapter} style={{marginTop:'3vh'}} model={chapters.map(c=>({label:c.title}))} />
         <div className="carousel-wrapper">
             <Carousel value={userAnswers?.map((q)=>q.question)} numVisible={1} numScroll={1} 
              itemTemplate={showQuestion} 

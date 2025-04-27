@@ -5,6 +5,19 @@ const nodemailer=require("nodemailer")
 
 const getAllUsers=async(req,res)=>{
  const users=   await User.find({},{password:0}).lean()
+
+
+
+
+
+
+
+
+
+
+
+
+
 if(!users)
     return res.status(400).json({error:true,message:"no users found",data:null})
 return res.status(200).json({error:false,message:"",data:users})
@@ -44,6 +57,18 @@ const usersCount = await User.aggregate([
       $sort: { _id: 1 } 
     }
   ])
+
+
+
+
+
+
+
+  
+
+
+
+
 
 
 

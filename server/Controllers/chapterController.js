@@ -1,6 +1,6 @@
 const Chapter=require("../Models/Chapter")
 const getAllChapters=async(req,res)=>{
-const chapters=await Chapter.find().lean()
+const chapters=await Chapter.find().sort("_id").lean()
 if(!chapters)
 return res.status(400).json({error:true,message:"no Chapters found",data:null})
 return res.status(200).json({error:false,message:"",data:chapters})

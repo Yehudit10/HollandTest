@@ -11,6 +11,7 @@ import "./Form.css";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../authApiSlice";
 import useAuth from "../../../hooks/useAuth";
+import Error from "../../../components/Error";
 
 const Login = () => {
   const { register, handleSubmit ,control,reset,formState: { errors } } = useForm();
@@ -29,7 +30,7 @@ navigate("/home")
   
   };
 if(isError)
-return (<>{JSON.stringify(error)}</>)
+return <Error error={error}/>
   return (
     <div className="form-container">
       <div className="form-card">

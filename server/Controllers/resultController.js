@@ -2,7 +2,14 @@ const User=require('../Models/User')
 const Result=require('../Models/Result')
 const Type=require("../Models/Type")
 const Test=require("../Models/Test")
+
+
+
 const addResult=async(req,res)=>{
+
+
+
+
     // const {userId}=req.body
     // const user=await User.findById(userId).lean()
     // if(!user)

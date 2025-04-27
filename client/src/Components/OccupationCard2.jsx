@@ -39,8 +39,8 @@ const handleAddToFavoraites=()=>{
          
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px', gap: '5px' }}>
-          <Button label="הוספה להשוואה" className="p-button-secondary p-button-sm" />
-          <Button icon={isInFavoraites?"pi pi-heart-fill":"pi pi-heart"} className="p-button-secondary p-button-sm" onClick={handleAddToFavoraites} />
+          {/* <Button label="הוספה להשוואה" className="p-button-secondary p-button-sm" /> */}
+          <Button icon={isInFavoraites?"pi pi-heart-fill":"pi pi-heart"} label={isInFavoraites?" הסר מהמועדפים " :" הוסף למועדפים "}  className="p-button-secondary p-button-sm" onClick={handleAddToFavoraites} />
         </div>
       </div>
     </div>

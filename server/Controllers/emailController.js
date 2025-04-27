@@ -1,7 +1,9 @@
+const nodemailer=require("nodemailer")
 const sendEmail = async (req,res) => {
-    const { to, subject, text } = req.body;
-   if (!to )
-   return res.status(400).json({error:true,message:"to is required",data:null})
+    const { to, subject, text,base64Image } = req.body;
+   
+   //if (!to )
+   //return res.status(400).json({error:true,message:"to is required",data:null})
 
   
     const transporter = nodemailer.createTransport({
@@ -12,14 +14,21 @@ const sendEmail = async (req,res) => {
       pass: process.env.EMAIL_PASS   
     }
     });
-    
+    //${base64Image}
     const mailOptions = {
         from: 'hollandtest@gmail.com',
         to: 'yehudit50402@gmail.com',
         subject: 'Sending Email using Node.js',
-        text: 'That was easy!'
-      };
+        text: 'That was easy!',
+        html:
+        `
+        <p>Hello,</p>
+        <p>Here is what you captured:</p>
       
+        `
+    
+      };
+     
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
           console.log(error);
@@ -29,4 +38,4 @@ const sendEmail = async (req,res) => {
     
 };
 
-export default sendEmail;
+module.exports={sendEmail}

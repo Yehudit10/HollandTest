@@ -1,4 +1,5 @@
 const Test=require("../Models/Test")
+const Question=require("../Models/Question")
 // const getAllTests=async(req,res)=>{
 // const tests=await Test.find().lean()
 // if(!tests)
@@ -16,10 +17,11 @@ const Test=require("../Models/Test")
 //    return res.status(201).json({error:false,message:null,data:newTest})
 
 // }
-
-const addTest=async(req,res)=>{
-    const {test}=req.body
-    const newTest=await (await Test.create({userId:req.user._id,test:test?.map((q)=>({question:q._id}))}))
+//const {test}=req.body
+const addTest=async(req,res)=>{ 
+    const questions=await Question.find().sort("chapterID").lean()
+ 
+    const newTest=await (await Test.create({userId:req.user._id,test:questions?.map(q=>({question:q._id}))}))
     if(!newTest)
    return res.status(400).json({error:true,message:"create failed",data:null})
    return res.status(201).json({error:false,message:null,data:newTest})
