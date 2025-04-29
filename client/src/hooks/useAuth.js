@@ -6,9 +6,9 @@ const token=useSelector(selectToken)
 if(token)
 {
     const decodedUser=jwtDecode(token)
-    const {username,role,imgUrl}=decodedUser
-    return {username,role,imgUrl}
+    const {_id,username,role,imgUrl}=decodedUser
+    return {_id,username,role,imgUrl}
 }
-return {username:'',role:'',imgUrl:''}
+return {_id:'',username:'',role:'',imgUrl:''}
 }
 export default useAuth

@@ -28,6 +28,7 @@ app.use("/api/email",require("./Routes/emailRoutes"))
 connectToDB()
 mongoose.connection.once('open',()=>{
     app.listen(PORT,()=>{
+       
 console.log(`server is running on port ${PORT}`)
 })
 })

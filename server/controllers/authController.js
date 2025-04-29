@@ -7,6 +7,7 @@ const login = async (req, res) => {
         return res.status(401).send({ error: true, massage: "All fields are required", data: null })
 
     foundUser = await User.findOne({username})
+   
     if (!foundUser)
         return res.status(401).send({ error: true, massage: "Unauthorized", data: null })
     const match = await bcrypt.compare(password, foundUser.password)
