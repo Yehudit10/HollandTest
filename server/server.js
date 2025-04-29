@@ -2,8 +2,8 @@ require("dotenv").config()
 const express=require("express")
 const cookieParser=require("cookie-parser")
 const mongoose=require("mongoose")
-const corsOptions=require("./Config/corsOptions")
-const connectToDB=require("./Config/ConnectToDB")
+const corsOptions=require("./config/corsOptions")
+const connectToDB=require("./config/connectToDB")
 const cors=require("cors")
 const http = require("http");
 const setupSocket = require("./socketService");
