@@ -19,7 +19,7 @@ const [preview, setPreview] = useState()
 const [signUp,{isError,isLoading,isSuccess}]=useAddUserMutation()
   const onSubmit = (data) => {
     const formData =new FormData()
-    formData.append("profil",image)
+    formData.append("imgUrl",image)
     Object.keys(data).forEach((key) => {
         formData.append(key, data[key]);
       })

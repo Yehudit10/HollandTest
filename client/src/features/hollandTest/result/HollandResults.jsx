@@ -1,12 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from "react-router-dom";
 import HollandType from '../../../components/HollandType';
-// import Artistic from '../images/Artistic.png';
-// import Realistic from '../images/Realistic.png';
-// import Social from '../images/Social.png';
-// import Investigative from '../images/Investigative.png';
-// import Enterprising from '../images/Enterprising.png';
-// import Conventional from '../images/Conventional.png';
 import HollandMatch from '../../../components/HollandMatch';
 import Sidebar from '../../../components/SideBar';
 import html2canvas from 'html2canvas';
@@ -70,16 +64,17 @@ const HollandResults = () => {
     const contentRef=useRef()
     const [sendMail,{}]=useSendEmailMutation()
 const sendEmail=async()=>{
-    const page = contentRef.current; 
-  
-  try {
-    const canvas=await html2canvas(page,{scale:0.5,useCORS: true})
-    const base64Image = canvas.toDataURL("image/jpeg", 0.6);
-   
-    sendMail(base64Image)
-  }catch (error) {
-    console.error("Error capturing the page", error);
-  }
+    const page=contentRef.current
+const canvas=await html2canvas(page,{scale:1.5,useCORS: true})
+const imgData = canvas.toDataURL("image/jpeg", 0.6);
+        const pdf = new jsPDF("p", "mm", "a4");
+        const imgWidth = 210; 
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+        const blob = pdf.output('blob');
+const formData = new FormData();
+formData.append('pdf', blob, 'resultPdf.pdf');
+sendMail(formData)
 }
 
 
@@ -124,7 +119,13 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
             ←מהו שאלון הולנד? למידע נוסף
             </Link>
             <h2 style={{ fontSize: '20px', marginBottom: '20px' }}>הטיפוסים העיקריים שלך</h2>
-            <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%', marginBottom: '20px' }}>
+            <div 
+            style={{ display: 'flex', 
+            justifyContent: 'space-around', 
+             width: '100%',
+           
+             marginBottom: '20px' }}
+            >
     
             {/* {
             selected?.map((type)=>{

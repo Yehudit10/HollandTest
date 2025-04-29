@@ -11,6 +11,11 @@
     align-items: center;
     padding: 10px;
 }
+body{
+    overflow-x: hidden;
+    width: "100%";
+    margin: 0;
+}
 
 /* Responsive button adjustments */
 @media (max-width: 768px) {
@@ -27,12 +32,13 @@
     }
 }
 
-.choosen-img img {
-    height: 20%;
-    width: 20%;
-    bottom: 20%;
-    left: 42%;
-    position: absolute;
+choosen-img img {
+    height:1px;
+    width: 1px;
+    /* position: relative;  */
+    /* left: 50%;
+    top: 50%;  */
+    /* transform: translate(-50%, -50%); */
 }
 
 .qeustion-text {
@@ -126,13 +132,14 @@
 }
 
 /* Steps component */
+
 .p-steps {
     width: 35vw;
     height: 12vh;
     display: flex;
-    justify-content: center;  /* Centers the steps */
+    justify-content: center;  
     align-items: center;
-    margin: 0 auto; /* Ensures it stays in the center */
+    margin: 0 auto; 
 }
 
 .p-steps-item {
@@ -182,7 +189,7 @@
     padding:10%;
     margin-bottom: 14%;
 }
-/* Responsive Steps */
+
 @media (max-width: 768px) {
     .p-steps {
         width: 60vw;

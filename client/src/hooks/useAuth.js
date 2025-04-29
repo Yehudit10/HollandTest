@@ -6,10 +6,9 @@ const token=useSelector(selectToken)
 if(token)
 {
     const decodedUser=jwtDecode(token)
-    const {username,role,profil}=decodedUser
-    return {username,role,profil}
+    const {username,role,imgUrl}=decodedUser
+    return {username,role,imgUrl}
 }
-console.log("no token")
-return {username:'',role:''}
+return {username:'',role:'',imgUrl:''}
 }
 export default useAuth

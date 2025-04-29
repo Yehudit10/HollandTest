@@ -15,34 +15,37 @@ import useAuth from "../../hooks/useAuth";
 import useGetFilePath from "../../hooks/useGetFilePath";
 const Edit = () => {
   const navigate=useNavigate()
-const [image, setImage] = useState(null);
-const [preview, setPreview] = useState()
 const {data:userData,isSuccess:userIsSuccuss}=useGetUserByIdQuery()
-const {getFilePath}=useGetFilePath()
-  const { register, handleSubmit,control, reset,formState: { errors } } = useForm();
-const [update,{isError,isLoading,isSuccess}]=useUpdateUserMutation()
+const [preview, setPreview] = useState()
+
 useEffect(()=>{
-  
   if(userIsSuccuss){
-  const{username,firstname,lastname,phone,email,role,address,profil}=userData.data
-  setPreview(getFilePath(profil)) 
-  
+  const{_id,username,firstname,lastname,phone,email,role,address,imgUrl}=userData.data
+  setPreview(getFilePath(imgUrl))
 reset({
-  username,firstname,lastname,phone,email,role,address
+  _id,username,firstname,lastname,phone,email,role,address
 })
 }},[userIsSuccuss])
+
+const {getFilePath}=useGetFilePath()
+  const { register, handleSubmit,control, reset,formState: { errors } } = useForm(
+    // {defaultValues:userData.data}
+    );
+  const [image, setImage] = useState();
+
+  const [update,{isError,isLoading,isSuccess:updateIsSuccess}]=useUpdateUserMutation()
+useEffect(()=>{if(updateIsSuccess) navigate('/home')},[updateIsSuccess])///
   const onSubmit = (data) => {
     console.log(data)
     const formData =new FormData() 
-    formData.append("profil",image)
-    formData.append("_id",userData._id)
+    formData.append("imgUrl",image)
+    //formData.append("_id",userData._id)
     Object.keys(data).forEach((key) => {
         formData.append(key, data[key]);
       })
      update(formData)
   };
 
-  
   useEffect(() => {
     if (!image) {
         setPreview(undefined)
@@ -67,7 +70,7 @@ const fileUploadRef=useRef()
   return (
     <div className="form-container">
       <div className="form-card">
-        <h2 className="form-title">Update Details</h2>
+        <h2 className="form-title">עדכון פרטים</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
                     <Avatar
@@ -159,7 +162,7 @@ const fileUploadRef=useRef()
             {errors.phone && <small className="p-error">{errors.phone.message}</small>}
           </div>
        
-          <Button type="submit" label="Update" className="p-button-primary p-mt-3" />
+          <Button type="submit" label="עדכון" className="p-button-primary p-mt-3" />
         </form>
       </div>
     </div>

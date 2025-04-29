@@ -1,5 +1,5 @@
-const { default: apiSlice } = require("../../app/apiSlice");
-
+//const { default: apiSlice } = require("../../app/apiSlice");
+import apiSlice from "../../app/apiSlice"
 const userApiSlice=apiSlice.injectEndpoints(
    { endpoints:(build)=>({
         
@@ -25,6 +25,11 @@ const userApiSlice=apiSlice.injectEndpoints(
                 params
             })
         }),
+        getCounslers:build.query({
+            query:()=>({
+                url:'/api/users/counslers'
+            })
+        }),
         addUser:build.mutation({
            query:(data)=>({
                url:"/api/users",
@@ -33,13 +38,21 @@ const userApiSlice=apiSlice.injectEndpoints(
            }),
            invalidatesTags:['User']
         }),
+        addCounsler:build.mutation({
+            query:(data)=>({
+                url:"/api/users/counsler",
+                method:'POST',
+                body:data
+            }),
+            invalidatesTags:['User']
+         }),
         updateUser:build.mutation({
             query:(data)=>({
                 url:"/api/users",
                 method:'PUT',
                 body:data
             }),
-            invalidatesTags:['User']
+            invalidatesTags:['User'],
         })
         ,
         deleteUser:build.mutation({
@@ -54,5 +67,5 @@ const userApiSlice=apiSlice.injectEndpoints(
 
 }
 )
-export const {useGetUsersStatQuery,useAddUserMutation,useDeleteUserMutation,useGetUsersQuery,useUpdateUserMutation,useGetUserByIdQuery}=userApiSlice
+export const {useGetCounslersQuery,useGetUsersStatQuery,useAddUserMutation,useDeleteUserMutation,useGetUsersQuery,useUpdateUserMutation,useGetUserByIdQuery,useAddCounslerMutation}=userApiSlice
 export default userApiSlice

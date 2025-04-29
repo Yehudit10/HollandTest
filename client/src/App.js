@@ -28,6 +28,7 @@ import Edit from './features/users/Edit';
 import ProfileCard from './features/users/ProfilCard';
 import ViewResults from './features/hollandTest/result/ViewResults';
 import Favoraites from './components/Favoraites';
+import AddCounsler from './features/users/AddCounsler';
 
 
 function App() {
@@ -48,7 +49,7 @@ function App() {
             <Route element={<RequireAuth allowedRoles={['admin']} />}>
             <Route path="stat" element={<AdminDashboard/>}/>
         <Route path="view" element={<ViewQuestions/>}/>
-        
+        <Route path="counsler-register" element={<AddCounsler/>}/>
         <Route path="users" element={<UsersList/>}/>
         </Route>
 

@@ -5,7 +5,7 @@ const emailSlice=apiSlice.injectEndpoints({
             query:(data)=>({
             url:'/api/email',
                method:'POST',
-               body:{base64Image:data}
+               body:data
             })
             
         })

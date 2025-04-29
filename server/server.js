@@ -5,7 +5,11 @@ const mongoose=require("mongoose")
 const corsOptions=require("./Config/corsOptions")
 const connectToDB=require("./Config/ConnectToDB")
 const cors=require("cors")
+const http = require("http");
+const setupSocket = require("./socketService");
 const app=express()
+const server = http.createServer(app);
+setupSocket(server); 
 const PORT=process.env.PORT||1500
 app.use(cors(corsOptions))
 app.use(cookieParser())

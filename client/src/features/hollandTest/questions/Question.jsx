@@ -59,10 +59,9 @@ setCurrentChapter(chapterData?.data?.findIndex((c)=>c._id===chapterId))
     },[userAnswers])
     useEffect(()=>{
         if(deleteIsSuccess&&resultIsSuccess)
-        navigate(`home/holland/results/${resultData.data._id}`)
+        navigate(`/home/holland/results/${resultData.data._id}`)
 
     },[deleteIsSuccess])
-  
 const showImg=(num)=>{
  
 switch(num)
@@ -76,16 +75,20 @@ switch(num)
     }
     const showQuestion=(question)=>{
         return(<>
-        <Card style={{height:"35vh",
+        <Card 
+        style={{height:"35vh",
         boxShadow: '0 8px 8px rgba(0, 0, 0, 0.1)',
         border: '1px solid rgba(0, 0, 0, 0.1)',
         borderRadius: '8px',
         display:'flex',
         flexDirection:'column',
-        position:'relative'
-      }}>
+        position:'relative',
+   
+        
+      }}
+      >
         <div>{chapterData?.data[currentChapter]?.description}</div>
-        <div className='qeustion-text'>{question.text}</div>
+        <div className='question-text'>{question.text}</div>
         <Image className='choosen-img' src={showImg(userAnswers[currentQuestion]?.questionResult)}></Image>
     <span style={{position:'absolute',bottom:'5%',left:'50%'}}>{currentQuestion+1}/{userAnswers.length}</span>
 
@@ -129,7 +132,7 @@ else{
              onPageChange={(e)=>{setCurrentQuestion(e.page)}}
              showNavigators={false} 
               showIndicators={false}
-              style={{display:'flex',alignItems:'center',height:'35vh',width:'30vw',marginTop:'5vh'}}
+              style={{display:'flex',alignItems:'center',height:'35vh',width:'1vw',marginTop:'5vh'}}
              />
            </div>
              <div className='answer-buttons-container'>
