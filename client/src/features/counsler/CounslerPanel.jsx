@@ -8,7 +8,6 @@ const CounselorPanel=()=> {
   const {_id}=useAuth()   
 
   useEffect(() => {
-    console.log("pp")
     const socket = connectSocket(_id, "counselor");
     return () => {
       socket.disconnect();

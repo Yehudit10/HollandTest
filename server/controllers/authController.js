@@ -51,6 +51,7 @@ const refresh = async (req, res) => {
             // address:foundUser.address
 
         }
+      
         const accessToken = jwt.sign(userDetails, process.env.ACCESS_TOKEN, { expiresIn: '15m' })
         res.json({ accessToken })
     })

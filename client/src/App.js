@@ -31,6 +31,8 @@ import Favoraites from './components/Favoraites';
 import AddCounsler from './features/users/AddCounsler';
 import CounselorPanel from './features/counsler/CounslerPanel';
 import AvailableCounsler from './features/counsler/AvailableCounsler';
+import CounselorChatApp from './components/CounslerChatApp';
+import ChatApp from './components/ChatApp';
 
 
 function App() {
@@ -45,7 +47,7 @@ function App() {
         <Route path="/" element={<PersistLogin />}>
         
 
-          <Route element={<RequireAuth allowedRoles={['user', 'admin','counsler']} />}>
+          <Route element={<RequireAuth allowedRoles={['user', 'admin','counselor']} />}>
             <Route path="home" element={<><NavBar /><Outlet /></>}>
 
             <Route element={<RequireAuth allowedRoles={['admin']} />}>
@@ -55,8 +57,8 @@ function App() {
         <Route path="users" element={<UsersList/>}/>
         </Route>
 
-        <Route path="chatc" element={<CounselorPanel/>}/>
-<Route path="chatu" element={<AvailableCounsler/>}/>
+        <Route path="chatc" element={<CounselorChatApp/>}/>
+<Route path="chatu" element={<ChatApp/>}/>
                 <Route path="favoraites" element={<Favoraites/>}/>
                 <Route path="edit" element={<Edit/>}/>
                <Route path="holland" element={<Outlet />}>

@@ -27,7 +27,7 @@ const userApiSlice=apiSlice.injectEndpoints(
         }),
         getCounslers:build.query({
             query:()=>({
-                url:'/api/users/counslers'
+                url:'/api/users/counselor'
             })
         }),
         addUser:build.mutation({
@@ -40,7 +40,7 @@ const userApiSlice=apiSlice.injectEndpoints(
         }),
         addCounsler:build.mutation({
             query:(data)=>({
-                url:"/api/users/counsler",
+                url:"/api/users/counselor",
                 method:'POST',
                 body:data
             }),

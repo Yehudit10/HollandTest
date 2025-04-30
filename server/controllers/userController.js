@@ -12,7 +12,7 @@ if(!users)
 return res.status(200).json({error:false,message:"",data:users})
 }
 const getAllCounslers=async(req,res)=>{
-  const users= await User.find({role:'counsler'},{profile:1,firstname:1,lastname:1,imgUrl:1}).lean()
+  const users= await User.find({role:'counselor'},{_id:1,role:1,username:1,profile:1,firstname:1,lastname:1,imgUrl:1}).lean()
  if(!users)
      return res.status(400).json({error:true,message:"no users found",data:null})
  return res.status(200).json({error:false,message:"",data:users})
@@ -79,7 +79,7 @@ const addCounsler=async(req,res)=>{
 const tmpPassword=crypto.randomBytes(10).toString('base64').slice(0, 10)
 const username=`counselor_${uuidv4().split('-')[0]}`
   const hashedpassword=await bcrypt.hash(tmpPassword,10)
-  const newUser=await User.create({password:hashedpassword,username,role:'counsler',email,isActive:false})
+  const newUser=await User.create({password:hashedpassword,username,role:'counselor',email,isActive:false})
   if(!newUser)
   return res.status(400).json({error:true,message:"create failed",data:null})
 await sendEmail({to:email,text:"your username"+username+"your password: "+tmpPassword})
@@ -104,7 +104,7 @@ const hashedpassword=await bcrypt.hash(password,10)
 }
 const updateUser=async(req,res)=>{
     const {password,username,firstname,lastname,address,phone,email,favoraites,profile}=req.body
-    if(!username||!email||(req.user.role==='counsler'&&!profile))
+    if(!username||!email||(req.user.role==='counselor'&&!profile))
         return res.status(400).json({error:true,message:"you are missing required fields",data:null})
         const duplicate=await User.findOne({username,_id:{$ne:req.user._id}}).lean()
         if(duplicate)

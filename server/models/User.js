@@ -14,7 +14,7 @@ unique:true},
     role:{
         type:String,
         tolowercase:true,
-        enum:['user','admin','counsler'],
+        enum:['user','admin','counselor'],
         default:'user',
         required:true
     },
