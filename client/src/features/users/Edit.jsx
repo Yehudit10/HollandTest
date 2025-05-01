@@ -13,33 +13,31 @@ import { FileUpload } from "primereact/fileupload";
 import { Avatar } from "primereact/avatar";
 import useAuth from "../../hooks/useAuth";
 import useGetFilePath from "../../hooks/useGetFilePath";
+import { InputTextarea } from "primereact/inputtextarea";
 const Edit = () => {
   const navigate=useNavigate()
 const {data:userData,isSuccess:userIsSuccuss}=useGetUserByIdQuery()
+const{_id,username,firstname,lastname,phone,email,role,address,imgUrl,profile}=userData?.data||{}
 const [preview, setPreview] = useState()
 
 useEffect(()=>{
   if(userIsSuccuss){
-  const{_id,username,firstname,lastname,phone,email,role,address,imgUrl}=userData.data
   setPreview(getFilePath(imgUrl))
 reset({
-  _id,username,firstname,lastname,phone,email,role,address
+  _id,username,firstname,lastname,phone,email,role,address,profile
 })
 }},[userIsSuccuss])
 
 const {getFilePath}=useGetFilePath()
   const { register, handleSubmit,control, reset,formState: { errors } } = useForm(
-    // {defaultValues:userData.data}
     );
   const [image, setImage] = useState();
 
   const [update,{isError,isLoading,isSuccess:updateIsSuccess}]=useUpdateUserMutation()
 useEffect(()=>{if(updateIsSuccess) navigate('/home')},[updateIsSuccess])///
   const onSubmit = (data) => {
-    console.log(data)
     const formData =new FormData() 
     formData.append("imgUrl",image)
-    //formData.append("_id",userData._id)
     Object.keys(data).forEach((key) => {
         formData.append(key, data[key]);
       })
@@ -124,8 +122,9 @@ const fileUploadRef=useRef()
               placeholder="Password"
                {...field}
               toggleMask
-              feedback={false}
-              value=""
+              // feedback={}
+              
+            //  defaultValue={""}
             />}
             />
             {errors.password && <small className="p-error">{errors.password.message}</small>}
@@ -161,7 +160,17 @@ const fileUploadRef=useRef()
             />
             {errors.phone && <small className="p-error">{errors.phone.message}</small>}
           </div>
-       
+          {role==="counselor"&&<div className="form-group">
+            <InputTextarea
+              id="profile"
+              placeholder="Write about yourself...."
+              {...register("profile", { required: "Profile is required" })}
+              className={`p-inputtext ${errors.profile ? "p-invalid" : ""}`}
+            />
+            {errors.profile && <small className="p-error">{errors.profile.message}</small>}
+        
+            
+          </div>}
           <Button type="submit" label="עדכון" className="p-button-primary p-mt-3" />
         </form>
       </div>

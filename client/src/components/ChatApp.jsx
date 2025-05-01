@@ -5,19 +5,18 @@ import ChatWindow from "./ChatWindow";
 import useAuth from "../hooks/useAuth";
 import Loading from "./Loading";
 const ChatApp = () => {
-    const {_id:userId,role}=useAuth() 
-  const [inChat, setInChat] = useState(false);
+    const {_id:userId,role,imgUrl}=useAuth() 
   const [chatWith, setChatWith] = useState(null);
+  
 const [r,setr]=useState(false)
   useEffect(() => {
-    const socket=connectSocket(userId, role);
+    const socket=connectSocket(userId, role,imgUrl);
     setr(true)
     socket.on("chatStarted", ({ counselorId }) => {
       setChatWith(counselorId);
-      setInChat(true);
     });
 
-    return () => socket.disconnect();
+    //return () => socket.disconnect();
   }, [userId, role]);
 
   const handleStartChat = (counselorId) => {
@@ -27,18 +26,19 @@ const [r,setr]=useState(false)
 
   const handleEndChat = () => {
     const socket = getSocket();
-    socket.emit("endChat", { counselorId: chatWith, userId });
-    setInChat(false);
+    socket.emit("endChat", { otherId:chatWith });
     setChatWith(null);
   };
 
   return (
      <div className="p-d-flex p-jc-center p-mt-6">
       <div className="p-col-12 p-md-6">
-        {!r?<Loading/>:!inChat? (
+        {
+        !r?<Loading/>:
+        !chatWith? (
           <CounselorList onStartChat={handleStartChat} />
         ) : (
-          <ChatWindow counselorId={chatWith} onEndChat={handleEndChat} />
+          <ChatWindow chatWith={chatWith} onEndChat={handleEndChat} />
         )}
       </div>
      </div>

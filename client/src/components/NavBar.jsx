@@ -15,12 +15,12 @@ import useAuth from '../hooks/useAuth';
 import useGetFilePath from '../hooks/useGetFilePath';
 import {useGetUserByIdQuery} from '../features/users/userApiSlice'
 import { Badge } from 'primereact/badge';
-
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 const NavBar = () => {
     const profileMenu = useRef(null);
 const navigate=useNavigate()
-const {imgUrl,role,_id}=useAuth()
-console.log(imgUrl)
+const {imgUrl,role,_id,isActive}=useAuth()
 const[logout,{isError,isSuccess:logoutIsSuccess}]=useSendLogoutMutation()
 //const {data:userData,isLoading:userIsLoading,isError:userIsError,error:userError}=useGetUserByIdQuery(_id)
 const handleLogout=()=>{
@@ -33,16 +33,19 @@ const userNavigation = [
     { label: 'שאלון הכוונה', command:()=>{ navigate("holland")} },
     { label: 'מאגר העיסוקים',command:()=>{navigate("jobs")} },
     { label:'צפיה בתוצאות',command:()=>{navigate("holland/results")} },
+    { label:'ליועצים',command:()=>{navigate("chatu")} },
 ];
 const adminNavigation=[
  { label:'שאלות',command:()=>{navigate("view")}},
  { label:'הוספת יועץ',command:()=>{navigate("counsler-register")}},
 ]
-const navigationList=role==='admin'?adminNavigation:userNavigation
+const counslerNavigation=[{label:"להתחלת ייעוץ",command:()=>{navigate("chatc")}}]
+const navigationList=role==='admin'?adminNavigation:role==="user"?userNavigation:role==="counselor"&&isActive?counslerNavigation:[]
   
 const {getFilePath}=useGetFilePath()
     const end = (
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+ 
             {role==='user'&&
             <div style={{ position: 'relative', display: 'inline-block' }}>
             <Button  icon="pi pi-heart-fill" className="p-button-rounded p-button-secondary" onClick={()=>{navigate('favoraites')}} />
@@ -62,7 +65,7 @@ const {getFilePath}=useGetFilePath()
         />
         </div>}
             <Avatar
-                //icon="pi pi-user"
+                icon="pi pi-user"
                 image={getFilePath(imgUrl)}
                 shape="circle"
                 className="p-mr-2"

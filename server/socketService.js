@@ -1,8 +1,9 @@
 const { Server } = require("socket.io");
 
 const availableCounselors = new Map();
-const activeChats = new Map();
-const userSocketMap = new Map(); 
+//const activeChats = new Map();
+const socketsMap = new Map();
+const notifyWaitList = new Map();
 function setupSocket(server) {
   
   const io = new Server(server, {
@@ -14,16 +15,8 @@ function setupSocket(server) {
   io.listen(4000);
   io.on("connection", (socket) => {
     
-    const { userId, role } = socket.handshake.query;
-  
-    socket.on("identify", (userId) => {
-      
-      userSocketMap.set(userId,socket.id );
-      socket.userId = userId; // optionally store on socket for later
-      console.log(`User ${userId} is connected with socket ${socket.id}`);
-    });
-
-
+    const { userId, role,imgUrl } = socket.handshake.query;
+    socketsMap.set(userId,socket.id)
     if (role === "user") {
       socket.emit("availableCounselors", Array.from(availableCounselors.keys()));
     }
@@ -31,46 +24,50 @@ function setupSocket(server) {
     socket.on("startChat", ({ counselorId }) => {
       if (role === "user" && availableCounselors.has(counselorId)) {
         const counselorSocketId = availableCounselors.get(counselorId);
-    
         const counselorSocket = io.sockets.sockets.get(counselorSocketId);
         if (counselorSocket) {
           availableCounselors.delete(counselorId);
-          activeChats.set(counselorId, userId);
+          //activeChats.set(counselorId, userId);
+          
           io.emit("availableCounselors", Array.from(availableCounselors.keys()));
-          counselorSocket.emit("chatStarted", { userId, counselorId });
-          socket.emit("chatStarted", { userId, counselorId });
+          counselorSocket.emit("chatStarted", {userId });
+          socket.emit("chatStarted", { counselorId });
         }
       }
     });
-    socket.on("endChat", ({ counselorId, userId }) => {
-      if (
-        (role === "user" && activeChats.get(counselorId) === userId) ||
-        (role === "counselor" && activeChats.has(userId))
-      ) {
-        const counselorSocketId = availableCounselors.get(counselorId) || socket.id;
-        const counselorSocket = io.sockets.sockets.get(counselorSocketId);
-    
-        activeChats.delete(counselorId);
-        availableCounselors.set(counselorId, counselorSocketId);
-        io.emit("availableCounselors", Array.from(availableCounselors.keys()));
-    
-        // Notify both
+    socket.on("endChat", ({ otherId }) => {
+      // if (
+      //   (role === "user" && activeChats.get(counselorId) === userId) ||
+      //   (role === "counselor" && activeChats.has(userId))
+      // ) 
+      // {
+        //const counselorSocketId = availableCounselors.get(counselorId) || socket.id;
+        const otherSocket = io.sockets.sockets.get(socketsMap.get(otherId));
+       // activeChats.delete(counselorId);
+  
         socket.emit("chatEnded");
-        if (counselorSocket) {
-          counselorSocket.emit("chatEnded");
+        if (otherSocket) {
+          otherSocket.emit("chatEnded");
         }
       }
-    });
+    //}
+    
+    );
     socket.on("sendMessage", ({ to, message }) => {
-      const targetSocket = io.sockets.sockets.get(userSocketMap.get(to));
+
+      const targetSocket = io.sockets.sockets.get(socketsMap.get(to));
       if (targetSocket) {
-        targetSocket.emit("receiveMessage", { from: socket.id, message });
+        targetSocket.emit("receiveMessage", { from: imgUrl, message });
       }
     });
     socket.on("setAvailable", () => {
       if (role === "counselor") {
         availableCounselors.set(userId, socket.id);
         io.emit("availableCounselors", Array.from(availableCounselors.keys()));
+        const socketSet = notifyWaitList.get(userId);
+        if (!socketSet) return;
+        socketSet.forEach(socketId=>io.to(socketId).emit("NotifyCounselorAvailable", { counselorId:userId })) ;
+        notifyWaitList.delete(userId); 
       }
     });
   
@@ -83,16 +80,25 @@ function setupSocket(server) {
       }
     });
   
+
+    socket.on("notifyWhenAvailable", ({ counselorId }) => {
+      if (!notifyWaitList.get(counselorId) )notifyWaitList.set(counselorId,[]);
+      if (!notifyWaitList.get(counselorId).includes(socket.id)) {
+        notifyWaitList.get(counselorId).push(socket.id);
+      }
+    });
+
+
     socket.on("disconnect", () => {
       if (role === "counselor") {
         availableCounselors.delete(userId);
         io.emit("availableCounselors", Array.from(availableCounselors.keys()));
       }
-
-      if (socket.userId) {
-        userSocketMap.delete(socket.userId);
-        console.log(`User ${socket.userId} disconnected`);
-      }
+      
+      // for (const socketSet of notifyWaitList.values()) {
+      //   socketSet?.delete(socket.id);
+      // }
+    
 
 
     });

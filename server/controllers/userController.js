@@ -116,6 +116,7 @@ const updateUser=async(req,res)=>{
         {
             user.password=await bcrypt.hash(password,10)
         }
+    user.username=username
     user.firstname=firstname
     user.lastname=lastname
     user.address=address

@@ -3,25 +3,22 @@ import { connectSocket, getSocket } from "../socket";
 import ChatWindow from "./ChatWindow";
 import { Card } from "primereact/card";
 import useAuth from "../hooks/useAuth";
-import { io } from "socket.io-client";
 import { Button } from "primereact/button";
 const CounselorChatApp = () => {
-    const {_id:userId,role}=useAuth() 
-  const [inChat, setInChat] = useState(false);
+
+    const {_id:userId,role,imgUrl}=useAuth() 
   const [chatWith, setChatWith] = useState(null);
   const [available, setAvailable] = useState(false);
   useEffect(() => {
-   const socket = connectSocket(userId, role);
+   const socket = connectSocket(userId, role,imgUrl);
     
     socket.on("chatStarted", ({ userId }) => {
       setChatWith(userId);
-      setInChat(true);
     });
 
     socket.on("chatEnded", () => {
-      setInChat(false);
       setChatWith(null);
-      socket.emit("setAvailable"); // allow new users to see this counselor
+      socket.emit("setAvailable"); 
     });
     
     return () => {
@@ -32,7 +29,6 @@ const CounselorChatApp = () => {
 
   const toggleAvailability = () => {
     const socket = getSocket();
-    console.log(socket)
     if (!available) {
       socket.emit("setAvailable");
     } else {
@@ -43,10 +39,7 @@ const CounselorChatApp = () => {
   };
   const handleEndChat = () => {
     const socket = getSocket();
-    socket.emit("endChat", { userId: chatWith, counselorId: userId });
-    setInChat(false);
-    setChatWith(null);
-    socket.emit("setAvailable");
+    socket.emit("endChat", { otherId:chatWith});
   };
 
   return (
@@ -55,12 +48,12 @@ const CounselorChatApp = () => {
       <p>Status: {available ? "✅ Available" : "❌ Unavailable"}</p>
       <Button label= {available ? "Go Unavailable" : "Become Available"} onClick={toggleAvailability}/>
        
-        {(available&&!inChat) ? (
+        {(available&&!chatWith) ? (
           <Card title="Waiting for a user to chat...">
             <p>This window will activate when a user starts a chat with you.</p>
           </Card>
-        ) :inChat? (
-          <ChatWindow counselorId={chatWith} onEndChat={handleEndChat} />
+        ) :chatWith? (
+          <ChatWindow chatWith={chatWith} onEndChat={handleEndChat} />
         ):<></>}
       </div>
     </div>

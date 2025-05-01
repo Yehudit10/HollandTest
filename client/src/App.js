@@ -33,13 +33,14 @@ import CounselorPanel from './features/counsler/CounslerPanel';
 import AvailableCounsler from './features/counsler/AvailableCounsler';
 import CounselorChatApp from './components/CounslerChatApp';
 import ChatApp from './components/ChatApp';
-
-
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 function App() {
 
 
   return (
     <div className="App">
+      <ToastContainer style={{ zIndex: 9999 }} />
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<Login />} />

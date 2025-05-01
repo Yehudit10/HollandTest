@@ -1,5 +1,6 @@
 //const { default: apiSlice } = require("../../app/apiSlice");
 import apiSlice from "../../app/apiSlice"
+import authApiSlice from "../auth/authApiSlice"
 const userApiSlice=apiSlice.injectEndpoints(
    { endpoints:(build)=>({
         
@@ -11,7 +12,6 @@ const userApiSlice=apiSlice.injectEndpoints(
             providesTags:['User']
             
         })
-        
         ,
         getUserById:build.query({
             query:()=>({
@@ -28,7 +28,8 @@ const userApiSlice=apiSlice.injectEndpoints(
         getCounslers:build.query({
             query:()=>({
                 url:'/api/users/counselor'
-            })
+            }),
+            providesTags:['Counselors']
         }),
         addUser:build.mutation({
            query:(data)=>({
@@ -44,7 +45,7 @@ const userApiSlice=apiSlice.injectEndpoints(
                 method:'POST',
                 body:data
             }),
-            invalidatesTags:['User']
+            invalidatesTags:['User','Counselors']
          }),
         updateUser:build.mutation({
             query:(data)=>({
@@ -53,6 +54,17 @@ const userApiSlice=apiSlice.injectEndpoints(
                 body:data
             }),
             invalidatesTags:['User'],
+            async onQueryStarted(args,{dispatch,queryFulfilled})
+            {
+             try{
+                await queryFulfilled
+             dispatch(authApiSlice.endpoints.refresh.initiate())
+            }
+             catch(err)
+             {
+                 console.log(err)
+             }
+            }
         })
         ,
         deleteUser:build.mutation({

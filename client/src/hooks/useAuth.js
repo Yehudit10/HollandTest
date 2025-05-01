@@ -6,8 +6,8 @@ const token=useSelector(selectToken)
 if(token)
 {
     const decodedUser=jwtDecode(token)
-    const {_id,username,role,imgUrl}=decodedUser
-    return {_id,username,role,imgUrl}
+    const {_id,username,role,imgUrl,isActive}=decodedUser
+    return {_id,username,role,imgUrl,isActive}
 }
 return {_id:'',username:'',role:'',imgUrl:''}
 }
