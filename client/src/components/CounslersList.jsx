@@ -18,13 +18,9 @@ const CounselorList = ({ onStartChat }) => {
 const {getFilePath}=useGetFilePath()
 const socket = getSocket();
 const showToastMessage = (counselorId) => {
-    // toast.info(`היועץ ${counselorId} התפנה`, {
-    //   position: "bottom-right"
-    // });
+ 
     toast.info(`היועץ ${counselorId} התפנה`, {
         position: "bottom-right",
-        //icon: "📩",
-        //closeButton: false,
         hideProgressBar: true,
         toastId: `counselor-${counselorId}`,
         autoClose: 5000,
@@ -51,18 +47,35 @@ const showToastMessage = (counselorId) => {
       socket.off("availableCounselors", setAvailableCounselors);
     };
   }, []);
-const[notifications,setNotifications]=useState(new Set())
+  const[notifications,setNotifications]=useState(()=>{
+    const stored = sessionStorage.getItem("notifications");
+  return stored ? new Set(JSON.parse(stored)) : new Set();
+})
+useEffect(() => {
+  sessionStorage.setItem("notifications", JSON.stringify([...notifications]));
+}, [notifications]);
+// const waitForCounselor=(counselorId)=>{
+//     socket.emit("notifyWhenAvailable", { counselorId })
+//     setNotifications(prevSet => new Set(prevSet).add(counselorId));
+//     socket.on("NotifyCounselorAvailable", ({ counselorId }) => {
+//       showToastMessage(counselorId);
+//       removeWaiting(counselorId)
+//     });
+// }
+// const removeWaiting=(counselorId)=>{
+//     socket.off("NotifyCounselorAvailable")
+//     setNotifications(prev => (prev.delete(counselorId), new Set(prev)));
+// }
 const waitForCounselor=(counselorId)=>{
-    socket.emit("notifyWhenAvailable", { counselorId })
-    setNotifications(prevSet => new Set(prevSet).add(counselorId));
-    socket.on("NotifyCounselorAvailable", ({ counselorId }) => {
-      showToastMessage(counselorId);
-      removeWaiting(counselorId)
-    });
+   setNotifications(prevSet => new Set(prevSet).add(counselorId));
+   socket.on(`NotifyCounselorAvailable-${counselorId}`, ({ counselorId }) => {
+     showToastMessage(counselorId);
+     removeWaiting(counselorId)
+   });
 }
 const removeWaiting=(counselorId)=>{
-    socket.off("NotifyCounselorAvailable")
-    setNotifications(prev => (prev.delete(counselorId), new Set(prev)));
+   socket.off(`NotifyCounselorAvailable-${counselorId}`)
+   setNotifications(prev => (prev.delete(counselorId), new Set(prev)));
 }
 
 
@@ -94,7 +107,7 @@ const removeWaiting=(counselorId)=>{
           }}>{counselor.profile}</ScrollPanel>}}/>
 
         <Column body={(counselor) => {
-           return <Button disabled={!availableCounselors.includes(counselor._id)} label="Chat" icon="pi pi-comments" onClick={() => onStartChat(counselor._id)} className="p-button-sm" />
+           return <Button disabled={!availableCounselors.includes(counselor._id)} label="Chat" icon="pi pi-comments" onClick={() => onStartChat(counselor._id,counselor.username)} className="p-button-sm" />
         }} />
           
           <Column body={(counselor) => 

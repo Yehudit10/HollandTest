@@ -14,6 +14,10 @@ import { Avatar } from "primereact/avatar";
 import useAuth from "../../hooks/useAuth";
 import useGetFilePath from "../../hooks/useGetFilePath";
 import { InputTextarea } from "primereact/inputtextarea";
+import {  toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
+
 const Edit = () => {
   const navigate=useNavigate()
 const {data:userData,isSuccess:userIsSuccuss}=useGetUserByIdQuery()
@@ -30,17 +34,23 @@ reset({
 
 const {getFilePath}=useGetFilePath()
   const { register, handleSubmit,control, reset,formState: { errors } } = useForm(
+    
     );
   const [image, setImage] = useState();
 
   const [update,{isError,isLoading,isSuccess:updateIsSuccess}]=useUpdateUserMutation()
-useEffect(()=>{if(updateIsSuccess) navigate('/home')},[updateIsSuccess])///
+useEffect(()=>{if(updateIsSuccess){   
+   toast.success("העדכון בוצע בהצלחה", {
+     position: "top-center",
+     hideProgressBar:true
+});navigate('/home')}},[updateIsSuccess])///
   const onSubmit = (data) => {
     const formData =new FormData() 
     formData.append("imgUrl",image)
     Object.keys(data).forEach((key) => {
         formData.append(key, data[key]);
       })
+      console.log(formData)
      update(formData)
   };
 

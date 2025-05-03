@@ -1,6 +1,6 @@
 const Job=require("../models/Job")
 const getAllJobs=async(req,res)=>{
-    console.log(req.query)
+   // console.log(req.query)
     const {q="",minWorkingHours,maxWorkingHours,educationLevel,minSalary,maxSalary,sortBy="jobname",page,pageSize}=req.query 
 const query={
     jobname:{$regex:`${q}`,$options:"i"}

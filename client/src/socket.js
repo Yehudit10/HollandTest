@@ -2,9 +2,9 @@ import { io } from "socket.io-client";
 
 let socket;
 
-export const connectSocket = (userId, role,imgUrl) => {
+export const connectSocket = (userId, role) => {
   socket = io("http://localhost:4000", {
-    query: { userId, role,imgUrl },
+    query: { userId, role },
     
   });
 

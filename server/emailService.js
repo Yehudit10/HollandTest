@@ -1,5 +1,5 @@
 const nodemailer=require("nodemailer")
-const sendEmail = async ({to, subject, text,file}) => {
+const sendEmail = async ({to, subject, text,file,html}) => {
  
    
    //if (!to )
@@ -14,7 +14,7 @@ const sendEmail = async ({to, subject, text,file}) => {
     //${base64Image}
     const mailOptions = {
         from: 'hollandtest@gmail.com',
-        to,//:'yehudit50402@gmail.com',
+        to:'yehudit50402@gmail.com',
         subject,//: 'Sending Email using Node.js',
         text,//: 'That was easy!',
         // html:
@@ -23,6 +23,7 @@ const sendEmail = async ({to, subject, text,file}) => {
         // <p>Here is what you captured:</p>
       
         // `
+        html
         
       };
       if(file)

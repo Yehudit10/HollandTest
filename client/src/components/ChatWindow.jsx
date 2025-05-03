@@ -8,12 +8,17 @@ import useAuth from "../hooks/useAuth";
 import { Avatar } from "primereact/avatar";
 import useGetFilePath from "../hooks/useGetFilePath";
 
-const ChatWindow = ({ chatWith, onEndChat }) => {
+const ChatWindow = ({ chatWith,chatWithUsername, onEndChat,shareDetails }) => {
+
+const {imgUrl}=useAuth()
 const socket = getSocket();
-  const [messages, setMessages] = useState([]);
+const [messages, setMessages] = useState(()=>{const savedMsgs=sessionStorage.getItem(`messages-${chatWith}`)
+return savedMsgs?JSON.parse(savedMsgs):[]});
   const [input, setInput] = useState("");
   const chatEndRef = useRef();
  const {getFilePath}=useGetFilePath()
+ useEffect(()=>{sessionStorage.setItem(`messages-${chatWith}`,JSON.stringify(messages))},[messages])
+
   useEffect(() => {
     
     const handleReceive = ({ from, message }) => {
@@ -36,7 +41,7 @@ const socket = getSocket();
 
   const sendMessage = () => {
     if (input.trim()) {
-      const msg = { to: chatWith, message: input };
+      const msg = { profile:shareDetails===false?"":imgUrl, to: chatWith, message: input };
       socket.emit("sendMessage", msg);
       setMessages((prev) => [...prev, { from: "me", message: input }]);
       setInput("");
@@ -50,7 +55,7 @@ const socket = getSocket();
         alignItems: 'center',
         height: '100vh',
       }}>
-    <Card title={`Chat with ${chatWith}`} style={{width:'70%' }} className="h-full">
+    <Card title={`Chat with ${chatWithUsername||"Anonymous User"}`} style={{width:'70%' }} className="h-full">
       <ScrollPanel style={{ height: '250px', marginBottom: '1rem' }}>
         {messages.map((msg, i) => (
             
