@@ -1,9 +1,10 @@
 const { Server } = require("socket.io");
-
+const verifySocketJWT=require("./middleware/verifySocketJWT");
+const { addSession } = require("./controllers/chatSessionController");
 const availableCounselors = new Map();
-//const activeChats = new Map();
 const socketsMap = new Map();
-const notifyWaitList = new Map();
+const sessionsStartTime=new Map()
+
 function setupSocket(server) {
   
   const io = new Server(server, {
@@ -13,18 +14,22 @@ function setupSocket(server) {
     },
   })
   io.listen(4000);
+  io.use(verifySocketJWT)
   io.on("connection", (socket) => {
-    
-    const { userId, role } = socket.handshake.query;
+
+    const { _id:userId, role } = socket.user
+   
     socketsMap.set(userId,socket.id)
     if (role === "user") { 
       socket.emit("availableCounselors", Array.from(availableCounselors.keys()));
     }  
-  if(role==='counselor'&&notifyWaitList.get(userId)?.size>0)
-  socket.emit("waitingUsers",notifyWaitList.get(userId).size)
+
     socket.on("startChat", ({ counselorId,username }) => {
       if (role === "user" && availableCounselors.has(counselorId)) {
+        sessionsStartTime.set(socket.id,new Date())
+        
         const counselorSocketId = availableCounselors.get(counselorId);
+        sessionsStartTime.set(counselorSocketId,new Date())
         const counselorSocket = io.sockets.sockets.get(counselorSocketId);
         if (counselorSocket) {
           availableCounselors.delete(counselorId);
@@ -35,7 +40,14 @@ function setupSocket(server) {
       }
     });
    
-    socket.on("endChat", ({ otherId }) => {
+    socket.on("endChat", async({ otherId }) => {
+
+const startTime=sessionsStartTime.get(socket.id)
+sessionsStartTime.delete(socket.id)
+sessionsStartTime.delete(socketsMap.get(otherId))
+  const newSessionObj={userId:role==='user'?userId:otherId,counselorId:role==='user'?otherId:userId,chatStartTime:startTime,chatEndTime:new Date()}
+ const newSession=await addSession(newSessionObj)
+console.log(newSession)
 
       // if (
       //   (role === "user" && activeChats.get(counselorId) === userId) ||

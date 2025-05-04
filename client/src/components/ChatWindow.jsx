@@ -92,7 +92,7 @@ return savedMsgs?JSON.parse(savedMsgs):[]});
         <div ref={chatEndRef}></div>
       </ScrollPanel>
 
-      <div className="p-d-flex p-ai-center" style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
+      {/* <div className="p-d-flex p-ai-center" style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
         <InputText
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -101,7 +101,55 @@ return savedMsgs?JSON.parse(savedMsgs):[]});
         />
         <Button icon="pi pi-send" onClick={sendMessage} className="p-button-success" style={{ marginRight: '0.5rem' }} />
         <Button label="End" icon="pi pi-times" onClick={onEndChat} className="p-button-danger" />
-      </div>
+      </div> */}
+      <div
+  className="p-d-flex p-ai-center"
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '1rem',
+    gap: '0.5rem',
+  }}
+>
+  <InputText
+    value={input}
+    onChange={(e) => setInput(e.target.value)}
+    placeholder="הקלד את הודעתך..."
+    style={{
+      flex: 1,
+      borderRadius: '2rem',
+      padding: '0.75rem 1rem',
+      border: '1px solid #cce0ff',
+    }}
+  />
+
+  <Button
+    icon="pi pi-send"
+    onClick={sendMessage}
+    className="p-button-rounded p-button-primary"
+    style={{
+      width: '3rem',
+      height: '3rem',
+      borderRadius: '2rem',
+    }}
+  />
+
+  <Button
+    icon="pi pi-times"
+    onClick={()=>{
+      const socket=getSocket()
+      socket.emit('endChat',{otherId:chatWith})
+    }}
+    className="p-button-rounded p-button-secondary"
+    style={{
+      width: '3rem',
+      height: '3rem',
+      backgroundColor: '#dfe7fd',
+      color: '#002b80',
+      border: 'none',
+    }}
+  />
+</div>
     </Card></div>
   );
 };

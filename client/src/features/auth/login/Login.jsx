@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../authApiSlice";
 import useAuth from "../../../hooks/useAuth";
 import Error from "../../../components/Error";
+import Loading from "../../../components/Loading";
 
 const Login = () => {
   const { register, handleSubmit ,control,reset,formState: { errors } } = useForm();
@@ -29,8 +30,10 @@ navigate("/home")
     login(data)
   
   };
+  if(isLoading)
+  return <Loading/>
 if(isError)
-return <Error error={error}/>
+return <Error error={error?.data?.message}/>
   return (
     <div className="form-container">
       <div className="form-card">

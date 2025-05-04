@@ -48,31 +48,35 @@ function App() {
         <Route path="/" element={<PersistLogin />}>
         
 
-          <Route element={<RequireAuth allowedRoles={['user', 'admin','counselor']} />}>
-            <Route path="home" element={<><NavBar /><Outlet /></>}>
-
-            <Route element={<RequireAuth allowedRoles={['admin']} />}>
-            <Route path="stat" element={<AdminDashboard/>}/>
-        <Route path="view" element={<ViewQuestions/>}/>
-        <Route path="counsler-register" element={<AddCounsler/>}/>
-        <Route path="users" element={<UsersList/>}/>
-        </Route>
-
-        <Route path="chatc" element={<CounselorChatApp/>}/>
-<Route path="chatu" element={<ChatApp/>}/>
+          <Route element={<RequireAuth allowedRoles={['user', 'admin','counselor']} notActiveAllowed={true} />}> 
+          <Route path="home" element={<><NavBar /><Outlet /></>}>
+           
+              <Route path="edit" element={<Edit/>}/>
+                <Route element={<RequireAuth allowedRoles={['user', 'admin','counselor']} notActiveAllowed={false} />}> 
+                <Route path="chatu" element={<ChatApp/>}/>
                 <Route path="favoraites" element={<Favoraites/>}/>
-                <Route path="edit" element={<Edit/>}/>
-               <Route path="holland" element={<Outlet />}>
+                <Route path="holland" element={<Outlet />}>
                 <Route index element={<HollandPages />} />
                 <Route path="holland-info" element={<HollandInfoPage />} />
                 <Route path="test" element={<Question/>} />
                 <Route path="results" element={<ViewResults/>}/>
                 <Route path="results/:resultId" element={<HollandResults />} />
+                <Route path="jobs" element={<JobList/>}/> 
+                </Route>
+                <Route element={<RequireAuth allowedRoles={['counselor','admin']} notActiveAllowed={false}/>}>
+                    <Route path="chatc" element={<CounselorChatApp/>}/></Route>
+                <Route element={<RequireAuth allowedRoles={['admin']} notActiveAllowed={false}/>}>
+                      <Route path="stat" element={<AdminDashboard/>}/>
+                      <Route path="view" element={<ViewQuestions/>}/>
+                      <Route path="counsler-register" element={<AddCounsler/>}/>
+                      <Route path="users" element={<UsersList/>}/>
+
               </Route>
-              <Route path="jobs" element={<JobList/>}/>
+              
               
               </Route>
           </Route>
+        </Route>
         </Route>
 
       </Routes>

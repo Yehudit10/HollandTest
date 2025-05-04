@@ -52,6 +52,7 @@ useEffect(()=>{if(updateIsSuccess){
       })
       console.log(formData)
      update(formData)
+     reset()
   };
 
   useEffect(() => {

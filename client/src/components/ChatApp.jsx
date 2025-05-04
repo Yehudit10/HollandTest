@@ -1,31 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { connectSocket,getSocket } from "../socket";
+import { ConnectSocket,getSocket } from "../socket";
 import CounselorList from "./CounslersList";
 import ChatWindow from "./ChatWindow";
 import useAuth from "../hooks/useAuth";
 import Loading from "./Loading";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
+
+
+import {selectToken} from "../features/auth/authSlice"
+import { useSelector } from "react-redux";
 const ChatApp = () => {
+  const token = useSelector(selectToken)
     const {_id:userId,role,imgUrl,username}=useAuth() 
     const [chatWith, setChatWith] = useState(sessionStorage.getItem("chatWith"));
-  const [chatWithUsername, setChatWithusername] = useState(null);
+  const [chatWithUsername, setChatWithusername] = useState(sessionStorage.getItem("chatWithUsername"));
 const [visible,setVisible]=useState(false)
-const[shareDetails,setShareDetails]=useState(false)
+const[shareDetails,setShareDetails]=useState(JSON.parse(sessionStorage.getItem("shareDetails")))
   const [isSocketConnected,setIsSocketConnected]=useState(false)
+
+  useEffect(()=>{if(chatWith)sessionStorage.setItem("chatWith",chatWith)
+    else sessionStorage.removeItem("chatWith")
+  },[chatWith])
+  useEffect(()=>{
+    if(chatWithUsername)
+    sessionStorage.setItem("chatWithUsername",chatWithUsername) 
+  else 
+    sessionStorage.removeItem("chatWithUsername")
+},[chatWithUsername])
+  useEffect(()=>{if(shareDetails)sessionStorage.setItem("shareDetails",JSON.stringify(shareDetails))
+    else sessionStorage.removeItem("shareDetails")
+  },[shareDetails])
   useEffect(() => {
-    const socket=connectSocket(userId, role);
+    const socket=ConnectSocket(token);
     setIsSocketConnected(true)
     socket.on("chatStarted", ({ counselorId }) => {
       setChatWith(counselorId);
-      sessionStorage.setItem("chatWith",counselorId)
+      //sessionStorage.setItem("chatWith",counselorId)
     });
     return () => {
        
-      if(socket.listeners("NotifyCounselorAvailable").length === 0)
+      if(!chatWith&&(!sessionStorage.getItem("notification")||JSON.parse(sessionStorage.getItem("notification")).length===0))
       {
-        if(chatWith)
-        socket.emit('endChat',{otherId:chatWith})
+        // if(chatWith)
+        // socket.emit('endChat',{otherId:chatWith})
           socket.disconnect()
       }
           
@@ -42,17 +60,22 @@ const startAnonymousChat=()=>{
     const socket = getSocket();
   setShareDetails(false)
     socket.emit("startChat",{counselorId:chatWith});
+    setVisible(false)
 }
 const startChat=()=>{
     const socket = getSocket();
     setShareDetails(true);
     socket.emit("startChat",{counselorId:chatWith,username});
+    setVisible(false)
 }
   const handleEndChat = () => {
-    const socket = getSocket();
-    socket.emit("endChat", { otherId:chatWith });
+    //const socket = getSocket();
+    //socket.emit("endChat", { otherId:chatWith });
+    sessionStorage.removeItem(`messages-${chatWith}`)
     setChatWith(null);
-    sessionStorage.removeItem("chatWith")
+    setChatWithusername(null)
+    setShareDetails(null)
+    //sessionStorage.removeItem("chatWith")
   };
 
   return (
@@ -62,17 +85,17 @@ const startChat=()=>{
             <Dialog
             header="שיתוף פרופיל"
             visible={visible}
-            onHide={()=>{ startAnonymousChat(); setVisible(false)}}
+            onHide={startAnonymousChat}
             style={{ width: '30vw' }}
             modal
             footer={
               <div className="flex justify-end gap-2">
-                <Button label="לא" icon="pi pi-times" className="p-button-text" onClick={()=>{ startAnonymousChat(); setVisible(false)}} />
-                <Button label="כן, שתף" icon="pi pi-check" onClick={()=>{ startChat();setVisible(false)}} autoFocus />
+                <Button label="לא" icon="pi pi-times" className="p-button-text" onClick={startAnonymousChat } />
+                <Button label="כן, שתף" icon="pi pi-check" onClick={startChat} autoFocus />
               </div>
             }
           >
-            <p>האם אתה רוצה לשתף את שם המשתמש והפרופיל שלך עם הצד השני בצ'אט?</p>
+            <p>האם אתה רוצה לשתף את שם המשתמש והפרופיל שלך?</p>
           </Dialog> {
         !isSocketConnected?<Loading/>:
         !chatWith? (

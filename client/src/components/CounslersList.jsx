@@ -17,12 +17,12 @@ const CounselorList = ({ onStartChat }) => {
   const [availableCounselors, setAvailableCounselors] = useState([]);
 const {getFilePath}=useGetFilePath()
 const socket = getSocket();
-const showToastMessage = (counselorId) => {
+const showToastMessage = (counselorUsername) => {
  
-    toast.info(`היועץ ${counselorId} התפנה`, {
+    toast.info(`היועץ ${counselorUsername} התפנה`, {
         position: "bottom-right",
         hideProgressBar: true,
-        toastId: `counselor-${counselorId}`,
+        toastId: `counselor-${counselorUsername}`,
         autoClose: 5000,
         style: {
           background: "#fff",
@@ -66,10 +66,10 @@ useEffect(() => {
 //     socket.off("NotifyCounselorAvailable")
 //     setNotifications(prev => (prev.delete(counselorId), new Set(prev)));
 // }
-const waitForCounselor=(counselorId)=>{
+const waitForCounselor=(counselorId,counselorUsername)=>{
    setNotifications(prevSet => new Set(prevSet).add(counselorId));
    socket.on(`NotifyCounselorAvailable-${counselorId}`, ({ counselorId }) => {
-     showToastMessage(counselorId);
+     showToastMessage(counselorUsername);
      removeWaiting(counselorId)
    });
 }
@@ -121,7 +121,7 @@ const removeWaiting=(counselorId)=>{
                 if(notifications.has(counselor._id))
                 removeWaiting(counselor._id)
                 else
-                waitForCounselor(counselor._id)
+                waitForCounselor(counselor._id,counselor.username)
                 }}
               />
             );

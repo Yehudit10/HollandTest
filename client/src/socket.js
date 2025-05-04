@@ -2,10 +2,12 @@ import { io } from "socket.io-client";
 
 let socket;
 
-export const connectSocket = (userId, role) => {
+export const ConnectSocket = (token) => {
+  
   socket = io("http://localhost:4000", {
-    query: { userId, role },
-    
+      extraHeaders: {
+        authorization: `Bearer ${token}`
+      }
   });
 
   return socket;

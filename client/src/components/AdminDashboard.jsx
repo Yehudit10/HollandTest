@@ -10,6 +10,8 @@ import DynamicPieChart from './Pie';
 import {useGetUsersQuery, useGetUsersStatQuery} from "../features/users/userApiSlice"
 import { useSearchParams } from 'react-router-dom';
 import { Calendar } from 'primereact/calendar';
+import { useGetSessionsSumQuery } from '../features/chatSessions/chatSessionApiSlice';
+import Loading from './Loading';
 const Dashboard = () => {
    
    
@@ -18,29 +20,34 @@ const [searchParams,setSearchParams]=useSearchParams()
         setSearchParams(e.target.value?{fromMonth:(e.target.value).toISOString()}:{})    
       };
 
-    const dailyRevenueData = {
-        labels: ['Jul 17, 2023', 'Jul 18, 2023', 'Jul 19, 2023', 'Jul 20, 2023', 'Jul 21, 2023', 'Jul 22, 2023', 'Jul 24, 2023'],
-        datasets: [{
-            label: 'Daily Revenue',
-            data: [8, 12, 12, 9, 13, 4, 12],
-            backgroundColor: 'rgba(255, 167, 38, 0.5)',
-            borderColor: 'rgba(255, 167, 38, 1)',
-            borderWidth: 1
-        }]
-    };
+   
 
     const chartOptions = {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    };
+   
+  scales: {
+     y: {
+        beginAtZero: true,
+       
+    }}}
    
 const fromMonth= Object.fromEntries(searchParams.entries());
     const {data:usersData}=useGetUsersStatQuery(fromMonth)
+const {data:sessionsData,isLoading:sessionIsLoading}=useGetSessionsSumQuery(fromMonth)
+const dailyRevenueData = {
+    labels: sessionsData?.data.map(c=>`${c.counselorUsername}- ${c.sessionCount} sessions`),
+    datasets: [{
+        label: 'Counselor Sessions',
+        data: sessionsData?.data.map(c=>c.totalDuration),
+        backgroundColor: 'rgba(255, 167, 38, 0.5)',
+        borderColor: 'rgba(255, 167, 38, 1)',
+        borderWidth: 1,
+        maxBarThickness: 200,
+        
+    }]
+};
     const today = new Date();
     const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+    if(sessionIsLoading)return <Loading/>
     return (
         <div className="dashboard-container">
             <div className="top-cards">
@@ -66,6 +73,16 @@ const fromMonth= Object.fromEntries(searchParams.entries());
         showIcon={true}  
         showButtonBar={true}  
       />
+      
+       {/* <Calendar 
+        value={searchParams.get('fromMonth')&&new Date(searchParams.get('fromMonth'))}
+        onChange={onMonthChange}
+        view="month"  
+        dateFormat="mm/yy" 
+        maxDate={lastMonthEnd} 
+        showIcon={true}  
+        showButtonBar={true}  
+      /> */}
             <TabView>
                 <TabPanel header="Daily Revenue">
                     <Chart type="bar" data={dailyRevenueData} options={chartOptions} />

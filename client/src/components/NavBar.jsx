@@ -20,9 +20,10 @@ import "react-toastify/dist/ReactToastify.css";
 const NavBar = () => {
     const profileMenu = useRef(null);
 const navigate=useNavigate()
-const {imgUrl,role,_id,isActive}=useAuth()
+const {_id}=useAuth()
 const[logout,{isError,isSuccess:logoutIsSuccess}]=useSendLogoutMutation()
-//const {data:userData,isLoading:userIsLoading,isError:userIsError,error:userError}=useGetUserByIdQuery(_id)
+const {data:userData,isLoading:userIsLoading,isError:userIsError,error:userError}=useGetUserByIdQuery(_id)
+const {imgUrl,role,isActive,favoraites}=userData?.data||{}
 const handleLogout=()=>{
     logout()
     navigate("/login")
@@ -52,7 +53,7 @@ const {getFilePath}=useGetFilePath()
             
             {/* <Button icon="pi pi-search" className="p-button-rounded p-button-secondary" /> */}
             <Badge
-          value={8}//userData?.data?.favoraites?.length}
+          value={favoraites?.length||0}
           severity="info"
           style={{
             position: 'absolute',
@@ -81,8 +82,8 @@ const {getFilePath}=useGetFilePath()
         </div>
     );
 
-// if(userIsLoading)
-//     return <Loading/>
+if(userIsLoading)
+   return <Loading/>
 //     if(userIsError)
 //         return <Error error={userError}/>
     return (

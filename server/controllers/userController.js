@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid')
 const { sendEmail } = require("../emailService")
 
 const getAllUsers=async(req,res)=>{
- const users=   await User.find({},{password:0}).lean()
+ const users= await User.find({},{password:0}).lean()
 if(!users)
     return res.status(400).json({error:true,message:"no users found",data:null})
 return res.status(200).json({error:false,message:"",data:users})
@@ -26,14 +26,14 @@ const getUserByID=async(req,res)=>{
 }
 const getUsersStatistics=async(req,res)=>{
     const now = new Date();
-    const {fromMonth=new Date(now.getFullYear(), now.getMonth() - 11, 1)}=req.query
+    const {fromMonth=new Date(now.getFullYear(), now.getMonth() - 11, 1),toMonth=new Date()}=req.query
     const fromDate=new Date(fromMonth)
-    console.log(fromDate)
+    const toDate=new Date(toMonth)
 
 const usersCount = await User.aggregate([
     {
       $match: {
-        createdAt: { $gte: fromDate } ,
+        createdAt: { $gte: fromDate,$lte:toDate } ,
         role:'user'
       }
     },
@@ -54,7 +54,7 @@ const usersCount = await User.aggregate([
   ])
 
 const result = [];
-const monthsDiff=(now.getFullYear() - fromDate.getFullYear()) * 12 + now.getMonth() -fromDate.getMonth()
+const monthsDiff=(toDate.getFullYear() - fromDate.getFullYear()) * 12 + toDate.getMonth() -fromDate.getMonth()
     for (let i = monthsDiff - 1; i >= 0; i--) {
       const date = new Date();
       date.setMonth(date.getMonth() - i);  

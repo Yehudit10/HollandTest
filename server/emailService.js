@@ -1,6 +1,9 @@
 const nodemailer=require("nodemailer")
-const sendEmail = async ({to, subject, text,file,html}) => {
- 
+const fs = require('fs');
+const path=require('path')
+const handlebars = require('handlebars');
+const sendEmail = async ({to, subject, text,file,emailTemplate,emailParams}) => {
+ console.log(emailParams)
    
    //if (!to )
    //return res.status(400).json({error:true,message:"to is required",data:null})
@@ -12,6 +15,12 @@ const sendEmail = async ({to, subject, text,file,html}) => {
     }
     });
     //${base64Image}
+    const templatePath = path.join(__dirname, 'emailTemplates',emailTemplate+".hbs");
+    const source = fs.readFileSync(templatePath, 'utf8');
+    const template = handlebars.compile(source);
+    const html = template(
+      emailParams
+    );
     const mailOptions = {
         from: 'hollandtest@gmail.com',
         to:'yehudit50402@gmail.com',

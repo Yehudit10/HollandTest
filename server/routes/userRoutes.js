@@ -15,14 +15,19 @@ const upload=multer({storage:storage})
 const userController=require("../controllers/userController")
 const router=express.Router()
 const verifyJWT=require("../middleware/verifyJWT")
+const verifyActiveCounselor=require("../middleware/verifyActiveCounsler")
+const verifyAdmin=require("../middleware/verifyAdmin")
 router.post("/",upload.single("imgUrl"),userController.addUser)
-router.post("/counselor",userController.addCounsler)
 router.use(verifyJWT)
+
+router.put("/",upload.single("imgUrl"),userController.updateUser)
+router.get("/me",userController.getUserByID)///id instead???
+router.use(verifyActiveCounselor)
+router.delete("/",userController.deleteUser)
 router.get("/",userController.getAllUsers)
 router.get("/counselor",userController.getAllCounslers)
+router.use(verifyAdmin)
+router.post("/counselor",userController.addCounsler)
 router.get("/stat",userController.getUsersStatistics)
-router.get("/me",userController.getUserByID)///id instead???
-router.put("/",upload.single("imgUrl"),userController.updateUser)
-router.delete("/",userController.deleteUser)
 module.exports=router
 

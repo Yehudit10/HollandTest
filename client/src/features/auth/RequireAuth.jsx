@@ -1,10 +1,14 @@
 import { Navigate, Outlet } from "react-router-dom"
 import useAuth from "../../hooks/useAuth"
 
-const RequireAuth=({allowedRoles})=>{
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
+const RequireAuth=({allowedRoles,notActiveAllowed})=>{
     
-const {role}=useAuth()
-return (<>{allowedRoles.includes(role)?<Outlet/>:<Navigate to="/login" replace/>}</>)
+const {role,isActive}=useAuth()
+const isAllowed=allowedRoles.includes(role)
+return (<>{isAllowed&&(notActiveAllowed||isActive)?<Outlet/>:isAllowed?<Navigate to="edit" replace/>:<Navigate to="/login" replace/>}</>)
 
 }
 export default RequireAuth
