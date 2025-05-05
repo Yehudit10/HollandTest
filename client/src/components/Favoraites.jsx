@@ -10,7 +10,7 @@ const Favoraites=()=>{
     if(jobsIsLoading)
         return <Loading/>
     if(jobsIsError)
-        return <Error error={jobsError}/>
+        return <Error error={jobsError.data.message}/>
       //populate??
     return (<>
     <h1>המועדפים שלי</h1>
@@ -21,7 +21,7 @@ const Favoraites=()=>{
         justifyContent:'center',
        
         }}>
-    {jobsData?.data?.filter(job=>userData?.data?.favoraites?.includes(job._id))?.map(job=><OccupationCard2 job={job}/>)}
+    {jobsData?.data?.jobs.filter(job=>userData?.data?.favoraites?.includes(job._id))?.map(job=><OccupationCard2 job={job}/>)}
     </div>
     </>)
 }

@@ -36,7 +36,7 @@ const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname",offset:0,
 
  
 const sortOptions={"א-ת":"jobname","שכר גבוה":"salaryAvg","שעות עבודה":"workingHoursAvg"}
-
+const educationLevelOptions=["תואר אקדמאי","על-תיכוני","תעודת בגרות","ללא תעודת בגרות"]
   return (
     <>
     <div className="filter-sidebar">
@@ -111,7 +111,18 @@ const sortOptions={"א-ת":"jobname","שכר גבוה":"salaryAvg","שעות ע�
         <div >
           
         <div >
+        {educationLevelOptions.map(educationLevel=>
           <ToggleButton
+            checked={searchParams.get("educationLevel")?.split(",").includes(educationLevel)}
+            onChange={(e) =>{
+              handleFilterAppend("educationLevel",educationLevel)
+            }}
+            onLabel={educationLevel}
+            offLabel={educationLevel}
+          />
+        )
+        }
+          {/* <ToggleButton
             checked={searchParams.get("educationLevel")?.split(",").includes("תואר אקדמאי")}
             onChange={(e) =>{
               handleFilterAppend("educationLevel","תואר אקדמאי")
@@ -144,7 +155,7 @@ const sortOptions={"א-ת":"jobname","שכר גבוה":"salaryAvg","שעות ע�
             }}
             onLabel="ללא תעודת בגרות"
             offLabel="ללא תעודת בגרות"
-          />
+          /> */}
         </div>
          
         </div>

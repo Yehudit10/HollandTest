@@ -17,7 +17,7 @@ const AddCounsler=()=>{
               <div className="form-group">
                 <InputText
                   id="email"
-                  placeholder="Email"
+                  placeholder="אימייל"
                   {...register("email", { required: "Email is required" })}
                   className={`p-inputtext ${errors.username ? "p-invalid" : ""}`}
                 />

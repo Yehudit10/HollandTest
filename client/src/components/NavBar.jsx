@@ -31,17 +31,24 @@ const handleLogout=()=>{
 
 
 const userNavigation = [
-    { label: 'שאלון הכוונה', command:()=>{ navigate("holland")} },
-    { label: 'מאגר העיסוקים',command:()=>{navigate("jobs")} },
-    { label:'צפיה בתוצאות',command:()=>{navigate("holland/results")} },
-    { label:'ליועצים',command:()=>{navigate("chatu")} },
-];
-const adminNavigation=[
- { label:'שאלות',command:()=>{navigate("view")}},
- { label:'הוספת יועץ',command:()=>{navigate("counsler-register")}},
-]
-const counslerNavigation=[{label:"להתחלת ייעוץ",command:()=>{navigate("chatc")}}]
-const navigationList=role==='admin'?adminNavigation:role==="user"?userNavigation:role==="counselor"&&isActive?counslerNavigation:[]
+    { label: 'שאלון התאמה תעסוקתית', command: () => navigate("holland") },
+    { label: 'מאגר עיסוקים', command: () => navigate("jobs") },
+    { label: 'התוצאות שלי', command: () => navigate("holland/results") },
+    { label: 'פנייה ליועץ', command: () => navigate("userchat") },
+  ];
+  
+  const adminNavigation = [
+    { label: 'ניהול שאלות', command: () => navigate("questions") },
+    { label: 'צפיה במשתמשים', command: () => navigate("users") },
+    { label: 'הוספת יועץ חדש', command: () => navigate("counsler-register") },
+    { label: 'ניהול העיסוקים', command: () => navigate("viewjobs") },
+    { label: 'סטטיסטיקות', command: () => navigate("statistics") },
+  ];
+  
+  const counselorNavigation = [
+    { label: 'התחלת פגישת ייעוץ', command: () => navigate("counselorchat") },
+  ];
+const navigationList=role==='admin'?adminNavigation:role==="user"?userNavigation:role==="counselor"&&isActive?counselorNavigation:[]
   
 const {getFilePath}=useGetFilePath()
     const end = (
@@ -84,8 +91,8 @@ const {getFilePath}=useGetFilePath()
 
 if(userIsLoading)
    return <Loading/>
-//     if(userIsError)
-//         return <Error error={userError}/>
+    if(userIsError)
+        return <Error error={userError.data.message}/>
     return (
         <Menubar model={navigationList} end={end} className="custom-menubar" />
     );

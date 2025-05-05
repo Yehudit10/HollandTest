@@ -57,13 +57,16 @@ return savedMsgs?JSON.parse(savedMsgs):[]});
       }}>
     <Card title={`Chat with ${chatWithUsername||"Anonymous User"}`} style={{width:'70%' }} className="h-full">
       <ScrollPanel style={{ height: '250px', marginBottom: '1rem' }}>
+        <div style={{
+              marginTop: '2rem',
+            }}></div>
         {messages.map((msg, i) => (
             
           <div
             key={i}
             style={{
               textAlign: msg.from === "me" ? "right" : "left",
-              marginBottom: '0.5rem',
+              marginTop: '0.5rem',
             }}
           >
          
@@ -92,16 +95,6 @@ return savedMsgs?JSON.parse(savedMsgs):[]});
         <div ref={chatEndRef}></div>
       </ScrollPanel>
 
-      {/* <div className="p-d-flex p-ai-center" style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
-        <InputText
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a message..."
-          style={{ flex: 1, marginRight: '0.5rem' }}
-        />
-        <Button icon="pi pi-send" onClick={sendMessage} className="p-button-success" style={{ marginRight: '0.5rem' }} />
-        <Button label="End" icon="pi pi-times" onClick={onEndChat} className="p-button-danger" />
-      </div> */}
       <div
   className="p-d-flex p-ai-center"
   style={{

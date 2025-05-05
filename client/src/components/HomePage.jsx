@@ -20,14 +20,14 @@ const HomePage = () => {
                     </p>
                     {/* כפתור להופעת הדיאלוג */}
                     {//!quizVisible && (
-                        <button 
-                            // onClick={
-                            //     () => setQuizVisible(true)
-                            // } 
-                            className="demo-button"
-                        >
-                            נסה את שאלון הדמה עכשיו!
-                        </button>
+                        // <button 
+                        //     // onClick={
+                        //     //     () => setQuizVisible(true)
+                        //     // } 
+                        //     className="demo-button"
+                        // >
+                        //     נסה את שאלון הדמה עכשיו!
+                        // </button>
                     //)
                     }
                 </section>

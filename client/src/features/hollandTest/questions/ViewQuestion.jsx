@@ -67,19 +67,12 @@ const findChapterTitle=(id)=>chaptersData?.data?.find((c)=>c._id===id).title
     return (
         <div>
             <Toast  ref={toast} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 >שאלות</h2>
+            <div style={{direction:'rtl', display: 'flex', justifyContent: 'space-between', alignItems: 'center',textAlign:'center' }}>
+                <h2 style={{direction:'rtl', textAlign: 'center' }}>שאלות</h2>
                 <Button icon="pi pi-plus" rounded text onClick={openAddDialog} tooltip="הוספת שאלה" tooltipOptions={{ position: 'top' }} />
             </div>
-            <DataTable  value={questions}>
-                <Column field="text" header="שאלה" />
-                <Column body={(question) => {
-            return findTypeTitle(question.type)
-        }} header="טיפוס" />
-                <Column body={(question) => {
-           return findChapterTitle(question.chapterID)
-        }} header="פרק" />
-                <Column
+            <DataTable  value={questions} paginator rows={10} stripedRows responsiveLayout="scroll">
+            <Column
                     body={(question) => (
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
                             <Button icon="pi pi-pencil" rounded text onClick={() => updateQuestion(question)} tooltip="עריכה" tooltipOptions={{ position: 'top' }} />
@@ -87,6 +80,15 @@ const findChapterTitle=(id)=>chaptersData?.data?.find((c)=>c._id===id).title
                         </div>
                     )}
                 />
+                <Column body={(question) => {
+           return findChapterTitle(question.chapterID)
+        }} header="פרק" />
+               
+                <Column body={(question) => {
+            return findTypeTitle(question.type)
+        }} header="טיפוס" />
+                <Column field="text" header="שאלה" />
+
             </DataTable>
 
             <Dialog header="עריכת שאלה" visible={editDialogVisible} onHide={() => setEditDialogVisible(false)}>

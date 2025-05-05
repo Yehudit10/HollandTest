@@ -31,12 +31,12 @@ const [searchParams,setSearchParams]=useSearchParams()
     }}}
    
 const fromMonth= Object.fromEntries(searchParams.entries());
-    const {data:usersData}=useGetUsersStatQuery(fromMonth)
+    const {data:usersData,isLoading:userIsLoading}=useGetUsersStatQuery(fromMonth)
 const {data:sessionsData,isLoading:sessionIsLoading}=useGetSessionsSumQuery(fromMonth)
 const dailyRevenueData = {
-    labels: sessionsData?.data.map(c=>`${c.counselorUsername}- ${c.sessionCount} sessions`),
+    labels: sessionsData?.data.map(c=>`${c.counselorUsername}- ${c.sessionCount} שיחות`),
     datasets: [{
-        label: 'Counselor Sessions',
+        label: "פעילות יועצים",
         data: sessionsData?.data.map(c=>c.totalDuration),
         backgroundColor: 'rgba(255, 167, 38, 0.5)',
         borderColor: 'rgba(255, 167, 38, 1)',
@@ -47,21 +47,24 @@ const dailyRevenueData = {
 };
     const today = new Date();
     const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
-    if(sessionIsLoading)return <Loading/>
+    if(sessionIsLoading||userIsLoading)return <Loading/>
     return (
-        <div className="dashboard-container">
+        <div className="dashboard-container" >
             <div className="top-cards">
-                <Card title="Weekly Revenue" subTitle="$ 1930" ClassName="revenue-card">
-                    <i className={`pi ${PrimeIcons.DOLLAR}`} ClassName="card-icon" />
-                    <p>-4% since last week</p>
+                <Card title="פעילות יועצים"  ClassName="revenue-card">
+                    <i 
+                     className={`pi ${PrimeIcons.CLOCK}`} 
+                    ClassName="card-icon" />
+                    <p>{"דקות שיחה בחודש הנוכחי"+Math.floor(sessionsData?.data?.reduce((acc, c) => acc + c.totalDuration, 0))}</p>
                 </Card>
                 <Card title="Weekly Orders" subTitle="65" ClassName="orders-card">
-                    <i className={`pi ${PrimeIcons.SHOPPING_CART}`} ClassName="card-icon" />
-                    <p>+231% since last week</p>
+                    <i className={`pi ${PrimeIcons.BOOK}`} ClassName="card-icon" />
+                    <p></p>
                 </Card>
-                <Card title="New Customers"  ClassName="customers-card">
+                <Card title="משתמשים חדשים"  ClassName="customers-card">
                     <i className={`pi ${PrimeIcons.USER_PLUS}`} ClassName="card-icon" />
-                    <p>{usersData?.data[usersData?.data?.length-1]?.count+" new customer this month"}</p>
+                    <p>{" משתמשים חדשים בחודש הנוכחי"+usersData?.data[usersData?.data?.length-1]?.count}</p>
+                 
                 </Card>
             </div>
             <Calendar 
@@ -83,14 +86,14 @@ const dailyRevenueData = {
         showIcon={true}  
         showButtonBar={true}  
       /> */}
-            <TabView>
-                <TabPanel header="Daily Revenue">
+            <TabView style={{ direction: 'rtl' }}>
+                <TabPanel header="פעילות יועצים">
                     <Chart type="bar" data={dailyRevenueData} options={chartOptions} />
                 </TabPanel>
                 <TabPanel header="Daily Orders">
                     <DynamicPieChart></DynamicPieChart>
                 </TabPanel>
-                <TabPanel header="New Customers">
+                <TabPanel header="משתמשים חדשים">
                    <UserRegistrationChart users={usersData?.data}/>
                 </TabPanel>
             </TabView>

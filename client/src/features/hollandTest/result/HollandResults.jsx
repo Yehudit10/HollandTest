@@ -209,11 +209,11 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
             </div>
         {sentencesData?.data?.sentences.map((sentence)=><div>{sentence}</div>)}
             <div  style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '20px', width: '100%' }}>
-                <div data-html2canvas-ignore="true" style={{ flexGrow: 1 }}>
+                <div  style={{ flexGrow: 1 }}>
                     <h2 style={{ textAlign: 'center' }}>עיסוקים שיכולים להתאים לטיפוס שלך</h2>
 
                    
-               {[...jobsData?.data].sort((job1,job2)=>{return (matchPercentage(job2)-matchPercentage(job1))}).map((job)=>
+               {[...jobsData?.data?.jobs].sort((job1,job2)=>{return (matchPercentage(job2)-matchPercentage(job1))}).map((job)=>
                        <OccupationCard2
                        job={job}
                        matchPercentage={matchPercentage(job)}

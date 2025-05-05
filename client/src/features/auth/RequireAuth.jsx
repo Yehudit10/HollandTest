@@ -8,6 +8,8 @@ const RequireAuth=({allowedRoles,notActiveAllowed})=>{
     
 const {role,isActive}=useAuth()
 const isAllowed=allowedRoles.includes(role)
+if(!(isAllowed&&(notActiveAllowed||isActive)))
+console.log("not allowed")
 return (<>{isAllowed&&(notActiveAllowed||isActive)?<Outlet/>:isAllowed?<Navigate to="edit" replace/>:<Navigate to="/login" replace/>}</>)
 
 }

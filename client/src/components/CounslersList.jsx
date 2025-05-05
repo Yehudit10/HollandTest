@@ -10,6 +10,7 @@ import useGetFilePath from "../hooks/useGetFilePath";
 import { ScrollPanel } from "primereact/scrollpanel";
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { showToast } from "./toastService";
 const CounselorList = ({ onStartChat }) => {
      
     const {data:counselorsData,isSuccess,isLoading}=useGetCounslersQuery()
@@ -18,30 +19,35 @@ const CounselorList = ({ onStartChat }) => {
 const {getFilePath}=useGetFilePath()
 const socket = getSocket();
 const showToastMessage = (counselorUsername) => {
- 
-    toast.info(`היועץ ${counselorUsername} התפנה`, {
-        position: "bottom-right",
-        hideProgressBar: true,
-        toastId: `counselor-${counselorUsername}`,
-        autoClose: 5000,
-        style: {
-          background: "#fff",
-          color: "#202124",
-          borderRadius: "12px",
-          boxShadow: "0 2px 12px rgba(0, 0, 0, 0.2)",
-          padding: "12px 16px",
-          fontSize: "20px",
-          fontFamily: "Roboto, sans-serif",
-          display: "flex",
-          alignItems: "center",
-          height:'25vh',
-          width:'30vw'
-        },
-      });
-  };
+  showToast({
+    severity: 'Info',
+    summary: 'Info',
+    detail: `היועץ ${counselorUsername} התפנה`,
+  });
+};
+  //   toast.info(`היועץ ${counselorUsername} התפנה`, {
+  //       position: "bottom-right",
+  //       hideProgressBar: true,
+  //       toastId: `counselor-${counselorUsername}`,
+  //       autoClose: 5000,
+  //       style: {
+  //         background: "#fff",
+  //         color: "#202124",
+  //         borderRadius: "12px",
+  //         boxShadow: "0 2px 12px rgba(0, 0, 0, 0.2)",
+  //         padding: "12px 16px",
+  //         fontSize: "20px",
+  //         fontFamily: "Roboto, sans-serif",
+  //         display: "flex",
+  //         alignItems: "center",
+  //         height:'25vh',
+  //         width:'30vw'
+  //       },
+  //     });
+  // };
   useEffect(() => {
-    
-    socket.on("availableCounselors", setAvailableCounselors);
+   
+    socket.on("availableCounselors",setAvailableCounselors);
 
     return () => {
       socket.off("availableCounselors", setAvailableCounselors);
@@ -66,16 +72,20 @@ useEffect(() => {
 //     socket.off("NotifyCounselorAvailable")
 //     setNotifications(prev => (prev.delete(counselorId), new Set(prev)));
 // }
+const removeWaiting=(counselorId)=>{
+ 
+  socket.off(`NotifyCounselorAvailable-${counselorId}`)
+  setNotifications(prev => (prev.delete(counselorId), new Set(prev)));
+}
+
 const waitForCounselor=(counselorId,counselorUsername)=>{
    setNotifications(prevSet => new Set(prevSet).add(counselorId));
    socket.on(`NotifyCounselorAvailable-${counselorId}`, ({ counselorId }) => {
+    removeWaiting(counselorId)
+    sessionStorage.setItem("notifications",JSON.stringify([...notifications]))
      showToastMessage(counselorUsername);
-     removeWaiting(counselorId)
+     
    });
-}
-const removeWaiting=(counselorId)=>{
-   socket.off(`NotifyCounselorAvailable-${counselorId}`)
-   setNotifications(prev => (prev.delete(counselorId), new Set(prev)));
 }
 
 
@@ -83,33 +93,8 @@ const removeWaiting=(counselorId)=>{
     <Card title="בחר יועץ תעסוקתי לשיחה אישית" subTitle="בחר יועץ מתוך הרשימה למטה כדי להתחיל שיחה.">
      
         <DataTable  value={counselors}>
-        <Column body={(counselor) => {
-           return <Avatar
-           icon="pi pi-user"
-           image={getFilePath(counselor.imgUrl)}
-           shape="circle"
-           className="p-mr-2"
-           style={{ cursor: 'pointer' }}
-          
-       />
-        }}  />
-                <Column field="username" header="שם משתמש" />
-                <Column field="firstname" header="שם פרטי"/>
-                <Column field="lastname" header="שם משפחה"/>
-                {/* <Column field="profile" header="עלי"/> */}
-                <Column body={(counselor) => {
-           return <ScrollPanel style={{
-            width: '100%',
-            maxWidth: '300px',
-            height: '4em',
-            overflow: 'auto',
-            overflowY: 'scroll',
-          }}>{counselor.profile}</ScrollPanel>}}/>
-
-        <Column body={(counselor) => {
-           return <Button disabled={!availableCounselors.includes(counselor._id)} label="Chat" icon="pi pi-comments" onClick={() => onStartChat(counselor._id,counselor.username)} className="p-button-sm" />
-        }} />
-          
+       
+                
           <Column body={(counselor) => 
           {if (!availableCounselors.includes(counselor._id)) {
             return (
@@ -130,6 +115,31 @@ const removeWaiting=(counselorId)=>{
           }
         
         } />  
+
+<Column body={(counselor) => {
+           return <Button disabled={!availableCounselors.includes(counselor._id)} label="Chat" icon="pi pi-comments" onClick={() => onStartChat(counselor._id,counselor.username)} className="p-button-sm" />
+        }} />
+<Column header="פרטי יועץ" body={(counselor) => {
+           return <ScrollPanel style={{
+            width: '100%',
+            maxWidth: '300px',
+            height: '4em',
+            overflow: 'auto',
+            overflowY: 'scroll',
+          }}>{counselor.profile}</ScrollPanel>}}/>
+<Column field="lastname" header="שם משפחה"/>
+<Column field="firstname" header="שם פרטי"/>
+<Column field="username" header="שם משתמש" />
+<Column body={(counselor) => {
+           return <Avatar
+           icon="pi pi-user"
+           image={getFilePath(counselor.imgUrl)}
+           shape="circle"
+           className="p-mr-2"
+           style={{ cursor: 'pointer' }}
+          
+       />
+        }}  />
         </DataTable>
        
     </Card>
@@ -140,12 +150,3 @@ const removeWaiting=(counselorId)=>{
 
 export default CounselorList;
 
-
-
-// <ScrollPanel style={{
-//             width: '100%',
-//             maxWidth: '300px',
-//             height: '4em',
-//             overflow: 'auto',
-//             overflowY: 'scroll',
-//           }}>{counselor.profile}</ScrollPanel>

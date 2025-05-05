@@ -5,11 +5,13 @@ import { Card } from "primereact/card";
 import useAuth from "../hooks/useAuth";
 import { Button } from "primereact/button";
 import Loading from "./Loading";
-
+import "./CounselorChatApp.css"
 
 
 import {selectToken} from "../features/auth/authSlice"
 import { useSelector } from "react-redux";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Avatar } from "primereact/avatar";
 const CounselorChatApp = () => {
   const token = useSelector(selectToken)
     const {_id:userId,role,imgUrl}=useAuth() 
@@ -49,13 +51,16 @@ const handleEndChat = () => {
 
     });
 
-    socket.on("chatEnded", () => {
+    socket.on("chatEnded", async() => {
       sessionStorage.removeItem(`messages-${chatWith}`)
       setChatWith(null);
       setChatWithusername(null)
       // sessionStorage.removeItem("chatWith")
       // sessionStorage.removeItem("chatWithUsername")
-      socket.emit("setAvailable"); 
+      await setTimeout(() => {
+         socket.emit("setAvailable"); 
+      }, 10);
+     
     });
     
     return () => {
@@ -80,25 +85,65 @@ const handleEndChat = () => {
  
 if(!isSocketConnected)return <Loading/>
   return (
-    <div className="p-d-flex p-jc-center p-mt-6">
-      <div className="p-col-12 p-md-6">
+    //  <div className="p-d-flex p-jc-center p-mt-6">
+      // <div className="p-col-12 p-md-6">
 
-        
+        <div>
          
          {chatWith?<ChatWindow chatWith={chatWith} chatWithUsername={chatWithUsername} onEndChat={handleEndChat} />:
-          (<><p>Status: {available ? "✅ Available" : "❌ Unavailable"}</p>
-          <Button label= {available ? "Go Unavailable" : "Become Available"} onClick={toggleAvailability}/>
-          {available?
-            <Card title="Waiting for a user to chat...">
-              <p>This window will activate when a user starts a chat with you.</p>
-            </Card>:<></>}</>
+          (<>
+          {/* <p>Status: {available ? "✅ Available" : "❌ Unavailable"}</p>
+          <Button label= {available ? "Go Unavailable" : "Become Available"} /> */}
+          
+          {/* <div>
+          
+          </div> */}
+          
+            {/* // <Card title="Waiting for a user to chat...">
+            //   <p>This window will activate when a user starts a chat with you.</p>
+            // </Card>   */}
+            <div className="waiting-container">
+             
+            <Card
+              title={available?"ממתינים למשתמשים...":"אתה לא זמין כעת"}
+              subTitle={available?"ברגע שמישהו יתחבר, תתחיל שיחה":"משתמשים לא יכולים להתחבר אליך"}
+              className="waiting-card"
+            > <Button
+            label={available?"הפסק להיות זמין":"הפוך לזמין"}
+            icon={available?"pi pi-times":"pi pi-check"}
+            onClick={toggleAvailability}
+            //className="p-button-danger"
+          />
+          {available&& <div className="waiting-content">
+                <div className="dot-loader">
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                </div>
+                <Avatar
+                  icon="pi pi-user"
+                  size="xlarge"
+                  shape="circle"
+                  className="waiting-avatar"
+                />
+                <p className="waiting-text">
+                  אנא המתן. נשלח למשתמשים התראה שאתה זמין.
+                </p>
+                
+              </div> }
+            </Card>
+           
+          </div>
+           
+            :<></>
+            </>
           
         )
       }
 
         
-      </div>
-    </div>
+    {/* //   </div> */}
+     </div>
   );
 };
 

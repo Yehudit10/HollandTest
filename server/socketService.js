@@ -4,7 +4,7 @@ const { addSession } = require("./controllers/chatSessionController");
 const availableCounselors = new Map();
 const socketsMap = new Map();
 const sessionsStartTime=new Map()
-
+const activeChats=new Map();
 function setupSocket(server) {
   
   const io = new Server(server, {
@@ -18,7 +18,7 @@ function setupSocket(server) {
   io.on("connection", (socket) => {
 
     const { _id:userId, role } = socket.user
-   
+    
     socketsMap.set(userId,socket.id)
     if (role === "user") { 
       socket.emit("availableCounselors", Array.from(availableCounselors.keys()));
@@ -26,10 +26,11 @@ function setupSocket(server) {
 
     socket.on("startChat", ({ counselorId,username }) => {
       if (role === "user" && availableCounselors.has(counselorId)) {
-        sessionsStartTime.set(socket.id,new Date())
+        activeChats.set(counselorId,{userId,chatStartTime:new Date()})
+        //sessionsStartTime.set(socket.id,new Date())
         
         const counselorSocketId = availableCounselors.get(counselorId);
-        sessionsStartTime.set(counselorSocketId,new Date())
+        //sessionsStartTime.set(counselorSocketId,new Date())
         const counselorSocket = io.sockets.sockets.get(counselorSocketId);
         if (counselorSocket) {
           availableCounselors.delete(counselorId);
@@ -42,18 +43,18 @@ function setupSocket(server) {
    
     socket.on("endChat", async({ otherId }) => {
 
-const startTime=sessionsStartTime.get(socket.id)
-sessionsStartTime.delete(socket.id)
-sessionsStartTime.delete(socketsMap.get(otherId))
-  const newSessionObj={userId:role==='user'?userId:otherId,counselorId:role==='user'?otherId:userId,chatStartTime:startTime,chatEndTime:new Date()}
- const newSession=await addSession(newSessionObj)
-console.log(newSession)
+// const startTime=sessionsStartTime.get(socket.id)
+// sessionsStartTime.delete(socket.id)
+// sessionsStartTime.delete(socketsMap.get(otherId))
+//   const newSessionObj={userId:role==='user'?userId:otherId,counselorId:role==='user'?otherId:userId,chatStartTime:startTime,chatEndTime:new Date()}
+//  const newSession=await addSession(newSessionObj)
 
-      // if (
-      //   (role === "user" && activeChats.get(counselorId) === userId) ||
-      //   (role === "counselor" && activeChats.has(userId))
-      // ) 
-      // {
+
+      if (
+        (role === "user" && activeChats.get(otherId)?.userId === userId) ||
+        (role === "counselor" && activeChats.has(userId))
+      ) 
+      {
         //const counselorSocketId = availableCounselors.get(counselorId) || socket.id;
         const otherSocket = io.sockets.sockets.get(socketsMap.get(otherId));
        // activeChats.delete(counselorId);
@@ -63,6 +64,11 @@ console.log(newSession)
           
           otherSocket.emit("chatEnded");
         }
+      
+        const counselorID=role==='user'?otherId:userId,userID=role==='user'?userId:otherId
+        const newSession=await addSession({counselorId:counselorID,userId:userID,chatStartTime:activeChats.get(counselorID).chatStartTime,chatEndTime:new Date()})
+        activeChats.delete(counselorID)
+        console.log(newSession)
       //   if(role==="counsler")
       //   availableCounselors.set(userId,socket.id)
       // else
@@ -71,21 +77,25 @@ console.log(newSession)
        //io.emit("availableCounselors", Array.from(availableCounselors.keys()));
        // otherSocket.emit("availableCounselors", Array.from(availableCounselors.keys()));
       }
-    //}
+    }
     
     );
     socket.on("sendMessage", ({profile, to, message }) => {
-
+      if (
+        (role === "user" && activeChats.get(to)?.userId === userId) ||
+        (role === "counselor" && activeChats.has(userId))
+      ) {
       const targetSocket = io.sockets.sockets.get(socketsMap.get(to));
       if (targetSocket) {
         targetSocket.emit("receiveMessage", { from: profile, message });
-      }
+      }}
     });
 
     socket.on("setAvailable", () => {
       
       if (role === "counselor") {
         availableCounselors.set(userId, socket.id);
+   
         io.emit("availableCounselors", Array.from(availableCounselors.keys()))
         // const socketSet = notifyWaitList.get(userId);
         // if (!socketSet) return;

@@ -37,12 +37,12 @@ return <Error error={error?.data?.message}/>
   return (
     <div className="form-container">
       <div className="form-card">
-        <h2 className="form-title">Login</h2>
+        <h2 className="form-title">התחברות</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
             <InputText
               id="username"
-              placeholder="Username"
+              placeholder="שם משתמש"
               {...register("username", { required: "Username is required" })}
               className={`p-inputtext ${errors.username ? "p-invalid" : ""}`}
             />
@@ -55,7 +55,7 @@ return <Error error={error?.data?.message}/>
             rules={{required:"Password is required"}}
             className={`p-password custom-password ${errors.password ? "p-invalid" : ""}`}
             render={({field})=><Password
-              placeholder="Password"
+              placeholder="סיסמא"
                {...field}
               toggleMask
               feedback={false}
@@ -64,7 +64,7 @@ return <Error error={error?.data?.message}/>
             {errors.password && <small className="p-error">{errors.password.message}</small>}
           </div>
 
-          <Button type="submit" label="Login" className="p-button-primary p-mt-3" />
+          <Button type="submit" label="התחברות" className="p-button-primary p-mt-3" />
         </form>
       </div>
     </div>

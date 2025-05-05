@@ -35,12 +35,24 @@ import CounselorChatApp from './components/CounslerChatApp';
 import ChatApp from './components/ChatApp';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { Toast } from 'primereact/toast';
+
+
+import React, { useRef, useEffect } from 'react';
+
+import { setToastRef } from './components/toastService';
+import JobManager from './features/jobs/JobManager';
 function App() {
 
+  const toast = useRef(null);
 
+  useEffect(() => {
+    setToastRef(toast.current);
+  }, []);
   return (
     <div className="App">
-      <ToastContainer style={{ zIndex: 9999 }} />
+      {/* <ToastContainer style={{ zIndex: 9999 }} /> */}
+      <Toast ref={toast}/>
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<Login />} />
@@ -53,28 +65,32 @@ function App() {
            
               <Route path="edit" element={<Edit/>}/>
                 <Route element={<RequireAuth allowedRoles={['user', 'admin','counselor']} notActiveAllowed={false} />}> 
-                <Route path="chatu" element={<ChatApp/>}/>
+               
+                
+                <Route path="userchat" element={<ChatApp/>}/>
                 <Route path="favoraites" element={<Favoraites/>}/>
+                <Route path="jobs" element={<JobList/>}/>
                 <Route path="holland" element={<Outlet />}>
                 <Route index element={<HollandPages />} />
                 <Route path="holland-info" element={<HollandInfoPage />} />
                 <Route path="test" element={<Question/>} />
                 <Route path="results" element={<ViewResults/>}/>
                 <Route path="results/:resultId" element={<HollandResults />} />
-                <Route path="jobs" element={<JobList/>}/> 
+                
                 </Route>
                 <Route element={<RequireAuth allowedRoles={['counselor','admin']} notActiveAllowed={false}/>}>
-                    <Route path="chatc" element={<CounselorChatApp/>}/></Route>
+                    <Route path="counselorchat" element={<CounselorChatApp/>}/></Route>
                 <Route element={<RequireAuth allowedRoles={['admin']} notActiveAllowed={false}/>}>
-                      <Route path="stat" element={<AdminDashboard/>}/>
-                      <Route path="view" element={<ViewQuestions/>}/>
+                <Route path="statistics" element={<AdminDashboard/>}/>
+                      <Route path="viewjobs" element={<JobManager/>}/>
+                      <Route path="questions" element={<ViewQuestions/>}/>
                       <Route path="counsler-register" element={<AddCounsler/>}/>
                       <Route path="users" element={<UsersList/>}/>
 
               </Route>
               
-              
               </Route>
+              
           </Route>
         </Route>
         </Route>

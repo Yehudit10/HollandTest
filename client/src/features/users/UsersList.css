@@ -1,0 +1,85 @@
+.custom-dropdown-container {
+    display: flex;
+    justify-content: center;
+    width: 300px;
+    margin: 2rem auto 3rem; /* הוספנו יותר מרווח מתחת */
+}
+
+.custom-dropdown .p-dropdown {
+    width: 100%; /* ה-Dropdown יתפוס את כל הרוחב של הקונטיינר */
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.custom-dropdown .p-dropdown-label {
+    text-align: center; /* מרכז את הטקסט placeholder */
+}
+
+.custom-dropdown .p-dropdown-panel {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    z-index: 1000; /* מוודא שהפאנל מעל הטבלה */
+}
+
+.custom-dropdown .p-dropdown-items-wrapper {
+    max-height: 200px; /* מגביל את הגובה של רשימת האפשרויות */
+}
+
+.custom-dropdown .p-dropdown-item {
+    text-align: right;
+    padding: 0.5rem 1rem;
+}
+
+.custom-dropdown .p-dropdown-panel {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.custom-dropdown-container {
+    display: flex;
+    justify-content: center;
+    width: 300px;
+    margin: 2rem auto 5rem; /* הגדלנו את המרווח התחתון משמעותית */
+}
+
+.custom-dropdown .p-dropdown {
+    width: 100%;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.custom-dropdown .p-dropdown-label {
+    text-align: center;
+}
+
+.custom-dropdown .p-dropdown-panel {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    z-index: 1000; 
+    min-width: 300px; 
+}
+
+.custom-dropdown .p-dropdown-items-wrapper {
+    max-height: 200px;
+}
+
+.custom-dropdown .p-dropdown-item {
+    text-align: right;
+    padding: 0.5rem 1rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -16,6 +16,7 @@ import useGetFilePath from "../../hooks/useGetFilePath";
 import { InputTextarea } from "primereact/inputtextarea";
 import {  toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { showToast } from "../../components/toastService";
 
 
 const Edit = () => {
@@ -40,10 +41,12 @@ const {getFilePath}=useGetFilePath()
 
   const [update,{isError,isLoading,isSuccess:updateIsSuccess}]=useUpdateUserMutation()
 useEffect(()=>{if(updateIsSuccess){   
-   toast.success("העדכון בוצע בהצלחה", {
-     position: "top-center",
-     hideProgressBar:true
-});navigate('/home')}},[updateIsSuccess])///
+  showToast({
+    severity: 'success',
+    summary: 'success',
+    detail: "העדכון בוצע בהצלחה",
+  });
+navigate('/home')}},[updateIsSuccess])///
   const onSubmit = (data) => {
     const formData =new FormData() 
     formData.append("imgUrl",image)

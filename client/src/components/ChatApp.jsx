@@ -40,8 +40,9 @@ const[shareDetails,setShareDetails]=useState(JSON.parse(sessionStorage.getItem("
     });
     return () => {
        
-      if(!chatWith&&(!sessionStorage.getItem("notification")||JSON.parse(sessionStorage.getItem("notification")).length===0))
+      if(!chatWith&&(!sessionStorage.getItem("notifications")||JSON.parse(sessionStorage.getItem("notifications")).length===0))
       {
+        
         // if(chatWith)
         // socket.emit('endChat',{otherId:chatWith})
           socket.disconnect()

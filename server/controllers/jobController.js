@@ -18,8 +18,11 @@ query.workingHoursAvg={...(query.workingHoursAvg||{}),$lte:maxWorkingHours}
 const jobs=await Job.find(query).sort(sortBy).skip(page*pageSize||0).limit(pageSize).lean()
 if(!jobs)
 return res.status(400).json({error:true,message:"no jobs found",data:null})
-
-return res.status(200).json({error:false,message:"",data:jobs})
+const totalCount = await Job.countDocuments();
+console.log(totalCount)
+console.log((page + 1) * pageSize)
+const hasMore = totalCount > (page + 1) * pageSize;
+return res.status(200).json({error:false,message:"",data:{jobs,hasMore}})
 }
 const addJob=async(req,res)=>{
     const {jobname,description,salaryAvg,workingHoursAvg,educationLevel,relatedTypes}=req.body
