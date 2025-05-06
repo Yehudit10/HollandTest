@@ -71,8 +71,8 @@ const findChapterTitle=(id)=>chaptersData?.data?.find((c)=>c._id===id).title
                 <h2 style={{direction:'rtl', textAlign: 'center' }}>שאלות</h2>
                 <Button icon="pi pi-plus" rounded text onClick={openAddDialog} tooltip="הוספת שאלה" tooltipOptions={{ position: 'top' }} />
             </div>
-            <DataTable  value={questions} paginator rows={10} stripedRows responsiveLayout="scroll">
-            <Column
+            <DataTable style={{justifyContent:'center'}}  value={questions} paginator rows={10} stripedRows responsiveLayout="scroll">
+            <Column headerStyle={{ justifyContent: 'center' }}
                     body={(question) => (
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
                             <Button icon="pi pi-pencil" rounded text onClick={() => updateQuestion(question)} tooltip="עריכה" tooltipOptions={{ position: 'top' }} />
@@ -82,12 +82,12 @@ const findChapterTitle=(id)=>chaptersData?.data?.find((c)=>c._id===id).title
                 />
                 <Column body={(question) => {
            return findChapterTitle(question.chapterID)
-        }} header="פרק" />
+        }} header="פרק"    style={{direction:'rtl',textAlign:'right'}} />
                
                 <Column body={(question) => {
             return findTypeTitle(question.type)
-        }} header="טיפוס" />
-                <Column field="text" header="שאלה" />
+        }} header="טיפוס"  style={{direction:'rtl',textAlign:'right'}} />
+                <Column field="text" style={{direction:'rtl',textAlign:'right'}} header="שאלה" />
 
             </DataTable>
 

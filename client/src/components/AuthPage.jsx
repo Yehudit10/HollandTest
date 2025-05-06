@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './HomePage.css'; // ייבוא קובץ CSS
+import './AuthPage.css'; // ייבוא קובץ CSS
 // import DemoQuizModal from './DemoTest'; // ייבוא הקומפוננטה של המבחן הדמה
 
-const HomePage = () => {
+const AuthPage = () => {
     //const [quizVisible, setQuizVisible] = useState(false); // מצב האם הדיאלוג פתוח
 
     return (
@@ -50,4 +50,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default AuthPage;

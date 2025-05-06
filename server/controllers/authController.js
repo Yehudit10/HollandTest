@@ -17,6 +17,7 @@ const login = async (req, res) => {
         _id:foundUser._id,
         username: foundUser.username,
         role: foundUser.role,
+        email:foundUser.email,
         imgUrl:foundUser.imgUrl,
         isActive:foundUser.isActive
 
@@ -48,8 +49,8 @@ const refresh = async (req, res) => {
             // lastname:foundUser.lastname,
             imgUrl:foundUser.imgUrl,
             role: foundUser.role,
-            isActive:foundUser.isActive
-            // email:foundUser.email,
+            isActive:foundUser.isActive,
+             email:foundUser.email,
             // phone:foundUser.phone,
             // address:foundUser.address
 

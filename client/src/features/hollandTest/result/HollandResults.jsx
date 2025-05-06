@@ -13,10 +13,12 @@ import useGetFilePath from '../../../hooks/useGetFilePath';
 import { useGetJobsQuery } from '../../jobs/jobApiSlice';
 import OccupationCard2 from '../../../components/OccupationCard2';
 import { useSendEmailMutation } from '../../email/emailApiSlice';
-
+import useAuth from "../../../hooks/useAuth"
+import { resultTemplate } from './resultTemplate';
 const HollandResults = () => {
     const{resultId}=useParams()
     const {getFilePath}=useGetFilePath()
+    const {username,email}=useAuth()
     const {data:sentencesData,isError,isSuccess:sentencesIsSuccess,isLoading:sentencesIsLoading}=useGetSentencesQuery(resultId)
     const {data:typesData,isSuccess:typesIsSuccess,isLoading:typesIsLoading}=useGetTypesQuery()
     const {data:jobsData,isSuccess:jobsIsSuccess,isLoading:jobsIsLoading}=useGetJobsQuery()
@@ -73,9 +75,11 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
         pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
         const blob = pdf.output('blob');
 const formData = new FormData();
-formData.append('pdf', blob, 'resultPdf.pdf');
-formData.append('emailTemplate', 'sendResult');
-formData.append('emailParams',JSON.stringify({username:"yehudit"}));
+formData.append('pdf', blob, 'resultPdf.pdf')
+formData.append('to',email)
+formData.append('html',resultTemplate(username))
+//formData.append('emailTemplate', 'sendResult');
+//formData.append('emailParams',JSON.stringify({username:"yehudit"}));
 // formData.append('html',`<!DOCTYPE html>
 // <html lang="he" dir="rtl">
 //   <head>
@@ -165,7 +169,7 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
 
         <div ref={contentRef} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
           
-     <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', paddingLeft: '20px' }}>
+     <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', paddingLeft: '20px',gap:'10px' }}>
     <Button data-html2canvas-ignore="true"
         label="הורד PDF" 
         icon="pi pi-download" 
@@ -207,13 +211,21 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
                 <HollandType  image={getFilePath(image)} title={title} description={description}/>
             )}
             </div>
-        {sentencesData?.data?.sentences.map((sentence)=><div>{sentence}</div>)}
+        {sentencesData?.data?.sentences.map((sentence)=><div style={{
+        fontFamily: "'Roboto', sans-serif",
+        fontSize: '1.1rem',
+        fontWeight: '600', // bold font
+        // lineHeight: '1.8',
+        marginBottom: '0.3rem',
+        color: '#333',
+        // letterSpacing: '0.5px',
+      }}>{sentence}</div>)}
             <div  style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '20px', width: '100%' }}>
                 <div  style={{ flexGrow: 1 }}>
                     <h2 style={{ textAlign: 'center' }}>עיסוקים שיכולים להתאים לטיפוס שלך</h2>
 
                    
-               {[...jobsData?.data?.jobs].sort((job1,job2)=>{return (matchPercentage(job2)-matchPercentage(job1))}).map((job)=>
+               {[...jobsData?.data?.jobs].sort((job1,job2)=>{return (matchPercentage(job2)-matchPercentage(job1))}).slice(0,10).map((job)=>
                        <OccupationCard2
                        job={job}
                        matchPercentage={matchPercentage(job)}

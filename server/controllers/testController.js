@@ -19,7 +19,7 @@ const Question=require("../models/Question")
 // }
 //const {test}=req.body
 const addTest=async(req,res)=>{ 
-    const questions=await Question.find().lean().sort("text")
+    const questions=await Question.find().lean().sort("chapterID")
     const newTest=await (await Test.create({userId:req.user._id,test:questions?.map(q=>({question:q._id}))}))
     if(!newTest)
    return res.status(400).json({error:true,message:"create failed",data:null})

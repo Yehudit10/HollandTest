@@ -4,6 +4,7 @@ const crypto=require("crypto")
 const User=require("../models/User")
 const { v4: uuidv4 } = require('uuid')
 const { sendEmail } = require("../emailService")
+const counselorSignupTemplate = require("../emailTemplates/counselorSignup")
 
 const getAllUsers=async(req,res)=>{
  const users= await User.find({},{password:0}).lean()
@@ -12,14 +13,14 @@ if(!users)
 return res.status(200).json({error:false,message:"",data:users})
 }
 const getAllCounslers=async(req,res)=>{
-  const users= await User.find({role:'counselor'},{_id:1,role:1,username:1,profile:1,firstname:1,lastname:1,imgUrl:1}).lean()
+  const users= await User.find({role:'counselor',isActive:true},{_id:1,role:1,username:1,profile:1,firstname:1,lastname:1,imgUrl:1}).lean()
  if(!users)
      return res.status(400).json({error:true,message:"no users found",data:null})
  return res.status(200).json({error:false,message:"",data:users})
  }
 const getUserByID=async(req,res)=>{
    
-    const user=await User.findById(req.user._id,{password:0}).lean()
+    const user=await User.findById(req.user._id,{password:0}).populate("favoraites").lean()
     if(!user)
         return res.status(400).json({error:true,message:"no user found",data:null})
     return res.status(200).json({error:false,message:"",data:user})
@@ -80,7 +81,7 @@ const username=`counselor_${uuidv4().split('-')[0]}`
   if(!newUser)
   return res.status(400).json({error:true,message:"create failed",data:null})
 await sendEmail({to:email,
-  emailTemplate:"counselorSignup",
+  
 //   ,html:`<!DOCTYPE html>
 // <html lang="he" dir="ltr">
 //   <head>
@@ -171,7 +172,7 @@ await sendEmail({to:email,
 //     </div>
 //   </body>
 // </html>`,
-emailParams:{tmpPassword,username},
+html:counselorSignupTemplate(username,tmpPassword)
 
 })
   return res.status(201).json({error:false,message:"",data:newUser})

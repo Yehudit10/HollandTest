@@ -6,8 +6,8 @@ const verifyJWT=require("../middleware/verifyJWT")
 const router=express.Router()
 const upload = multer({ storage: multer.memoryStorage() });
 router.use(verifyJWT)
-//router.post("/" ,upload.single('pdf'),emailController.sendEmail)
-router.post("/" ,upload.single('pdf'),async (req, res)=>{sendEmail({...req.body,emailParams:JSON.parse(req.body.emailParams),file:req.file})})
+router.post("/" ,upload.single('pdf'),async (req, res)=>sendEmail({...req.body,file:req.file}))
+//router.post("/" ,upload.single('pdf'),async (req, res)=>{sendEmail({...req.body,emailParams:JSON.parse(req.body.emailParams),file:req.file})})
 
 
 module.exports=router

@@ -1,6 +1,9 @@
 const express=require("express")
 const chapterController=require("../controllers/chapterController")
+const verifyJWT=require("../middleware/verifyJWT")
+
 const router=express.Router()
+router.use(verifyJWT)
 router.get("/",chapterController.getAllChapters)
 router.get("/:id",chapterController.getChapterById)
 router.post("/",chapterController.addChapter)

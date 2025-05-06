@@ -82,8 +82,8 @@ const {getFilePath}=useGetFilePath()
             />
             <OverlayPanel ref={profileMenu} dismissable>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                    <Button label="Log Out" onClick={handleLogout} icon="pi pi-sign-out" className="p-button-text" />
-                    <Button label="Edit profile" onClick={()=>navigate("edit")}icon="pi pi-user-edit" className="p-button-text" />
+                    <Button label="התנתקות" onClick={handleLogout} icon="pi pi-sign-out" className="p-button-text" />
+                    <Button label="עריכת פרופיל" onClick={()=>navigate("edit")}icon="pi pi-user-edit" className="p-button-text" />
                 </div>
             </OverlayPanel>
         </div>

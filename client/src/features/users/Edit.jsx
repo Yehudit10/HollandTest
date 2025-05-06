@@ -16,10 +16,12 @@ import useGetFilePath from "../../hooks/useGetFilePath";
 import { InputTextarea } from "primereact/inputtextarea";
 import {  toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { Toast } from 'primereact/toast';
 import { showToast } from "../../components/toastService";
 
 
 const Edit = () => {
+  const toast = useRef(null);
   const navigate=useNavigate()
 const {data:userData,isSuccess:userIsSuccuss}=useGetUserByIdQuery()
 const{_id,username,firstname,lastname,phone,email,role,address,imgUrl,profile}=userData?.data||{}
@@ -41,6 +43,7 @@ const {getFilePath}=useGetFilePath()
 
   const [update,{isError,isLoading,isSuccess:updateIsSuccess}]=useUpdateUserMutation()
 useEffect(()=>{if(updateIsSuccess){   
+  // toast.current.show
   showToast({
     severity: 'success',
     summary: 'success',
@@ -82,20 +85,21 @@ const fileUploadRef=useRef()
   return (
     <div className="form-container">
       <div className="form-card">
+        <Toast ref={toast}/>
         <h2 className="form-title">עדכון פרטים</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
                     <Avatar
                     key={preview}
                     size="large"
-                    image={preview || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}  // אם אין תמונה, תראה ברירת מחדל
+                    image={preview || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}  
                     shape="circle"
                     />
                         <FileUpload
                         ref={fileUploadRef}
                             mode="basic"
                             accept="image/*"
-                            chooseLabel={image?.name||"Choose Image"}
+                            chooseLabel={image?.name||"בחר תמונה"}
                            onSelect={handleImageChange}
                             customUpload
                         />
@@ -103,7 +107,7 @@ const fileUploadRef=useRef()
           <div className="form-group">
             <InputText
               id="username"
-              placeholder="Username"
+              placeholder="שם משתמש"
               {...register("username", { required: "Username is required" })}
               className={`p-inputtext ${errors.username ? "p-invalid" : ""}`}
               
@@ -113,7 +117,7 @@ const fileUploadRef=useRef()
           <div className="form-group">
             <InputText
               id="firstname"
-              placeholder="Firstname"
+              placeholder="שם פרטי"
               {...register("firstname")}
               className={`p-inputtext ${errors.firstname ? "p-invalid" : ""}`}
             />
@@ -122,7 +126,7 @@ const fileUploadRef=useRef()
           <div className="form-group">
             <InputText
               id="lastname"
-              placeholder="Lastname"
+              placeholder="שם משפחה"
               {...register("lastname")}
               className={`p-inputtext ${errors.lastname ? "p-invalid" : ""}`}
             />
@@ -133,7 +137,7 @@ const fileUploadRef=useRef()
             control={control}
             className={`p-password custom-password ${errors.password ? "p-invalid" : ""}`}
             render={({field})=><Password
-              placeholder="Password"
+              placeholder="סיסמא"
                {...field}
               toggleMask
               // feedback={}
@@ -146,7 +150,7 @@ const fileUploadRef=useRef()
           <div className="form-group">
             <InputText
               id="address"
-              placeholder="Address"
+              placeholder="כתובת"
               {...register("address")}
               className={`p-inputtext ${errors.address ? "p-invalid" : ""}`}
 
@@ -156,7 +160,7 @@ const fileUploadRef=useRef()
                <div className="form-group">
             <InputText
               id="email"
-              placeholder="Email"
+              placeholder="אימייל"
               {...register("email", { required: "Email is required" })}
               className={`p-inputtext ${errors.email ? "p-invalid" : ""}`}
             />
@@ -167,7 +171,7 @@ const fileUploadRef=useRef()
           <div className="form-group">
             <InputText
               id="phone"
-              placeholder="Phone"
+              placeholder="טלפון"
               {...register("phone")}
               className={`p-inputtext ${errors.phone ? "p-invalid" : ""}`}
 
@@ -177,7 +181,7 @@ const fileUploadRef=useRef()
           {role==="counselor"&&<div className="form-group">
             <InputTextarea
               id="profile"
-              placeholder="Write about yourself...."
+              placeholder="כתוב על עצמך..."
               {...register("profile", { required: "Profile is required" })}
               className={`p-inputtext ${errors.profile ? "p-invalid" : ""}`}
             />

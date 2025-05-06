@@ -22,6 +22,7 @@ const testApiSlice=apiSlice.injectEndpoints({
                 method:'PUT',
                 body:test
             }),
+        invalidatesTags:['Test']
         }),
         deleteTest:build.mutation({
             query:(test)=>({

@@ -264,3 +264,241 @@
 // };
 
 // export default JobManager;
+import React, { useEffect, useState, useRef } from 'react';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
+import { InputNumber } from 'primereact/inputnumber';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { useAddJobMutation, useDeleteJobMutation, useGetJobsQuery, useUpdateJobMutation } from './jobApiSlice';
+import Loading from '../../components/Loading';
+import { Dropdown } from 'primereact/dropdown';
+import { Tag } from 'primereact/tag';
+
+const JobManager = () => {
+    const { data: jobsData, isLoading: jobsIsLoading, isError: jobsIsError } = useGetJobsQuery();
+    const [removeJob, { isLoading: isDeleting, isSuccess: isDeletingSuccess, isError: isDeletingError }] = useDeleteJobMutation();
+    const [addJob, { isLoading: isAdding, isSuccess: isAddingSuccess, isError: isAddingError }] = useAddJobMutation();
+    const [updateJob, { isLoading: isUpdating, isSuccess: isUpdatingSuccess, isError: isUpdatingError }] = useUpdateJobMutation();
+
+    const jobsList = jobsData?.data?.jobs;
+
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [jobForm, setJobForm] = useState({});
+    const [isEditing, setIsEditing] = useState(false);
+
+    const toast = useRef(null);
+
+    const educationOptions = jobsList ? [...new Set(jobsList.map(job => job.educationLevel).filter(Boolean))] : [];
+
+    const openDialog = (job = {}) => {
+        setJobForm(job);
+        setIsEditing(!!job._id);
+        setDialogVisible(true);
+    };
+
+    const closeDialog = () => {
+        setDialogVisible(false);
+        setJobForm({});
+    };
+
+    const saveJob = () => {
+        if (!jobForm.jobname || !jobForm.description) {
+            toast.current.show({ severity: 'error', summary: 'שגיאה', detail: 'נא למלא את כל השדות החיוניים' });
+            return;
+        }
+
+        if (isEditing && jobForm._id) {
+            updateJob(jobForm);
+        } else {
+            addJob(jobForm);
+        }
+    };
+
+    const deleteJob = (jobId) => {
+        removeJob(jobId);
+    };
+
+    // useEffect to handle success and error messages based on the mutation status
+    useEffect(() => {
+        if (isAddingSuccess) {
+            toast.current.show({ severity: 'success', summary: 'נוספה', detail: 'העבודה נוספה בהצלחה' });
+        }
+
+        if (isAddingError) {
+            toast.current.show({ severity: 'error', summary: 'שגיאה', detail: 'שגיאה בהוספת עבודה' });
+        }
+    }, [isAddingSuccess, isAddingError]);
+
+    useEffect(() => {
+        if (isUpdatingSuccess) {
+            toast.current.show({ severity: 'success', summary: 'עודכן', detail: 'העבודה עודכנה בהצלחה' });
+        }
+
+        if (isUpdatingError) {
+            toast.current.show({ severity: 'error', summary: 'שגיאה', detail: 'שגיאה בעדכון העבודה' });
+        }
+    }, [isUpdatingSuccess, isUpdatingError]);
+
+    useEffect(() => {
+        if (isDeletingSuccess) {
+            toast.current.show({ severity: 'warn', summary: 'נמחקה', detail: 'העבודה נמחקה בהצלחה' });
+        }
+
+        if (isDeletingError) {
+            toast.current.show({ severity: 'error', summary: 'שגיאה', detail: 'שגיאה במחיקת העבודה' });
+        }
+    }, [isDeletingSuccess, isDeletingError]);
+
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div className="p-d-flex p-ai-center" style={{ gap: '0.5rem' }}>
+                <Button
+                    icon="pi pi-pencil"
+                    className="p-button-text p-button-sm p-button-warning"
+                    onClick={() => openDialog(rowData)}
+                    tooltip="עריכה"
+                    tooltipOptions={{ position: 'top' }}
+                />
+                <Button
+                    icon="pi pi-trash"
+                    className="p-button-text p-button-sm p-button-danger"
+                    onClick={() => deleteJob(rowData._id)}
+                    tooltip="מחיקה"
+                    tooltipOptions={{ position: 'top' }}
+                    loading={isDeleting}
+                    disabled={isDeleting}
+                />
+            </div>
+        );
+    };
+
+    const educationBodyTemplate = (rowData) => {
+        return <Tag value={rowData.educationLevel} severity="info" />;
+    };
+
+    const dialogFooter = (
+        <div className="p-d-flex p-jc-end">
+            <Button label="ביטול" icon="pi pi-times" className="p-button-text" onClick={closeDialog} disabled={isAdding || isUpdating || isDeleting} />
+            <Button label="שמור" icon="pi pi-check" onClick={saveJob} autoFocus loading={isAdding || isUpdating} disabled={isAdding || isUpdating || isDeleting} />
+        </div>
+    );
+
+    if (jobsIsLoading) {
+        return (
+            <div className="p-d-flex p-jc-center">
+                <Loading />
+            </div>
+        );
+    }
+
+    if (jobsIsError) {
+        return (
+            <div className="card p-fluid" style={{ margin: '2rem auto', padding: '2rem', textAlign: 'center' }}>
+                <Toast ref={toast} />
+                <h2 className="p-text-center p-mb-4">ניהול עבודות</h2>
+                <p className="p-text-bold p-text-danger">אירעה שגיאה בטעינת העבודות.</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="card p-fluid" style={{ maxWidth: '1200px', margin: '2rem auto', padding: '2rem' }}>
+            <Toast ref={toast} />
+            <h2 className="p-text-center p-mb-4">ניהול עבודות</h2>
+
+            <div className="p-d-flex p-jc-end p-mb-4">
+                <Button
+                    icon="pi pi-plus"
+                    label="הוסף עבודה"
+                    className="p-button-outlined"
+                    onClick={() => openDialog()}
+                    disabled={isAdding || isUpdating || isDeleting}
+                />
+            </div>
+
+            <DataTable value={jobsList} paginator rows={10} stripedRows responsiveLayout="scroll">
+                <Column field="jobname" header="שם עבודה" sortable />
+                <Column field="description" header="תיאור" sortable />
+                <Column field="salaryAvg" header="שכר ממוצע" sortable />
+                <Column field="workingHoursAvg" header="שעות עבודה" sortable />
+                <Column header="השכלה" body={educationBodyTemplate} sortable />
+                <Column header="פעולות" body={actionBodyTemplate} style={{ textAlign: 'right' }} />
+            </DataTable>
+
+            <Dialog
+                header={isEditing ? 'עריכת עבודה' : 'הוספת עבודה'}
+                visible={dialogVisible}
+                onHide={closeDialog}
+                footer={dialogFooter}
+                style={{ width: '50vw', direction: 'rtl', borderRadius: '10px' }}
+                breakpoints={{ '960px': '75vw', '640px': '100vw' }}
+                contentStyle={{ backgroundColor: '#fafafa', padding: '2rem', borderRadius: '0 0 10px 10px' }}
+                headerStyle={{ backgroundColor: '#f0f0f0', borderBottom: '1px solid #ddd', borderRadius: '10px 10px 0 0', padding: '1rem 2rem', textAlign: 'right', fontWeight: 'bold', fontSize: '1.25rem' }}
+            >
+                <div className="p-fluid p-formgrid p-grid" style={{ textAlign: 'right' }}>
+                    <div className="p-field p-col-12 p-md-6">
+                        <label htmlFor="jobname">שם עבודה</label>
+                        <InputText
+                            id="jobname"
+                            value={jobForm.jobname || ''}
+                            onChange={(e) => setJobForm({ ...jobForm, jobname: e.target.value })}
+                            placeholder="הכנס שם עבודה"
+                        />
+                    </div>
+
+                    <div className="p-field p-col-12 p-md-6">
+                        <label htmlFor="educationLevel">רמת השכלה</label>
+                        <Dropdown
+                            id="educationLevel"
+                            value={jobForm.educationLevel || ''}
+                                                        options={educationOptions.map(e => ({ label: e, value: e }))} // Options for education level dropdown
+                            onChange={(e) => setJobForm({ ...jobForm, educationLevel: e.value })}
+                            placeholder="בחר רמת השכלה"
+                        />
+                    </div>
+
+                    <div className="p-field p-col-12">
+                        <label htmlFor="description">תיאור</label>
+                        <InputTextarea
+                            id="description"
+                            value={jobForm.description || ''}
+                            onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
+                            rows={3}
+                            placeholder="תאר את התפקיד בקצרה"
+                            autoResize
+                        />
+                    </div>
+
+                    <div className="p-field p-col-12 p-md-6">
+                        <label htmlFor="salaryAvg">שכר ממוצע</label>
+                        <InputNumber
+                            id="salaryAvg"
+                            value={jobForm.salaryAvg || 0}
+                            onValueChange={(e) => setJobForm({ ...jobForm, salaryAvg: e.value })}
+                            mode="currency"
+                            currency="ILS"
+                            locale="he-IL"
+                            placeholder="₪"
+                        />
+                    </div>
+
+                    <div className="p-field p-col-12 p-md-6">
+                        <label htmlFor="workingHoursAvg">שעות עבודה</label>
+                        <InputNumber
+                            id="workingHoursAvg"
+                            value={jobForm.workingHoursAvg || 0}
+                            onValueChange={(e) => setJobForm({ ...jobForm, workingHoursAvg: e.value })}
+                            placeholder="שעות שבועיות"
+                        />
+                    </div>
+                </div>
+            </Dialog>
+        </div>
+    );
+};
+
+export default JobManager;

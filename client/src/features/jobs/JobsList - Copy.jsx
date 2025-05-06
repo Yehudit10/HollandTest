@@ -7,16 +7,10 @@ import FilterSidebar3 from "../../components/FilterSideBar3"
 import { Button } from "primereact/button"
 
 const JobList = () => {
-  const pageSize=2
-  const [searchParams, setSearchParams] = useSearchParams()
-  
-  const [page,setPage]=useState(0)
-  useEffect(()=>{setPage(0)},[searchParams])
-  // const [searchParams, setSearchParams] = useSearchParams({ page: 0, pageSize: 2 })
+  const [searchParams, setSearchParams] = useSearchParams({ page: 0, pageSize: 2 })
   const queryParams = Object.fromEntries(searchParams.entries());
-  const { data, isError, isSuccess, isLoading } = useGetJobsQuery({...queryParams,page,pageSize})
+  const { data, isError, isSuccess, isLoading } = useGetJobsQuery(queryParams)
   const [jobsList, setJobsList] = useState([])
-
 // useEffect(()=>{
 //   const page=searchParams.get("page") !== "0"
 // if(page !== "0")
@@ -38,13 +32,16 @@ const JobList = () => {
  
   useEffect(() => {
     if (isSuccess) {
-      if (page===0) 
-      setJobsList(data?.data?.jobs)
+      if (searchParams.get("page") === "0") setJobsList(data?.data?.jobs)
       else
         setJobsList([...jobsList, ...(data?.data.jobs || [])])
     }
   }, [data])
-
+const handleNextPage=()=>{
+  const newSearchParams = new URLSearchParams(searchParams)
+  newSearchParams.set("page", 1 + parseInt(searchParams.get("page") || 0))
+  setSearchParams(newSearchParams);
+}
   if (isLoading)
     return <Loading />
   return (
@@ -63,7 +60,7 @@ const JobList = () => {
 
             {data?.data?.hasMore && <Button label="הצגת עיסוקים נוספים"
               style={{ display: 'flex', left: '50%', position: 'relative' }}
-              onClick={()=>{setPage(page+1)}}
+              onClick={handleNextPage}
             />}</div>
         </div>
 

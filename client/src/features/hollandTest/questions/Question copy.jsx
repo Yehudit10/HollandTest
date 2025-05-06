@@ -34,38 +34,51 @@ const  Question=()=> {
         if(chapterId!=currentChapter)
 setCurrentChapter(chapterData?.data?.findIndex((c)=>c._id===chapterId))
         },[currentQuestion])
-
+        
     useEffect(()=>{
         
         if(testIsSuccess)
         {
         if(testData==null)
         {addTest()
-      
+        //setUserAnswers([])
+        
+       // setCurrentQuestion(0)
+      //setCurrentChapter(0)
+        }
+    else
+    {
+        
+        setUserAnswers(testData.data?.test)
+        const index=testData.data?.test?.findIndex((question)=>question.questionResult==null)
+        if(index===-1)
+       setCurrentQuestion(testData.data?.test?.length-1)
+    else
+    setCurrentQuestion(index)
+    }
 
     }
-}
+    
 
-},[testIsSuccess,])
-    useEffect(() => {
-        const fetchAndSetData = async () => {
-            if (testData?.data) {
-                setUserAnswers(testData.data.test);
-                await new Promise(resolve => setTimeout(resolve, 500));
-                const index = testData.data.test.findIndex(
-                    (question) => question.questionResult == null
-                );
-                if (index === -1)
-                    setCurrentQuestion(testData.data.test.length - 1);
-                else
-                    setCurrentQuestion(index);
-            }
-        };
+},[testIsSuccess,newTestIsSuccess])
+    useEffect(()=>{
+        if(testData?.data){
+    //     setUserAnswers(testData.data.test)
+    //     const index=testData.data?.test?.findIndex((question)=>question.questionResult==null)
+    //     if(index===-1)
+    //    setCurrentQuestion(testData.data?.test?.length-1)
+    // else
+    // setCurrentQuestion(index)
+
+}},[testData])
     
-        fetchAndSetData();
-    },[testData])
-    
-   
+    useEffect(()=>{
+        //console.log("userchanged")
+       if(testId)
+        updateTest({
+    _id:testId,
+    test:userAnswers?.map((answer)=>({question:answer.question._id,questionResult:answer.questionResult}))})
+    },[userAnswers])
     useEffect(()=>{
         if(deleteIsSuccess&&resultIsSuccess)
         navigate(`/home/holland/results/${resultData.data._id}`)
@@ -82,60 +95,41 @@ switch(num)
     case 0:return hate;
 }
     }
-    const showQuestion = (question) => {
-        return (
-          <div className="question-card-wrapper">
-            <Card className="question-card">
-              <div className="chapter-description">
-                {chapterData?.data[currentChapter]?.description}
-              </div>
-              <div className="question-text">{question.text}</div>
-              <div className="image-wrapper">
-                <Image
-                  className="choosen-img"
-                  src={showImg(userAnswers[currentQuestion]?.questionResult)}
-                  alt="reaction"
-                />
-              </div>
-              <span className="question-progress">
-                {currentQuestion + 1}/{userAnswers.length}
-              </span>
-            </Card>
-          </div>
-        );
-      };
-    // const showQuestion=(question)=>{
-    //     return(<div >
-    //     <Card 
-    //     style={{height:"35vh",
-    //     boxShadow: '0 8px 8px rgba(0, 0, 0, 0.1)',
-    //     border: '1px solid rgba(0, 0, 0, 0.1)',
-    //     borderRadius: '8px',
-    //     display:'flex',
-    //     flexDirection:'column',
-    //     position:'relative',
+    const showQuestion=(question)=>{
+        return(<>
+        <Card 
+        style={{height:"35vh",
+        boxShadow: '0 8px 8px rgba(0, 0, 0, 0.1)',
+        border: '1px solid rgba(0, 0, 0, 0.1)',
+        borderRadius: '8px',
+        display:'flex',
+        flexDirection:'column',
+        position:'relative',
    
-    //   }}
-    //   >
-    //     <div>{chapterData?.data[currentChapter]?.description}</div>
-    //     <div  className='question-text'>{question.text}</div>
-    //     <Image style={{width: '500px', height: '120px', objectFit: 'contain' }} className='choosen-img' src={showImg(userAnswers[currentQuestion]?.questionResult)}></Image>
-    // <span style={{position:'absolute',bottom:'5%',left:'50%'}}>{currentQuestion+1}/{userAnswers.length}</span>
+        
+      }}
+      >
+        <div>{chapterData?.data[currentChapter]?.description}</div>
+        <div  className='question-text'>{question.text}</div>
+        <Image style={{width:'200px'}}className='choosen-img' src={showImg(userAnswers[currentQuestion]?.questionResult)}></Image>
+    <span style={{position:'absolute',bottom:'5%',left:'50%'}}>{currentQuestion+1}/{userAnswers.length}</span>
 
-    //    </Card>         
-    //     </div>
-    //     )
-    // }
+       </Card>         
+        </>
+        )
+    }
 
     const handleAnswer=async (answer)=>{
-        const newAnswers=[...userAnswers]
-        const updatedAnswer={question:newAnswers[currentQuestion].question,questionResult:answer}
-        newAnswers[currentQuestion]=updatedAnswer
-        updateTest({
-            _id:testId,
-            test:newAnswers?.map((answer)=>({question:answer.question._id,questionResult:answer.questionResult}))})
-       
-         
+        setUserAnswers((prevArray)=>{
+            
+    const newArray=[...prevArray]
+    const updatedAnswer={question:newArray[currentQuestion].question,questionResult:answer}
+   newArray[currentQuestion]=updatedAnswer
+   return newArray})
+         await new Promise(resolve => setTimeout(resolve, 500));
+         // handleNext()
+         if(currentQuestion<userAnswers.length-1)
+         setCurrentQuestion(currentQuestion+1)
     }
     const handleNext=()=>{
         if(currentQuestion<userAnswers.length-1)

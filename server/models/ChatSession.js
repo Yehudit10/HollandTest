@@ -18,7 +18,7 @@ const chatSessionSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.Date,
         required:true
      },
-     durationInSeconds:{
+     durationInMinutes:{
         type:Number,
         required:true
      }

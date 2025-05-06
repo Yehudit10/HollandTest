@@ -1,6 +1,5 @@
 const Job=require("../models/Job")
 const getAllJobs=async(req,res)=>{
-   // console.log(req.query)
     const {q="",minWorkingHours,maxWorkingHours,educationLevel,minSalary,maxSalary,sortBy="jobname",page,pageSize}=req.query 
 const query={
     jobname:{$regex:`${q}`,$options:"i"}
@@ -18,15 +17,13 @@ query.workingHoursAvg={...(query.workingHoursAvg||{}),$lte:maxWorkingHours}
 const jobs=await Job.find(query).sort(sortBy).skip(page*pageSize||0).limit(pageSize).lean()
 if(!jobs)
 return res.status(400).json({error:true,message:"no jobs found",data:null})
-const totalCount = await Job.countDocuments();
-console.log(totalCount)
-console.log((page + 1) * pageSize)
-const hasMore = totalCount > (page + 1) * pageSize;
+const totalCount = await Job.countDocuments(query);
+const hasMore = totalCount > (Number(page) + 1) * pageSize;
 return res.status(200).json({error:false,message:"",data:{jobs,hasMore}})
 }
 const addJob=async(req,res)=>{
     const {jobname,description,salaryAvg,workingHoursAvg,educationLevel,relatedTypes}=req.body
-    if(!jobname||!description||!relatedTypes)
+    if(!jobname||!description)//||!relatedTypes)
     return res.status(400).json({error:true,message:"you are missing some required fields",data:null})
     const newJob=await Job.create({jobname,description,salaryAvg,educationLevel,workingHoursAvg,relatedTypes})
     if(!newJob)
@@ -57,7 +54,7 @@ const deleteJob=async(req,res)=>{
     const job=await Job.findById(_id).exec()
     if(!job)
         return res.status(400).json({error:true,message:"job not found",data:null})
-    const deletedJob=await Job.deleteOne()
+    const deletedJob=await job.deleteOne()
     if(!deletedJob)
         return res.status(400).json({error:true,message:"delete failed",data:null})
         return res.status(200).json({error:false,message:null,data:deletedJob})

@@ -12,7 +12,7 @@ import { Dropdown } from "primereact/dropdown";
 import { useEffect } from "react";
         
 const FilterSidebar3 = () => {
-const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname",offset:0,limit:2}
+const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname"}
 
 
   const [searchParams,setSearchParams]=useSearchParams(initState)
@@ -21,7 +21,7 @@ const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname",offset:0,
   const handleFilterChange =(name,value) => {
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.set(name,value)
-    newSearchParams.set("page",0)
+    //newSearchParams.set("page",0)
   setSearchParams(newSearchParams);  
   };
 
@@ -30,7 +30,7 @@ const initState={minWorkingHours:0,maxWorkingHours:50,sortBy:"jobname",offset:0,
     let newVal=newSearchParams.get(name)?.split(',')||[]
     newVal.includes(value)?newVal=newVal.filter((v)=>v!=value):newVal.push(value)
     newSearchParams.set(name,newVal)
-    newSearchParams.set("page",0)
+    //newSearchParams.set("page",0)
     setSearchParams(newSearchParams); 
   }
 

@@ -15,9 +15,9 @@ const starsMap=[
 ]
 const {data:userData,isSuccess:userIsSuccuss}=useGetUserByIdQuery()
 const [updateUser,{}]=useUpdateUserMutation()
-const isInFavoraites=userData?.data?.favoraites?.includes(job._id)
+const isInFavoraites=userData?.data?.favoraites?.some(j=>j._id===job._id)
 const handleAddToFavoraites=()=>{
- updateUser({...userData.data,favoraites:isInFavoraites?userData.data.favoraites.filter(j=>j!==job._id):[...(userData.data.favoraites||[]),job._id]})
+ updateUser({...userData.data,favoraites:isInFavoraites?userData.data.favoraites.filter(j=>j._id!==job._id):[...(userData.data.favoraites||[]),job._id]})
 }
   return (
     <div className="p-card p-shadow-2" style={{ marginBottom: '10px', width: '100%', direction: 'rtl'}}>
