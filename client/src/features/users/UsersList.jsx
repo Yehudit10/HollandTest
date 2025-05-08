@@ -1,9 +1,7 @@
 
 import { useGetUsersQuery } from "./userApiSlice"
-import Loading from "../../components/Loading"
-import UserCard from "./UserCard"
-import ProfileCard from "./ProfilCard"
-import useGetFilePath from "../../hooks/useGetFilePath"
+import Loading from "../../components/generals/Loading"
+
 import React, { useEffect, useState, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -12,6 +10,7 @@ import { Tag } from 'primereact/tag';
 import { Avatar } from 'primereact/avatar';
 import { Toast } from 'primereact/toast';
 import './UsersList.css';
+import useGetFilePath from "../../hooks/useGetFilePath";
 const UsersList=()=>{
    const{data:usersData,isError,isLoading,isSuccess}=useGetUsersQuery()
    const usersList=usersData?.data

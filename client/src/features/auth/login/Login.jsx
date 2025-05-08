@@ -7,12 +7,10 @@ import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "./Form.css";
-
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../authApiSlice";
-import useAuth from "../../../hooks/useAuth";
-import Error from "../../../components/Error";
-import Loading from "../../../components/Loading";
+import Error from "../../../components/generals/Error";
+import Loading from "../../../components/generals/Loading";
 
 const Login = () => {
   const { register, handleSubmit ,control,reset,formState: { errors } } = useForm();

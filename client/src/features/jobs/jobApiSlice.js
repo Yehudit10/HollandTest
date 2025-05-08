@@ -30,7 +30,7 @@ const jobApiSlice=apiSlice.injectEndpoints({
             query:(id)=>({
                 url:"api/jobs",
                 method:"DELETE",
-                body:id
+                body:{id}
             })
             ,invalidatesTags:['Job']
 

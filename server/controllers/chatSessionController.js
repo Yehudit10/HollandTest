@@ -57,7 +57,8 @@ return res.status(200).json({error:false,message:"",data:sessionsByCounselors})
 const addSession=async({userId,counselorId,chatStartTime,chatEndTime})=>{
     if(!userId||!counselorId||!chatStartTime||!chatEndTime)
         return new Error("missing required fields")
-    const newSession=await ChatSession.create({userId,counselorId,chatStartTime,chatEndTime,durationInMinutes:(chatEndTime - chatStartTime) / 1000*60})
+    const newSession=await ChatSession.create({userId,counselorId,chatStartTime,chatEndTime,durationInMinutes:(chatEndTime - chatStartTime) / (1000*60)
+    })
     if(!newSession)
         return new Error("creating failed")
 return newSession

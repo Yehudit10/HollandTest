@@ -19,9 +19,8 @@ const verifyActiveCounselor=require("../middleware/verifyActiveCounsler")
 const verifyAdmin=require("../middleware/verifyAdmin")
 router.post("/",upload.single("imgUrl"),userController.addUser)
 router.use(verifyJWT)
-
 router.put("/",upload.single("imgUrl"),userController.updateUser)
-router.get("/me",userController.getUserByID)///id instead???
+router.get("/me",userController.getUserByID)
 router.use(verifyActiveCounselor)
 router.delete("/",userController.deleteUser)
 router.get("/",userController.getAllUsers)

@@ -3,8 +3,8 @@ const bcrypt=require("bcrypt")
 const crypto=require("crypto")
 const User=require("../models/User")
 const { v4: uuidv4 } = require('uuid')
-const { sendEmail } = require("../emailService")
-const counselorSignupTemplate = require("../emailTemplates/counselorSignup")
+const { sendEmail } = require("../email/emailService")
+const counselorSignupTemplate = require("../email/counselorSignup")
 
 const getAllUsers=async(req,res)=>{
  const users= await User.find({},{password:0}).lean()
@@ -78,6 +78,7 @@ const tmpPassword=crypto.randomBytes(10).toString('base64').slice(0, 10)
 const username=`counselor_${uuidv4().split('-')[0]}`
   const hashedpassword=await bcrypt.hash(tmpPassword,10)
   const newUser=await User.create({password:hashedpassword,username,role:'counselor',email,isActive:false})
+  console.log(username,tmpPassword)
   if(!newUser)
   return res.status(400).json({error:true,message:"create failed",data:null})
 await sendEmail({to:email,

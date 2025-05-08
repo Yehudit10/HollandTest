@@ -169,15 +169,14 @@ if (sumAll > 48)
 {
     
 }
-//...continue
 
 const chaptersDiff = {
     C: { IC: 5, IW: 5, CW: 6, CI: 6, WI: 3, WC: 4 }, 
-    E: { IC: 5, IW: 5, CW: 5, CI: 3, WI: 4, WC: 5 }, // יזמי
-    S: { IC: 3, IW: 7, CW: 8, CI: 4, WI: 3, WC: 3 }, // חברתי
-    A: { IC: 7, IW: 5, CW: 3, CI: 3, WI: 3, WC: 6 }, // אמנותי
-    I: { IC: 4, IW: 5, CW: 5, CI: 4, WI: 3, WC: 4 }, // חקרני
-    R: { IC: 4, IW: 6, CW: 7, CI: 5, WI: 3, WC: 3 }  // ביצועי
+    E: { IC: 5, IW: 5, CW: 5, CI: 3, WI: 4, WC: 5 }, 
+    S: { IC: 3, IW: 7, CW: 8, CI: 4, WI: 3, WC: 3 }, 
+    A: { IC: 7, IW: 5, CW: 3, CI: 3, WI: 3, WC: 6 }, 
+    I: { IC: 4, IW: 5, CW: 5, CI: 4, WI: 3, WC: 4 }, 
+    R: { IC: 4, IW: 6, CW: 7, CI: 5, WI: 3, WC: 3 } 
 }
 
 selected.forEach(([cat,{work,capability,interest}])=>{
@@ -202,12 +201,55 @@ else if(work-interest>chaptersDiff[cat].WI)
 sentences.push("בתחום ה"+category+"בולטת בחירה מרובה במקצועות ביחס לבחירה מועטת בפעילויות, דבר שיכול להעיד על רצון ועל מוטיבציה גבוהה לעסוק במקצועות מתחום זה בעתיד למרות רמת עניין וסיפוק נמוכה מפעילויות בו כיום")
 else if(work-capability>chaptersDiff[cat].WC)
  sentences.push("בתחום ה"+category+"בולטת בחירה מרובה במקצועות ביחס להערכה נמוכה של כישורים, דבר שיכול להעיד על רצון ועל מוטיבציה גבוהה לעסוק במקצועות מתחום זה בעתיד למרות הערכה עצמית נמוכה של יכולותיך בו כיום")
-// sentences.push("בתחום ה"+category+"")
-// sentences.push("בתחום ה"+category+"")
+
  
 })
 return res.status(200).json({error:false,message:null,data:{result,sentences}})
 
 }
+const getAllResults=async(req,res)=>{
 
-module.exports={addResult,getResultsWithSentences,getAllUserResult}
+    const now = new Date();
+    const {fromMonth=new Date(now.getFullYear(), now.getMonth() - 11, 1),toMonth=new Date()}=req.query
+    const fromDate=new Date(fromMonth)
+    const toDate=new Date(toMonth)
+console.log(fromDate)
+const resultCount = await Result.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: fromDate,$lte:toDate } ,
+      }
+    },
+    {
+      $project: {
+        yearMonth: { $dateToString: { format: "%Y-%m", date: "$createdAt" } } 
+      }
+    },
+    {
+      $group: {
+        _id: "$yearMonth", 
+        count: { $sum: 1 } 
+      }
+    },
+  ])
+
+const result = [];
+const monthsDiff=(toDate.getFullYear() - fromDate.getFullYear()) * 12 + toDate.getMonth() -fromDate.getMonth()
+    for (let i = monthsDiff - 1; i >= 0; i--) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);  
+      const monthStr = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}`; 
+      const match = resultCount.find(m => m._id === monthStr);
+      result.push({
+        month: `${date.toLocaleString("default", { month: "short" })} ${date.getFullYear()}`,
+        count: match ? match.count : 0 
+      });
+    }
+        return res.status(200).json({error:false,message:"",data:result})
+
+
+
+
+}
+
+module.exports={addResult,getResultsWithSentences,getAllUserResult,getAllResults}

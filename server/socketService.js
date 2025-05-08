@@ -17,7 +17,7 @@ function setupSocket(server) {
   io.use(verifySocketJWT)
   io.on("connection", (socket) => {
 
-    const { _id:userId, role } = socket.user
+    const { _id:userId, role,isActive } = socket.user
     
     socketsMap.set(userId,socket.id)
     if (role === "user") { 
@@ -93,7 +93,7 @@ function setupSocket(server) {
 
     socket.on("setAvailable", () => {
       
-      if (role === "counselor") {
+      if (role === "counselor"&&isActive) {
         availableCounselors.set(userId, socket.id);
    
         io.emit("availableCounselors", Array.from(availableCounselors.keys()))
@@ -107,7 +107,7 @@ function setupSocket(server) {
   
     socket.on("setUnavailable", () => {
       
-      if (role === "counselor") {
+      if (role === "counselor"&&isActive) {
         
         availableCounselors.delete(userId);
   

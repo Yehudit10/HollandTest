@@ -2,43 +2,32 @@ import logo from './logo.svg';
 import './App.css';
 import Login from './features/auth/login/Login';
 import SignUp from './features/users/SignUp';
-import HollandInfoPage from './components/HollandInfoPage';
-import HollandPages from './components/HollandPages';
+import HollandInfoPage from './components/hollandTestPages/HollandInfoPage';
+import HollandPages from './components/hollandTestPages/HollandPages';
 import { Outlet, Route, Router, Routes, useNavigate } from 'react-router-dom';
 
 import Question from "./features/hollandTest/questions/Question"
 import HollandResults from './features/hollandTest/result/HollandResults';
-import NavBar from './components/NavBar';
+import NavBar from './components/generals/NavBar';
 
 import UsersList from './features/users/UsersList';
 import RequireAuth from './features/auth/RequireAuth';
 import PersistLogin from './features/auth/PersistLogin';
-import AdminDashboard from './components/AdminDashboard';
-
-
+import AdminDashboard from './components/adminPage/AdminDashboard';
 import JobList from './features/jobs/JobsList';
-
-
 import ViewQuestions from './features/hollandTest/questions/ViewQuestion';
 import Edit from './features/users/Edit';
-
 import ViewResults from './features/hollandTest/result/ViewResults';
-import Favoraites from './components/Favoraites';
+import Favoraites from './components/userPages/Favoraites';
 import AddCounsler from './features/users/AddCounsler';
-
-import CounselorChatApp from './components/CounslerChatApp';
-import ChatApp from './components/ChatApp';
-import { ToastContainer } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+import CounselorChatApp from './components/chat/CounslerChatApp';
+import ChatApp from './components/chat/ChatApp';
 import { Toast } from 'primereact/toast';
-
-
 import React, { useRef, useEffect } from 'react';
-
-import { setToastRef } from './components/toastService';
+import { setToastRef } from './components/generals/toastService';
 import JobManager from './features/jobs/JobManager';
-import Home from './components/Home';
-import AuthPage from './components/AuthPage';
+import Home from './components/homePages/Home';
+import AuthPage from './components/homePages/AuthPage';
 function App() {
 
   const toast = useRef(null);
@@ -48,7 +37,6 @@ function App() {
   }, []);
   return (
     <div className="App">
-      {/* <ToastContainer style={{ zIndex: 9999 }} /> */}
       <Toast  position="bottom-right" ref={toast}/>
       <Routes>
         <Route path="/" element={<AuthPage/>} />

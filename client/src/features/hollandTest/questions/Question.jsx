@@ -3,16 +3,16 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'primereact/button';
 import { Carousel } from 'primereact/carousel';
 import './Question2.css'
-import love from '../../images/love.svg';
-import like from '../../images/like.svg'
-import dontlike from '../../images/dont-like.svg'
-import meh from '../../images/meh.svg'
-import hate from '../../images/hate.svg'
+import love from '../../../images/love.svg';
+import like from '../..//../images/like.svg'
+import dontlike from '../..//../images/dont-like.svg'
+import meh from '../..//../images/meh.svg'
+import hate from '../../../images/hate.svg'
 import { Image } from 'primereact/image';
 import { Card } from 'primereact/card';
 import { Steps } from 'primereact/steps';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../../../components/Loading';
+import Loading from '../../../components/generals/Loading';
 import { useAddTestMutation, useDeleteTestMutation, useGetTestQuery, useUpdateTestMutation } from './testApiSlice';
 import { useAddResultMutation } from '../result/resultApiSlice';
 import {useGetChaptersQuery} from '../chapters/chapterApiSlice'
@@ -89,7 +89,7 @@ switch(num)
               <div className="chapter-description">
                 {chapterData?.data[currentChapter]?.description}
               </div>
-              <div className="question-text">{question.text}</div>
+              <div className="question-text">{question?.text}</div>
               <div className="image-wrapper">
                 <Image
                   className="choosen-img"
@@ -104,28 +104,7 @@ switch(num)
           </div>
         );
       };
-    // const showQuestion=(question)=>{
-    //     return(<div >
-    //     <Card 
-    //     style={{height:"35vh",
-    //     boxShadow: '0 8px 8px rgba(0, 0, 0, 0.1)',
-    //     border: '1px solid rgba(0, 0, 0, 0.1)',
-    //     borderRadius: '8px',
-    //     display:'flex',
-    //     flexDirection:'column',
-    //     position:'relative',
-   
-    //   }}
-    //   >
-    //     <div>{chapterData?.data[currentChapter]?.description}</div>
-    //     <div  className='question-text'>{question.text}</div>
-    //     <Image style={{width: '500px', height: '120px', objectFit: 'contain' }} className='choosen-img' src={showImg(userAnswers[currentQuestion]?.questionResult)}></Image>
-    // <span style={{position:'absolute',bottom:'5%',left:'50%'}}>{currentQuestion+1}/{userAnswers.length}</span>
-
-    //    </Card>         
-    //     </div>
-    //     )
-    // }
+  
 
     const handleAnswer=async (answer)=>{
         const newAnswers=[...userAnswers]

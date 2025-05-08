@@ -1,41 +1,21 @@
 import { useEffect, useState } from "react"
-import Loading from "../../components/Loading"
-import OccupationCard2 from "../../components/OccupationCard2"
+import Loading from "../../components/generals/Loading"
+import OccupationCard2 from "../../components/generals/OccupationCard2"
 import { useGetJobsQuery } from "./jobApiSlice"
 import { useSearchParams } from "react-router-dom"
-import FilterSidebar3 from "../../components/FilterSideBar3"
+import FilterSidebar3 from "../../components/generals/FilterSideBar3"
 import { Button } from "primereact/button"
 
 const JobList = () => {
-  const pageSize=2
-  const [searchParams, setSearchParams] = useSearchParams()
+  const pageSize=6
+  const [searchParams] = useSearchParams()
   
   const [page,setPage]=useState(0)
   useEffect(()=>{setPage(0)},[searchParams])
-  // const [searchParams, setSearchParams] = useSearchParams({ page: 0, pageSize: 2 })
   const queryParams = Object.fromEntries(searchParams.entries());
   const { data, isError, isSuccess, isLoading } = useGetJobsQuery({...queryParams,page,pageSize})
   const [jobsList, setJobsList] = useState([])
 
-// useEffect(()=>{
-//   const page=searchParams.get("page") !== "0"
-// if(page !== "0")
-// {
-//   const newSearchParams = new URLSearchParams(searchParams)
-//   newSearchParams.set("page",  0)
-//   newSearchParams.set("pageSize",  page)
-//   setSearchParams(newSearchParams);
-// }
-// if(isSuccess)
-// {
-//   const newSearchParams = new URLSearchParams(searchParams)
-//   newSearchParams.set("page",  page)
-//   newSearchParams.set("pageSize",2)
-//   setSearchParams(newSearchParams);
-// }
-// },[isSuccess])
-
- 
   useEffect(() => {
     if (isSuccess) {
       if (page===0) 

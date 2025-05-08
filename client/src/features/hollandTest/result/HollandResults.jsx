@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from "react-router-dom";
-import HollandType from '../../../components/HollandType';
-import HollandMatch from '../../../components/HollandMatch';
-import Sidebar from '../../../components/SideBar';
+import HollandType from '../../../components/hollandTestPages/HollandType';
+import HollandMatch from './HollandMatch';
 import html2canvas from 'html2canvas';
 import { jsPDF } from "jspdf";
 import { Button } from 'primereact/button';
 import { useGetSentencesQuery } from './resultApiSlice';
 import { useGetTypesQuery } from '../../types/typeApiSlice';
-import Loading from '../../../components/Loading';
+import Loading from '../../../components/generals/Loading';
 import useGetFilePath from '../../../hooks/useGetFilePath';
 import { useGetJobsQuery } from '../../jobs/jobApiSlice';
-import OccupationCard2 from '../../../components/OccupationCard2';
+import OccupationCard2 from '../../../components/generals/OccupationCard2';
 import { useSendEmailMutation } from '../../email/emailApiSlice';
 import useAuth from "../../../hooks/useAuth"
 import { resultTemplate } from './resultTemplate';
@@ -31,12 +30,7 @@ const HollandResults = () => {
         if(sentencesIsSuccess) 
         {
         result=sentencesData.data.result
-        // setSums({R:0,I:0,A:0,S:0,E:0,C:0})
-        //  for(const type in result) 
-        //  {setSums(prevSums => ({
-        //     ...prevSums,
-        //     [type]: prevSums[type] + result[type].interest + result[type].work + result[type].capability
-        // })) 
+ 
         let tempSums = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
         
         for (const type in result) {
@@ -78,75 +72,7 @@ const formData = new FormData();
 formData.append('pdf', blob, 'resultPdf.pdf')
 formData.append('to',email)
 formData.append('html',resultTemplate(username))
-//formData.append('emailTemplate', 'sendResult');
-//formData.append('emailParams',JSON.stringify({username:"yehudit"}));
-// formData.append('html',`<!DOCTYPE html>
-// <html lang="he" dir="rtl">
-//   <head>
-//     <meta charset="UTF-8" />
-//     <title>תוצאות חדשות מחכות לך</title>
-//     <style>
-//       body {
-//         font-family: Arial, sans-serif;
-//         background-color: #f2f2f2;
-//         margin: 0;
-//         padding: 0;
-//         direction: rtl;
-//       }
-//       .container {
-//         max-width: 600px;
-//         margin: 20px auto;
-//         background-color: #ffffff;
-//         border-radius: 8px;
-//         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-//         overflow: hidden;
-//       }
-//       .header {
-//         background-color: #007ad9;
-//         color: #ffffff;
-//         text-align: center;
-//         padding: 20px;
-//       }
-//       .content {
-//         padding: 30px;
-//         font-size: 16px;
-//         color: #333333;
-//       }
-//       .button {
-//         display: inline-block;
-//         margin-top: 20px;
-//         background-color: #007ad9;
-//         color: #ffffff;
-//         padding: 12px 24px;
-//         text-decoration: none;
-//         border-radius: 6px;
-//       }
-//       .footer {
-//         text-align: center;
-//         font-size: 12px;
-//         color: #999999;
-//         padding: 20px;
-//       }
-//     </style>
-//   </head>
-//   <body>
-//     <div class="container">
-//       <div class="header">
-//         <h1>תוצאות מבחן הולנד זמינות עבורך</h1>
-//       </div>
-//       <div class="content">
-//         <p>שלום {{userName}},</p>
-//         <p>סיימת את מבחן הולנד, והתוצאות שלך מוכנות לצפייה.</p>
-//         <p>כדי לצפות בתוצאות שלך, הורד את הקובץ:</p>
-//         <a class="button" href="{{resultsLink}}">צפייה בתוצאות</a>
-//         <p>בהצלחה בהמשך הדרך,<br/>צוות HollandTest</p>
-//       </div>
-//       <div class="footer">
-//         מייל זה נשלח באופן אוטומטי. אין להשיב אליו.
-//       </div>
-//     </div>
-//   </body>
-// </html>`)
+
 sendMail(formData)
 }
 
@@ -200,11 +126,7 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
              marginBottom: '20px' }}
             >
     
-            {/* {
-            selected?.map((type)=>{
-                detailedType=typesData.data.find((t)=>t.type===type)
-                return <HollandType  image={getFilePath(typesData?.data[type].image)} title={typesData?.data[type].title} description={typesData?.data[type].description}/>
-            })} */}
+        
              {
            [...typesData?.data].filter(({type})=>selected?.includes(type)).sort(({type:type1},{type:type2})=>sums[type1]-sums[type2]).map(({type,image,title,description})=>
            
@@ -241,9 +163,6 @@ const imgData = canvas.toDataURL("image/jpeg", 0.6);
                     
                 </div>
             </div>
-            {/* <span data-html2canvas-ignore="true">
-            <Sidebar/>
-            </span> */}
         </div>
         
 

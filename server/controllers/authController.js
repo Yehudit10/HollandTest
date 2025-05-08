@@ -45,14 +45,10 @@ const refresh = async (req, res) => {
         const userDetails = {
             _id:foundUser._id,
             username: foundUser.username,
-            // firstname:foundUser.firstname,
-            // lastname:foundUser.lastname,
             imgUrl:foundUser.imgUrl,
             role: foundUser.role,
             isActive:foundUser.isActive,
              email:foundUser.email,
-            // phone:foundUser.phone,
-            // address:foundUser.address
 
         }
       

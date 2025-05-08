@@ -11,39 +11,41 @@ import{useNavigate}from "react-router-dom"
 import "../auth/login/Form.css"
 import { FileUpload } from "primereact/fileupload";
 import { Avatar } from "primereact/avatar";
-import useAuth from "../../hooks/useAuth";
 import useGetFilePath from "../../hooks/useGetFilePath";
 import { InputTextarea } from "primereact/inputtextarea";
-import {  toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
 import { Toast } from 'primereact/toast';
-import { showToast } from "../../components/toastService";
+import { showToast } from "../../components/generals/toastService";
 
 
 const Edit = () => {
   const toast = useRef(null);
   const navigate=useNavigate()
-const {data:userData,isSuccess:userIsSuccuss}=useGetUserByIdQuery()
+const {data:userData,isSuccess:userIsSuccuss,isFetching}=useGetUserByIdQuery()
 const{_id,username,firstname,lastname,phone,email,role,address,imgUrl,profile}=userData?.data||{}
+const [image, setImage] = useState();
 const [preview, setPreview] = useState()
-
+const [helper,setHelper]=useState()
 useEffect(()=>{
   if(userIsSuccuss){
+    setHelper(0)
   setPreview(getFilePath(imgUrl))
 reset({
   _id,username,firstname,lastname,phone,email,role,address,profile
 })
 }},[userIsSuccuss])
-
+useEffect(()=>{
+  if(userIsSuccuss)
+    setPreview(getFilePath(imgUrl))
+},[helper])
 const {getFilePath}=useGetFilePath()
   const { register, handleSubmit,control, reset,formState: { errors } } = useForm(
     
     );
-  const [image, setImage] = useState();
+  
 
   const [update,{isError,isLoading,isSuccess:updateIsSuccess}]=useUpdateUserMutation()
 useEffect(()=>{if(updateIsSuccess){   
-  // toast.current.show
+
   showToast({
     severity: 'success',
     summary: 'success',
@@ -74,11 +76,11 @@ navigate('/home')}},[updateIsSuccess])///
 const handleImageChange = (e) => {
   if (!e.files || e.files.length === 0) {
       setImage(undefined)
+      setPreview(undefined)
       return
   }
   setImage(e.files[0])
   fileUploadRef.current.clear()
-
 }
 const fileUploadRef=useRef()
 

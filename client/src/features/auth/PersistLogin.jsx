@@ -3,8 +3,8 @@ import { selectToken } from "./authSlice"
 import { useEffect, useRef, useState } from "react"
 import { useRefreshMutation } from "./authApiSlice"
 import { Link, Navigate, Outlet, useNavigate } from "react-router-dom"
-import Loading, {} from '../../components/Loading'
-import Error from "../../components/Error"
+import Loading, {} from '../../components/generals/Loading'
+import Error from "../../components/generals/Error"
 const PersistLogin = () => {
     const navigate=useNavigate()
     const token = useSelector(selectToken)

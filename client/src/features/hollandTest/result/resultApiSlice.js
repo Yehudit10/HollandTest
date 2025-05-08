@@ -18,9 +18,15 @@ const resultApiSlice=apiSlice.injectEndpoints({
             query:()=>({
                url:"/api/results"
             })
+        }),
+        getAllResult:build.query({
+            query:(params)=>({
+                url:"/api/results/statistics/all",
+                params
+             })
         })
       
     })
 })
-export const{useAddResultMutation,useGetSentencesQuery,useGetUserResultsQuery}=resultApiSlice
+export const{useAddResultMutation,useGetSentencesQuery,useGetUserResultsQuery,useGetAllResultQuery}=resultApiSlice
 export default resultApiSlice

@@ -1,17 +1,17 @@
-// import React, { useEffect, useState, useRef } from 'react';
-// import { DataTable } from 'primereact/datatable';
-// import { Column } from 'primereact/column';
-// import { Dialog } from 'primereact/dialog';
-// import { InputText } from 'primereact/inputtext';
-// import { Button } from 'primereact/button';
-// import { Toast } from 'primereact/toast';
-// import { Dropdown } from 'primereact/dropdown';
-// import { InputNumber } from 'primereact/inputnumber';
-// import { ProgressSpinner } from 'primereact/progressspinner';
-// import { Tag } from 'primereact/tag';
-// import { InputTextarea } from 'primereact/inputtextarea'; // עבור תיאור ארוך יותר
-// import { useAddJobMutation, useDeleteJobMutation, useGetJobsQuery, useUpdateJobMutation } from './jobApiSlice';
-// import Loading from '../../components/Loading';
+import React, { useEffect, useState, useRef } from 'react';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
+import { Dropdown } from 'primereact/dropdown';
+import { InputNumber } from 'primereact/inputnumber';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Tag } from 'primereact/tag';
+import { InputTextarea } from 'primereact/inputtextarea'; // עבור תיאור ארוך יותר
+import { useAddJobMutation, useDeleteJobMutation, useGetJobsQuery, useUpdateJobMutation } from './jobApiSlice';
+import Loading from '../../components/generals/Loading';
 
 // const mockJobs = [
 //     {
@@ -264,19 +264,8 @@
 // };
 
 // export default JobManager;
-import React, { useEffect, useState, useRef } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
-import { InputNumber } from 'primereact/inputnumber';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { useAddJobMutation, useDeleteJobMutation, useGetJobsQuery, useUpdateJobMutation } from './jobApiSlice';
-import Loading from '../../components/Loading';
-import { Dropdown } from 'primereact/dropdown';
-import { Tag } from 'primereact/tag';
+
+
 
 const JobManager = () => {
     const { data: jobsData, isLoading: jobsIsLoading, isError: jobsIsError } = useGetJobsQuery();
@@ -319,6 +308,7 @@ const JobManager = () => {
     };
 
     const deleteJob = (jobId) => {
+        console.log(jobId)
         removeJob(jobId);
     };
 
@@ -326,6 +316,7 @@ const JobManager = () => {
     useEffect(() => {
         if (isAddingSuccess) {
             toast.current.show({ severity: 'success', summary: 'נוספה', detail: 'העבודה נוספה בהצלחה' });
+            setDialogVisible(false)
         }
 
         if (isAddingError) {
@@ -336,6 +327,7 @@ const JobManager = () => {
     useEffect(() => {
         if (isUpdatingSuccess) {
             toast.current.show({ severity: 'success', summary: 'עודכן', detail: 'העבודה עודכנה בהצלחה' });
+            setDialogVisible(false)
         }
 
         if (isUpdatingError) {
@@ -355,13 +347,17 @@ const JobManager = () => {
 
     const actionBodyTemplate = (rowData) => {
         return (
-            <div className="p-d-flex p-ai-center" style={{ gap: '0.5rem' }}>
+            <div
+                className="p-d-flex p-ai-center"
+                style={{ gap: '0.5rem', flexWrap: 'nowrap', width: 'fit-content' }}
+            >
                 <Button
                     icon="pi pi-pencil"
                     className="p-button-text p-button-sm p-button-warning"
                     onClick={() => openDialog(rowData)}
                     tooltip="עריכה"
                     tooltipOptions={{ position: 'top' }}
+                    style={{ minWidth: '50px' }}
                 />
                 <Button
                     icon="pi pi-trash"
@@ -371,11 +367,12 @@ const JobManager = () => {
                     tooltipOptions={{ position: 'top' }}
                     loading={isDeleting}
                     disabled={isDeleting}
+                    style={{ minWidth: '50px' }}
                 />
             </div>
         );
     };
-
+    
     const educationBodyTemplate = (rowData) => {
         return <Tag value={rowData.educationLevel} severity="info" />;
     };
@@ -421,13 +418,13 @@ const JobManager = () => {
             </div>
 
             <DataTable value={jobsList} paginator rows={10} stripedRows responsiveLayout="scroll">
-                <Column field="jobname" header="שם עבודה" sortable />
-                <Column field="description" header="תיאור" sortable />
-                <Column field="salaryAvg" header="שכר ממוצע" sortable />
-                <Column field="workingHoursAvg" header="שעות עבודה" sortable />
-                <Column header="השכלה" body={educationBodyTemplate} sortable />
-                <Column header="פעולות" body={actionBodyTemplate} style={{ textAlign: 'right' }} />
-            </DataTable>
+    <Column field="jobname" header="שם עבודה" sortable />
+    <Column field="description" header="תיאור" sortable />
+    <Column field="salaryAvg" header="שכר ממוצע" sortable />
+    <Column field="workingHoursAvg" header="שעות עבודה" sortable />
+    <Column header="השכלה" body={educationBodyTemplate} sortable />
+    <Column header="פעולות" body={actionBodyTemplate} style={{ textAlign: 'right', width: '150px' }} /> {/* Adjust width here */}
+</DataTable>
 
             <Dialog
                 header={isEditing ? 'עריכת עבודה' : 'הוספת עבודה'}

@@ -1,0 +1,60 @@
+.homepage-container {
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.homepage-hero-content {
+    max-width: 600px;
+    margin-bottom: 2rem;
+    margin-left: 35vw;
+    text-align: center;
+}
+
+.homepage-hero-title {
+    font-size: 2.5rem;
+    color: #1976d2;
+    margin-bottom: 1rem;
+}
+
+.homepage-hero-subtitle {
+    font-size: 1.2rem;
+    color: #555;
+    display: block;
+}
+
+.homepage-tools-section {
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.homepage-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.homepage-tool-card {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.homepage-tool-card .p-card-title {
+    font-size: 1.5rem;
+    color: #1976d2;
+    margin-bottom: 0.5rem;
+}
+
+.homepage-tool-card .p-card-subtitle {
+    color: #777;
+    margin-bottom: 1rem;
+}
+
+.homepage-tool-card p {
+    margin-bottom: 1.5rem;
+}
+
+.homepage-button {
+    width: 100%;
+    margin-top: 1rem;
+}

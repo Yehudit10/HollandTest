@@ -48,10 +48,10 @@ const updateJob=async(req,res)=>{
     return res.status(200).json({error:false,message:null,data:updatedJob})
 }
 const deleteJob=async(req,res)=>{
-    const {_id}=req.body
-    if(!_id)
+    const {id}=req.body
+    if(!id)
         return res.status(400).json({error:true,message:"id is required",data:null})
-    const job=await Job.findById(_id).exec()
+    const job=await Job.findById(id).exec()
     if(!job)
         return res.status(400).json({error:true,message:"job not found",data:null})
     const deletedJob=await job.deleteOne()

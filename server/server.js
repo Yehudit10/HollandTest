@@ -5,8 +5,8 @@ const mongoose=require("mongoose")
 const corsOptions=require("./config/corsOptions")
 const connectToDB=require("./config/connectToDB")
 const cors=require("cors")
-const http = require("http");
-const setupSocket = require("./socketService");
+const http = require("http")
+const setupSocket = require("./socketService")
 const app=express()
 
 const PORT=process.env.PORT||1500
